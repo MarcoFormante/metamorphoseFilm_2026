@@ -3,5 +3,99 @@
 {% block title %}Services{% endblock %}
 
 {% block body %}
+<main class="services main-padding title-mobile-center" >
+    <article>
+        <twig:pageTitle title1="Services" title2="" />
 
+        <h2>Nos types de projets :</h2>
+        <ul class="services-cards-projects-section">
+            <li><a href="/services/publicitaire">PUBLICITAIRE</a></li>
+            <li><a href="/services/corporate">CORPORATE</a></li>
+            <li><a href="/services/evenementiel">ÉVÉNEMENTIEL</a></li>
+            <li><a href="/services/clip-video">CLIP VIDÉO</a></li>
+        </ul>
+        <h3>Comment se déroule la réalisation d'un projet ?</h3>
+
+        <ul class="services-cards-projects-realization" data-controller="servicesCards">
+            <li class="services-card-container">
+                <button aria-pressed="false" aria-expanded="false" tabindex="1" class="services-card-btn">
+                    <div class="card-flipper">
+                        <div class="card-front">
+                            <h4>1. Préproduction</h4>
+                        </div>
+                        <div class="card-back" aria-hidden="true">
+                            <h5>Concept et Planification</h5>
+                            <ul>
+                                <li>Développer l'idée</li>
+                                <li>Storyboard</li>
+                                <li>Budget et Planning</li>
+                            </ul>
+                        </div>
+                    </div>
+                </button>
+            </li>
+
+            <li class="services-card-container">
+                <button aria-pressed="false" aria-expanded="false">
+                    <div class="card-flipper">
+                        <div class="card-front">
+                            <h4>2. Production</h4>
+                        </div>
+                        <div class="card-back" aria-hidden="true">
+                            <h5>Tournage</h5>
+                            <ul>
+                                <li>Installation du matériel</li>
+                                <li>Filmer les scènes</li>
+                                <li>Direction artistique</li>
+                            </ul>
+                        </div>
+                    </div>
+                </button>
+            </li>
+
+            <li class="services-card-container">
+                <button aria-pressed="false" aria-expanded="false">
+                    <div class="card-flipper">
+                        <div class="card-front">
+                            <h4>3. Postproduction</h4>
+                        </div>
+                        <div class="card-back" aria-hidden="true">
+                            <h5>Montage / Édition</h5>
+                            <ul>
+                                <li>Dérushage et Assemblage</li>
+                                <li>Étalonnage</li>
+                                <li>Effets spéciaux, Graphismes</li>
+                            </ul>
+                        </div>
+                    </div>
+                </button>
+            </li>
+
+            <li class="services-card-container">
+                <button aria-pressed="false" aria-expanded="false">
+                    <div class="card-flipper">
+                        <div class="card-front">
+                            <h4>4. Distribution</h4>
+                        </div>
+                        <div class="card-back" aria-hidden="true">
+                            <h5>Publication / Promotion</h5>
+                            <ul>
+                                <li>Choisir les plateformes</li>
+                                <li>Télécharger et optimiser</li>
+                                <li>Marketing</li>
+                            </ul>
+                            
+                        </div>
+                    </div>
+                </button>
+            </li>
+        </ul>
+       
+
+
+
+            <a class="services-email" href="mailto:metamorphoseproductions@gmail.com">metamorphoseproductions@gmail.com</a>
+    </article>
+</main>
 {% endblock %}
+ 

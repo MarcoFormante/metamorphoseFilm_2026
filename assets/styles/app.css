@@ -326,7 +326,7 @@ form[name=new_project] input[type=submit] {
   font-style: normal;
 }
 
-.poppins-light, .backButton, .gallery-images .show-gallery .show-gallery-btn, .single-project .madeBy li, .single-project .project-staff li, .single-project-fixed-btn, .app-header, body:has(.admin-page) {
+.poppins-light, .services-email, .services ul.services-cards-projects-realization li.services-card-container button .card-back ul li, .services h2, .backButton, .gallery-images .show-gallery .show-gallery-btn, .single-project .madeBy li, .single-project .project-staff li, .single-project-fixed-btn, .app-header, body:has(.admin-page) {
   font-family: "Poppins", sans-serif;
   font-weight: 300;
   font-style: normal;
@@ -344,13 +344,13 @@ form[name=new_project] input[type=submit] {
   font-style: normal;
 }
 
-.poppins-semibold, h1 {
+.poppins-semibold {
   font-family: "Poppins", sans-serif;
   font-weight: 600;
   font-style: normal;
 }
 
-.poppins-bold, .gallery-images .show-gallery .show-gallery-exit, .gallery-list li a, .single-project .project-staff div h3, .single-project .madeBy h2, .single-project .project-staff h2, .swiper-slide figcaption .slide-collab {
+.poppins-bold, .services ul.services-cards-projects-realization li.services-card-container button .card-back h5, .services ul.services-cards-projects-realization li.services-card-container button .card-front h4, .services h3, .services ul.services-cards-projects-section li a, h1.bigTitle, .gallery-images .show-gallery .show-gallery-exit, .gallery-list li a, .single-project .project-staff div h3, .single-project .madeBy h2, .single-project .project-staff h2, .swiper-slide figcaption .slide-collab {
   font-family: "Poppins", sans-serif;
   font-weight: 700;
   font-style: normal;
@@ -869,9 +869,8 @@ body:has(.show-gallery-on) {
   margin-bottom: 40px;
 }
 
-h1 {
+h1.bigTitle {
   color: #fff;
-  font-weight: 600;
   font-size: clamp(3rem, 10vw, 8rem);
   padding: 0;
   margin: 0 0 50px;
@@ -880,7 +879,254 @@ h1 {
   display: flex;
   align-items: flex-end;
 }
-h1 .title2 {
+h1.bigTitle .title2 {
   font-size: 0.3em;
   margin: 0 0 0 10px;
+}
+
+@media screen and (max-width: 1024px) {
+  .title-mobile-center h1 {
+    text-align: center;
+    display: block;
+    margin-top: 20px;
+  }
+}
+
+.main-padding {
+  padding: 0 32px;
+}
+
+.services h2 {
+  font-size: 24px;
+  color: #fff;
+  font-weight: bold;
+}
+@media screen and (max-width: 1024px) {
+  .services h2 {
+    text-align: center;
+  }
+}
+.services ul.services-cards-projects-section {
+  list-style: none;
+  padding: 0 40px;
+  display: grid;
+  grid-template-columns: repeat(2, 0.5fr);
+  gap: 50px;
+  margin-top: 30px;
+  place-items: center;
+  margin-bottom: 60px;
+}
+@media screen and (max-width: 1024px) {
+  .services ul.services-cards-projects-section {
+    display: flex;
+    flex-direction: column;
+  }
+}
+.services ul.services-cards-projects-section li {
+  max-width: 850px;
+  border-radius: 30px;
+  border: 3px solid white;
+  height: clamp(300px, 20vw, 400px);
+  width: 100%;
+  transition: background-color 0.3s ease-in-out;
+  color: #fff;
+}
+@media screen and (max-width: 1024px) {
+  .services ul.services-cards-projects-section li {
+    max-width: clamp(240px, 80vw, 480px);
+    height: clamp(150px, 50vw, 282px);
+  }
+}
+.services ul.services-cards-projects-section li a {
+  font-size: clamp(16px, 3.5vw, 4rem);
+  text-transform: uppercase;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  text-align: center;
+  width: 100%;
+  margin: auto;
+  color: #fff;
+  transition: color 0.3s ease-in-out;
+}
+@media screen and (max-width: 1024px) {
+  .services ul.services-cards-projects-section li a {
+    font-size: clamp(16px, 5.5vw, 45px);
+  }
+}
+.services ul.services-cards-projects-section li:hover {
+  background-color: #fff;
+}
+.services ul.services-cards-projects-section li:hover a {
+  color: #f13900;
+}
+.services h3 {
+  font-size: 24px;
+  color: #fff;
+}
+@media screen and (max-width: 1024px) {
+  .services h3 {
+    text-align: center;
+  }
+}
+.services ul.services-cards-projects-realization {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 30px;
+}
+@media screen and (max-width: 1024px) {
+  .services ul.services-cards-projects-realization {
+    flex-direction: column;
+  }
+}
+.services ul.services-cards-projects-realization li.services-card-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+@media screen and (max-width: 1024px) {
+  .services ul.services-cards-projects-realization li.services-card-container {
+    flex-direction: column;
+  }
+}
+.services ul.services-cards-projects-realization li.services-card-container:not(:last-child)::after {
+  content: "";
+  font-size: 4em;
+  position: relative;
+  background-color: #fff;
+  width: 40px;
+  height: 40px;
+  clip-path: polygon(0 0, 50% 100%, 100% 0);
+  transform: rotate(-90deg);
+}
+@media screen and (max-width: 1024px) {
+  .services ul.services-cards-projects-realization li.services-card-container:not(:last-child)::after {
+    transform: rotate(0deg);
+  }
+}
+.services ul.services-cards-projects-realization li.services-card-container button {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  height: 192px;
+  width: 240px;
+}
+@media screen and (max-width: 1180px) {
+  .services ul.services-cards-projects-realization li.services-card-container button {
+    width: 200px;
+    height: 152px;
+  }
+}
+@media screen and (max-width: 1024px) {
+  .services ul.services-cards-projects-realization li.services-card-container button {
+    height: 192px;
+    width: 240px;
+  }
+}
+.services ul.services-cards-projects-realization li.services-card-container button .card-flipper {
+  height: 100%;
+  perspective: 1000px;
+  position: relative;
+}
+.services ul.services-cards-projects-realization li.services-card-container button .card-front {
+  backface-visibility: hidden;
+  height: 100%;
+  left: 0px;
+  position: absolute;
+  top: 0px;
+  transform: rotateY(0deg);
+  transform-style: preserve-3d;
+  transition: 1s;
+  width: 100%;
+  z-index: 2;
+  height: 100%;
+  background-color: #fff;
+  border: 3px solid #ffffff;
+  border-radius: 30px;
+  display: grid;
+  place-items: center;
+}
+.services ul.services-cards-projects-realization li.services-card-container button .card-front:hover h4 {
+  color: #f13900;
+}
+.services ul.services-cards-projects-realization li.services-card-container button .card-front h4 {
+  font-size: 24px;
+  transition: color 0.3s;
+  font-size: clamp(0.5em, 1.5vw, 24px);
+}
+@media screen and (max-width: 1024px) {
+  .services ul.services-cards-projects-realization li.services-card-container button .card-front h4 {
+    font-size: 18px;
+  }
+}
+.services ul.services-cards-projects-realization li.services-card-container button .card-back {
+  backface-visibility: hidden;
+  height: 100%;
+  left: 0px;
+  position: relative;
+  top: 0px;
+  transform: rotateY(180deg);
+  transform-style: preserve-3d;
+  transition: 1s;
+  width: 100%;
+  z-index: 2;
+  height: 100%;
+  border: 3px solid #ffffff;
+  border-radius: 30px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+}
+.services ul.services-cards-projects-realization li.services-card-container button .card-back ul {
+  list-style: none;
+}
+.services ul.services-cards-projects-realization li.services-card-container button .card-back ul li {
+  font-size: 16px;
+  font-size: clamp(13px, 1.2vw, 16px);
+}
+@media screen and (max-width: 1024px) {
+  .services ul.services-cards-projects-realization li.services-card-container button .card-back ul li {
+    font-size: 16px;
+  }
+}
+.services ul.services-cards-projects-realization li.services-card-container button .card-back h5 {
+  font-size: 17px;
+  font-size: clamp(13px, 1.2vw, 17px);
+}
+@media screen and (max-width: 1024px) {
+  .services ul.services-cards-projects-realization li.services-card-container button .card-back h5 {
+    font-size: 17px;
+  }
+}
+.services ul.services-cards-projects-realization li.services-card-container button.services-card-btn-on .card-front {
+  transform: rotateY(-180deg);
+  position: relative;
+}
+.services ul.services-cards-projects-realization li.services-card-container button.services-card-btn-on .card-back {
+  transform: rotateY(0deg);
+  position: absolute;
+  z-index: 1;
+}
+.services-email {
+  color: #fff;
+  text-align: center;
+  margin: 60px auto 40px auto;
+  display: block;
+  transition: 0.3s;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+.services-email:hover {
+  text-decoration-color: #f13900;
+  color: #f13900;
 }/*# sourceMappingURL=app.css.map */
