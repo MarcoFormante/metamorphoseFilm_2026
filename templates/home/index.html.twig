@@ -4,7 +4,8 @@
 
 {% block body %}
    <main class="fixed-main">
-        <div class="swiper" data-controller="swiper" >
+    <h1 class="hidden">Metamorphose Film — Découvrir nos projets</h1>
+        <div class="swiper" data-controller="swiper">
             <div class="swiper-wrapper">
                 {% for project in projects %}
                     <twig:Swiperitem :src="project.backgroundVideo" :slug="project.getSlug" :title="project.getName" :collab="project.collabWith|replace({'&amp;' : '&'})" :poster="project.thumb" />

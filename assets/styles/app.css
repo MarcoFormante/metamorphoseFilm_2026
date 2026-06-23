@@ -92,7 +92,7 @@ body {
   transform: translateY(-50%);
 }
 .swiper-slide figcaption h2 a {
-  background: transparent;
+  background: black;
   font-size: clamp(35px, 7vw, 120px);
   -webkit-text-stroke: 2px white;
   text-wrap: wrap;
@@ -435,7 +435,7 @@ form[name=new_project] input[type=submit] {
   position: fixed;
   top: 50%;
   text-align: center;
-  opacity: 0%;
+  opacity: 0.4;
   transition: opacity 0.3s ease-in-out;
 }
 @media screen and (max-width: 1024px) {
@@ -447,6 +447,7 @@ form[name=new_project] input[type=submit] {
 }
 .single-project-fixed-btn:hover {
   opacity: 1;
+  transform: scale(1.2);
 }
 .single-project-nextBtn {
   right: 2%;
@@ -1019,6 +1020,9 @@ h1.bigTitle .title2 {
   height: 192px;
   width: 240px;
 }
+.services ul.services-cards-projects-realization li.services-card-container button:focus h4 {
+  color: #f13900;
+}
 @media screen and (max-width: 1180px) {
   .services ul.services-cards-projects-realization li.services-card-container button {
     width: 200px;
@@ -1126,7 +1130,20 @@ h1.bigTitle .title2 {
   width: -moz-fit-content;
   width: fit-content;
 }
-.services-email:hover {
+.services-email:hover, .services-email:focus {
   text-decoration-color: #f13900;
   color: #f13900;
+}
+
+h1.hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+  color: #fff;
 }/*# sourceMappingURL=app.css.map */
