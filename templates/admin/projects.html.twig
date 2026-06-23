@@ -5,9 +5,11 @@
 {% block body %}
     <main class="admin-page admin_projects" data-controller="projects">
         <div class="admin-header">
-            <a href="/admin/home">Precedent</a>
+            <div class="flex-row gap-10">
+                <a href="/admin/logout">Logout</a>
+                <a href="/admin/home">Precedent</a>
+            </div>
         </div>
-        
             
         <div class="admin_projects_container">
             {% if projects %}

@@ -9,6 +9,10 @@
     margin-block-end: 0;
 }
 
+.gap-10{
+    gap: 10px;
+}
+
 body{
     background-color: black;
 }
@@ -195,6 +199,11 @@ body:has(.admin-page){
 .flex-col{
     display: flex;
     flex-direction: column;
+}
+
+.flex-row{
+    display: flex;
+    flex-direction: row;
 }
 
 .justify-center{

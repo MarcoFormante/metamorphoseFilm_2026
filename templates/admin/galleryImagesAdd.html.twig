@@ -4,9 +4,12 @@
 
 {% block body %}
     <main class="admin-page admin-gallery-add"  data-controller="add-images">
-      <div>
-          <a href="/admin/galleries">Precedent</a>
-      </div>
+        <div class="admin-header">
+            <div class="flex-row gap-10">
+                <a href="/admin/logout">Logout</a>
+                <a href="/admin/galleries/{{name}}">Precedent</a>
+            </div>
+        </div>
        {{form_start(form)}}
         {{form_widget(form)}}
         <div class="gallery-images-container" data-add-images-target="container">
