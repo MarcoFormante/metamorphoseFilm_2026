@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin gallery{% endblock %}
+
+{% block body %}
+    <main class="admin-page admin-gallery-images" data-controller="images">
+        
+        <div class="admin-header">
+            <a href="/admin/galleries">Precedent</a>
+            <a href="/admin/gallery/{{galleryName|lower}}/add-images">Ajouter les images</a>
+        </div>
+       
+         <div class="admin-gallery">
+            {% if images is defined %}
+                {% for img in images %}
+                    <div>
+                        <img draggable="true" data-id="{{img.id}}" data-position="{{img.position}}" src="{{asset('/uploads/images/galleries/' ~ img.src)}}" alt="" width="200" height="250"/>
+                        <button data-id='{{img.id}}' data-name="{{img.galleryName}}" class="delete-button">Effacer</button>
+                    </div>
+                {% endfor %}
+
+                {# form to change image position #}
+                <div class="hidden">
+                    {{form_start(form)}}
+                    {{form_end(form)}}
+                </div>
+
+                {# form to delete a image #}
+                <div class="hidden">
+                    {{form_start(deleteForm)}}
+                    {{form_end(deleteForm)}}
+                </div>       
+
+                {% if  error is defined and error %}
+                    {{error}}
+                {% endif %}
+        {% endif %}
+         </div>
+       
+        
+    
+    </main>
+
+{% endblock %}

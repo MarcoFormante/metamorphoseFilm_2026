@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin projects{% endblock %}
+
+{% block body %}
+    <main class="admin-page admin_projects" data-controller="projects">
+        <div class="admin-header">
+            <a href="/admin/home">Precedent</a>
+        </div>
+        
+            
+        <div class="admin_projects_container">
+            {% if projects %}
+                {% for project in projects %}
+                    <a href="/admin/projects/{{project.id}}" draggable="true" data-position="{{project.orderIndex}}" data-id="{{project.id}}" data-isActive="{{project.active}}">{{project.name}}</a>
+                {% endfor %}
+            {% endif %}
+        </div>
+      
+
+        <div class="hidden">
+            {{form_start(form)}}
+            
+            {{form_end(form)}}
+        </div>
+
+       
+    </main>
+{% endblock %}

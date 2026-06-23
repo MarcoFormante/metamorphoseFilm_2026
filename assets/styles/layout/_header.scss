@@ -1,0 +1,68 @@
+
+
+.app-header{
+        @extend .poppins-light;
+        position: relative;
+        z-index: 12;
+        padding: 32px;
+        nav{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 10;
+
+            ul{
+                display: flex;
+                gap: 30px;
+                list-style: none;
+
+                a{
+                    font-size: 20px;
+                    color: #FFFFFF;
+                    text-decoration: none;
+                    position: relative;
+
+                    &::after{
+                            content: "";
+                            width: 0%;
+                            height: 2px;
+                            background-color: $primary-color;
+                            display: block;
+                            position: absolute;
+                            transition: .2s;
+                    }
+
+                    &:hover::after{
+                        width: 100%;
+                    }
+
+                    &.activeRoute::after{
+                        width: 100%;
+                    }
+                }
+            }
+        }
+
+        .logo-link{
+            svg{
+                width: 200px;
+
+                path{
+                    transition: fill 0.2s;
+                }
+            }
+
+            &:hover{
+                svg path{
+                    fill: $primary-color;
+                }
+            }
+        }
+}
+
+
+
+
+
+

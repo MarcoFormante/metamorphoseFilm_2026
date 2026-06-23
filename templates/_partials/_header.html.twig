@@ -1,0 +1,19 @@
+{% if route is not defined %}
+    {% set route = ""%}
+{% endif %}
+
+<header class="app-header">
+    <nav>
+        <div class="logo-link">
+            <a href="/" >
+                {% include "_partials/logo.html.twig" %}
+            </a>
+        </div>
+        <ul>
+            <li><a href="/galerie" class="{{route === "galerie" ? "activeRoute" : ""}}">Galerie</a></li>
+            <li><a href="/services" class="{{route === "services" ? "activeRoute" : ""}}">Services</a></li>
+            <li><a href="/a-propos" class="{{route === "a-propos" ? "activeRoute" : ""}}">À propos</a></li>
+        </ul>
+    </nav>
+</header>
+

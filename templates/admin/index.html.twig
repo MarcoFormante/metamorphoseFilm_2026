@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin Home{% endblock %}
+
+{% block body %}
+    <main class="admin-page admin-home">
+        <div class="flex-col justify-center admin-home-links-container">
+            <a class="admin-home-link" href="/admin/newProject">Nouveau Projet</a>
+            <a class="admin-home-link" href="/admin/projects">Projets</a>
+            <a class="admin-home-link" href="/admin/galleries">Galeries</a>
+        </div>
+    </main>
+{% endblock %}

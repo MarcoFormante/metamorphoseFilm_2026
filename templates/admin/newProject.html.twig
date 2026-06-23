@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin new Project{% endblock %}
+
+  
+{% block body %}
+
+    <main data-controller="newProject" class="admin-page admin-form-page">
+        <div class="admin-header">
+            {% if project is defined %}
+                <a href="/admin/projects"> Precedent</a>
+                {% else %}
+                    <a href="/admin/home">Precedent</a>
+            {% endif %}
+            <div class="delete-btn-container">
+                {% if project is defined %}
+                    <div>
+                        <div class="deleteForm">
+                            {{form_start(deleteForm)}}
+                            {{form_end(deleteForm)}}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+      
+        {{form_start(form)}}
+        {{form_widget(form)}}
+       
+         <button class="add_staff" type="button">AJOUTER</button>
+         
+         <div class="new_staff_container">
+            
+            {% if moreStaff is defined and moreStaff is not empty %}
+                {% for row in moreStaff %}
+                    <div class="new_staff_item">
+                        <label for="new_staff_title{{loop.index}}">titre</label>
+                        <input type="text" name="new_staff_title[]" id="new_staff_title{{loop.index}}" value="{{row.value1}}"/>
+                        <label for="new_staff_value{{loop.index}}">Value</label>
+                        <input type="text" name="new_staff_value[]" id="new_staff_value{{loop.index}}" value="{{row.value2}}"/>
+                   </div>
+                {% endfor %}
+
+                {% else %}
+                    <div class="new_staff_item">
+                        <label for="new_staff_title">titre</label>
+                        <input type="text" name="new_staff_title[]" id="new_staff_title"/>
+                        <label for="new_staff_value">Value</label>
+                        <input type="text" name="new_staff_value[]" id="new_staff_value"/>
+                   </div>
+            {% endif %}
+                   
+         </div>
+
+          <input type="submit" value="Submit">
+           {{ form_errors(form) }}
+            {{form_end(form)}}
+
+            
+        {% if errors is defined %}
+            <p> errors:</p>
+            {% for error in errors %}
+                <p>{{error}}</p>
+            {% endfor %}
+        {% endif %}
+        
+    </main>
+{% endblock %}

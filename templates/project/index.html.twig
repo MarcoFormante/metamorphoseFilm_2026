@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{project.name}}{% endblock %}
+
+{% block body %}
+    <main class="single-project">
+        <article>
+            <div>
+                {% if next %}
+                    <a aria-label="Aller au prochain projet" href="/projet/{{next}}" class="single-project-fixed-btn single-project-nextBtn">></a>
+                {% endif %}
+
+                {% if prev %}
+                    <a aria-label="Aller au projet precedent" href="/projet/{{prev}}" class="single-project-fixed-btn single-project-prevBtn"><</a>
+                {% endif %}
+            </div>
+           
+            <video src="{{asset("/uploads/videos/" ~ project.backgroundVideo)}}" width="100%" height="100%" autoplay muted loop playsinline preload="none"></video>
+            <h1>{{project.name}}</h1>
+
+            <div class="madeBy">
+                <h2>Realisé par</h2>
+                <ul>
+                    {% for item in project?.madeBy|split(',') %}
+                        <li>{{item}}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+             <div class="ytb-video-container">
+                <iframe width="560" height="315" src="{{project.youtubeVideo|replace({'watch?v=' : 'embed/'})}}?autoplay=1&mute=1" allowfullscreen></iframe>
+            </div>
+
+            <div class="project-assets">
+                <div class="project-images">
+                    {% for image in images %}
+                        <img src="/uploads/images/projects/{{image.src}}" alt="" width="300">
+                    {% endfor %}
+                </div>
+
+                <div class="project-staff">
+                    <twig:Staffitem title="Production" :staffType="staff?.production"/>
+                    <twig:Staffitem title="Artiste" :staffType="staff?.artists"/>
+                    <twig:Staffitem title="Montage" :staffType="staff?.montage"/>
+                    <twig:Staffitem title="Cadrage" :staffType="staff?.cadrage"/>
+                    <twig:Staffitem title="Pilote de drone" :staffType="staff?.droniste"/>
+                    <twig:Staffitem title="Photographe de plateau" :staffType="staff?.phPlateau"/>
+                    <twig:Staffitem title="Chef Opérateur" :staffType="staff?.decorateurs"/>
+                    
+                    {% for row in createdStaff %}
+                        <twig:Staffitem :title="row.value1" :staffType="row.value2"/>
+                    {% endfor %} 
+                </div>             
+            </div>
+        </article>
+    </main>
+
+{% endblock %}
+
+ 

@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin new Gallery{% endblock %}
+
+{% block body %}
+    <main class="admin-page admin-newGallery" data-controller="newGallery">
+        <div class="admin-header">
+            <a href="/admin/galleries">Precedent</a>
+             {% if gallery is defined %}
+                {{form_start(deleteForm)}}
+                    <button type="submit" class="delete-btn">Effacer</button>
+                {{form_end(deleteForm)}}
+        {% endif %}
+        </div>
+        
+        <div class="form-newGallery">
+            {{form_start(form)}}
+                {{form_widget(form)}}
+                {% if gallery is defined %}
+                    <img data-newGallery-target="image" src="{{asset('/uploads/images/gallery/' ~ gallery.src)}}" width="150" height="200" alt="">
+                {% endif %}
+                <input type="submit" value="Submit">
+            {{form_end(form)}}
+        </div>
+        {% if error is defined and error is not empty  %}
+        <div>
+            Errors:
+        </div>
+            {{error}}
+        {% endif %}
+
+       
+    </main>
+{% endblock %}

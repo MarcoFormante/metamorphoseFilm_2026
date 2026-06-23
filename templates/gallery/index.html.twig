@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Galerie{% endblock %}
+
+{% block body %}
+<main class="galleries">
+    <ul class="gallery-list">
+        {% if galleries %}
+            {% for gallery in galleries %}
+                <li>
+                    <a href="/galerie/{{gallery.name|lower}}">
+                        <figure>
+                            <img src="{{asset('uploads/images/gallery/' ~ gallery.src )}}" alt="Galerie d'images, categorie {{gallery.name}}" width="300" height="420">
+                            <figcaption>{{gallery.name|capitalize}}</figcaption>
+                        </figure>
+                    </a>
+                </li>
+            {% endfor %}
+        {% endif %}
+    </ul>
+</main>
+
+{% endblock %}

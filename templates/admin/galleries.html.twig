@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin galleries{% endblock %}
+
+{% block body %}
+    <main class="admin-page admin-galleries" data-controller="adminGalleries">
+        <div class="admin-header">
+            <a href="/admin/home">Precedent</a>
+            <a href="/admin/newGallery">Creér une galerie</a>
+        </div>
+
+        <div class="admin-all-galleries-container">
+            {% if galleries %}
+                {% for gallery in galleries %}
+                    <div class="admin-gallery-container"   >
+                        <div class="flex-col">
+                            <a class="gallery-name" href="/admin/galleries/{{gallery.name|lower}}">{{gallery.name}}</a>
+                            <img src="{{asset('/uploads/images/gallery/' ~ gallery.src)}}" alt="" width="150" height="200" draggable="true" data-position="{{gallery.position}}" data-id="{{gallery.id}}">
+                        </div>
+                        <a class="gallery-edit-btn" href="/admin/galleries/{{gallery.name}}/edit">Modifier</a>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="hidden">
+            {{form_start(form)}}
+            {{form_end(form)}}
+        </div>
+      
+    </main>
+{% endblock %}

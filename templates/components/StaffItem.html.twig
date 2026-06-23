@@ -1,0 +1,11 @@
+{% if staffType %}
+    <div>
+        <h3>{{title}}</h3>
+        <ul>
+        {% for item in staffType|split(',') %}
+            <li>{{item}}</li>
+        {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+
