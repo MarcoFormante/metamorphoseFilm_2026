@@ -1,3 +1,5 @@
+{% set messages = [formErrors ?? null,app.flashes('error'),app.flashes('success')]  %}
+
 <!DOCTYPE html>
 <html lang="fr">
     <head>
@@ -26,6 +28,7 @@
     </head>
     <body>
         {% include "_partials/_header.html.twig" %}
+        <twig:Alert type="alert" messages='{{messages}}' />
         {% block body %}{% endblock %}
     </body>
 </html>

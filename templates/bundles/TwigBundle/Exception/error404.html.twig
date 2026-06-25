@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+{% block title %}Erreur{% endblock %}
+{% block body %}
+<main class="page-error">
+    <h1>404</h1>
+    {% if exception.message === "gallery" %}
+        <div class="error-message">
+            <p>Cette Galerie n'existe pas</p>
+        </div>
+       
+         {% elseif exception.message === "project_404" %}
+         <div class="error-message">
+            <p>Ce Projet n'existe pas</p>
+        </div>
+         
+    {% else %}
+        <div class="error-message">
+            <p>La page demandée n'a pas pu être trouvée.</p>
+        </div>
+    {% endif %}
+    
+    <p>
+        Veuillez vérifier l'URL ou retourner à la <a href="{{ path('app_home') }}">page d'accueil</a>.
+    </p>
+</main>
+
+{% endblock %}

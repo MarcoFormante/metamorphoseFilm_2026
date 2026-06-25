@@ -18,17 +18,17 @@ final class ProjectController extends AbstractController
 
 
         if ($project && !$project->isActive()) {
-            throw new HttpException(403,"Project Not Found");
+            throw new HttpException(403,"project_403");
         }
 
         if (!$project) {
             $deletedProject = $dr->findOneBy(["slug" => $slug]);
 
             if ($deletedProject) {
-                throw new HttpException(410,"Project Not Found");
+                throw new HttpException(410,"project_410");
             }
 
-            throw new HttpException(404,"Project Not Found");
+            throw new HttpException(404,"project_404");
         }
 
 
@@ -50,7 +50,7 @@ final class ProjectController extends AbstractController
         ->getQuery();
         
        
-
+    
         $prevQuery = $repository->createQueryBuilder('p')
         ->select('p.slug as prev')
         ->where('p.orderIndex < :id' )

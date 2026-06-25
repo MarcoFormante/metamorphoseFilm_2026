@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Gallery;
+use App\Repository\GalleryImagesRepository;
 use App\Repository\GalleryRepository;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,6 +17,7 @@ final class GalleryController extends AbstractController
     public function index(GalleryRepository $gr): Response
     {
         $galleries = $gr->findBy([],['position' => 'ASC']);
+
         return $this->render('gallery/index.html.twig', [
             'route' => 'galerie',
             'galleries' => $galleries
@@ -24,17 +26,14 @@ final class GalleryController extends AbstractController
 
 
   #[Route('/galerie/{name}', name: 'app_gallery_images')]
-    public function getGalleryImages(#[MapEntity(mapping: ['name' => 'name'])] ?Gallery $gallery,string $name): Response
+    public function getGalleryImages(#[MapEntity(mapping: ['name' => 'name'])] ?Gallery $gallery,string $name,GalleryImagesRepository $gr): Response
     {
         if (!$gallery) {
-            throw $this->createNotFoundException('Gallery not found');
+            throw $this->createNotFoundException("gallery");
         }
 
-        $images = $gallery->getImages();
+        $images = $gr->findBy(["gallery" => $gallery],['position' => 'DESC']);
 
-        if ($images->isEmpty()) {
-            throw $this->createNotFoundException('No images found for this gallery');
-        }
 
         return $this->render('gallery/galleryImages.html.twig', [
             'route' => 'galerie',

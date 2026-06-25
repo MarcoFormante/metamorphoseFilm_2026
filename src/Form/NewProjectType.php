@@ -40,6 +40,7 @@ class NewProjectType extends AbstractType
                         maxSize:'10M',
                         mimeTypes:['video/mp4'],
                         mimeTypesMessage:'La Video doit etre en MP4',
+                        maxSizeMessage:'La video ne doit pas dépasser 10 MB.',
                         groups: ['Default', 'create']
                     ), new NotBlank(
                         message:"La video est obligatoire",
@@ -64,19 +65,20 @@ class NewProjectType extends AbstractType
         ;
         
 
-        for ($i=0; $i <= 5 ; $i++) { 
-            $builder->add("image" . $i + 1,FileType::class,[
+        for ($i=1; $i <= 6 ; $i++) { 
+            $builder->add("image" . $i ,FileType::class,[
                 'mapped' => false,
                 'required' => $isCreateForm,
                 'constraints' => [
                     new Image(
                         maxSize:'2M',
                         mimeTypes:['image/jpeg','image/png','image/webp'],
-                        mimeTypesMessage:'L`image doit etre en JPEG,PNG ou WEBP et etre moins de 2MB',
+                        mimeTypesMessage:"L`image-{$i} doit etre en JPEG,PNG ou WEBP et etre moins de 2MB",
+                        maxSizeMessage: "L'image-{$i} ne doit pas dépasser 2 MB.",
                         groups: ['Default', 'create']
                     ),
                     new NotBlank(
-                        message:"L'image est obligatoire",
+                        message:"L'image-{$i}  est obligatoire",
                         groups: ['create']
                     )
                 ],

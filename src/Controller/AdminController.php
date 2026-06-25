@@ -14,12 +14,14 @@ use App\Form\DeleteImageType;
 use App\Form\DeleteProjectType;
 use App\Form\ItemPositionType;
 use App\Form\NewProjectType;
+use App\Kernel;
 use App\Repository\GalleryImagesRepository;
 use App\Repository\GalleryRepository;
 use App\Repository\ProjectImagesRepository;
 use App\Repository\ProjectRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,6 +31,10 @@ use Symfony\Component\Routing\Attribute\Route;
 final class AdminController extends AbstractController
 {
    
+    public function __construct(private LoggerInterface $adminLogger)
+    {
+        
+    }
 
      #[Route('/admin/home', name: 'app_admin_home')]
     public function index(): Response
@@ -37,7 +43,6 @@ final class AdminController extends AbstractController
             
         ]);
     }
-
     
 
      #[Route('/admin/newProject', name: 'app_admin_newProject')]
@@ -46,13 +51,13 @@ final class AdminController extends AbstractController
         $project = new Project();
         $staff = new ProjectStaff();
         $project->setProjectStaff($staff);
-
+  
         $form = $this->createForm(NewProjectType::class,$project,[
             'validation_groups' => ['Default', 'create'],
         ]);
 
         $form->handleRequest($request);
-        $errors = [];
+        $formErrors = $form->getErrors(true);
 
         if ($form->isSubmitted() && $form->isValid()) {
           
@@ -113,9 +118,9 @@ final class AdminController extends AbstractController
 
                 $moved = [];
                 try {
+                 
                     $em->persist($project);
                     $em->persist($staff);
-
             
                     $em->flush();
                
@@ -131,19 +136,23 @@ final class AdminController extends AbstractController
                         }
                     }
 
+                    $this->addFlash('success',"Projet Créé");
+                    return $this->redirectToRoute('app_admin_home');
+
                 } catch (\Exception $th) {
-                    $errors = [$th->getMessage()];
-                   
+                    $this->adminLogger->error($th->getMessage(),['error' => $th]);
+                    $this->addFlash('error',$th->getMessage());
+
                     return $this->render('admin/newProject.html.twig', [
                         'form' => $form,
-                        'errors' => $errors
+                        'formErrors' => $formErrors
                     ], new Response(null, Response::HTTP_UNPROCESSABLE_ENTITY));
                 }
-            return $this->redirectToRoute("app_admin_newProject");
        }
-    
+       
         return $this->render('admin/newProject.html.twig', [
             'form' => $form,
+            'formErrors' => $formErrors 
         ]);
     }
 
@@ -153,7 +162,6 @@ final class AdminController extends AbstractController
     public function projects(ProjectRepository $projectRepository,Request $request,EntityManagerInterface $em): Response
     {   
         $form = $this->createForm(ItemPositionType::class);
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -169,11 +177,15 @@ final class AdminController extends AbstractController
                 $p1->setOrderIndex($P1Position);
                 $p2->setOrderIndex($P2Position);
 
-                $em->flush();
-
-                return $this->redirectToRoute('app_admin_projects');
+                try {
+                    $em->flush();
+                } catch (\Throwable $th) {
+                    $this->addFlash('error',$th->getMessage());
+                }
+            }else{
+                $this->addFlash('error',"Erreur pendant la modification");
             }
-
+            return $this->redirectToRoute('app_admin_projects');
         }
 
         $projects = $projectRepository->findBy([],['orderIndex' => 'ASC']);
@@ -188,8 +200,13 @@ final class AdminController extends AbstractController
 
 
      #[Route('/admin/projects/{id}', name: 'app_admin_edit_project')]
-    public function editProjects(Project $p, ProjectImagesRepository $pi, EntityManagerInterface $em, Request $request): Response
+    public function editProjects(?Project $p, ProjectImagesRepository $pi, EntityManagerInterface $em, Request $request): Response
     {
+        if(!$p){
+            $this->addFlash('error',"Le Projet demandé n'existe pas");
+            return $this->redirectToRoute('app_admin_projects');    
+        }
+
         $form = $this->createForm(NewProjectType::class,$p);
         $deleteForm = $this->createForm(DeleteProjectType::class);
 
@@ -204,18 +221,23 @@ final class AdminController extends AbstractController
 
             $em->persist($deletedProject);
 
-            $em->flush();
-
-            return $this->redirectToRoute('app_admin_projects',[
-                    'project' => $p,
-                    'form' => $form,
-                    'deleteForm' =>$deleteForm,
-                    'moreStaff' => json_decode($p->getProjectStaff()->getMoreStaffFields()) 
-            ]);
-
+            try {
+                $em->flush();
+                $this->addFlash('success',"Le Projet a été supprimé");
+            } catch (\Throwable $th) {
+                $this->addFlash('error',"Le Projet demandé n'existe pas");
+                return $this->redirectToRoute('app_admin_edit_project',['id' => $p->getId()]);
+            }
+           
+            return $this->redirectToRoute('app_admin_projects');
         }
         
         $form->handleRequest($request);
+        $formErrors = $form->getErrors(true);
+
+        if (count($formErrors)) {
+            $this->addFlash('error',$formErrors);
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
 
@@ -285,31 +307,35 @@ final class AdminController extends AbstractController
                 $em->flush();
 
                 foreach ($filesToUnlink as $key => $file) {
-                        if (file_exists($file) && !is_dir($file)) {
-                            unlink($file);
-                        }
+                    if (file_exists($file) && !is_dir($file)) {
+                        unlink($file);
+                    }
                 }
 
                 foreach ($filesToMove as $key => $fileToMove) {
                     $fileToMove['file']->move($fileToMove['path'],$fileToMove['name']);
                 }
 
-                return $this->redirectToRoute('app_admin_projects',[
-                     'project' => $p,
-                    'form' => $form,
-                    'deleteForm' =>$deleteForm,
-                    'moreStaff' => json_decode($p->getProjectStaff()->getMoreStaffFields()) 
-                ]);
+                $this->addFlash('success',"Projet Modifié");
+                return $this->redirectToRoute('app_admin_edit_project',['id' => $p->getId()]);
 
             } catch (\Throwable $th) {
+                if($th->getCode() === 1062){
+                        if (preg_match("/Duplicate entry '(.*?)'/", $th->getMessage(), $matches)) {
+                            $duplicateValue = $matches[1]; 
+                            $this->addFlash('error','La valeur ' . $duplicateValue . ' existe déjà');
+                        }
+                    }else{
+                        $this->addFlash('error',$th->getMessage());
+                    }
+                    $this->adminLogger->error('Error:',['message' => $th->getMessage()]);
 
-                dd($th);
                 return $this->render('admin/newProject.html.twig',[
-                     'project' => $p,
+                    'project' => $p,
                     'form' => $form,
                     'deleteForm' =>$deleteForm,
                     'moreStaff' => json_decode($p->getProjectStaff()->getMoreStaffFields()) 
-                ], new Response("eee", Response::HTTP_UNPROCESSABLE_ENTITY));
+                ], new Response(null, Response::HTTP_UNPROCESSABLE_ENTITY));
             }
         }
 
@@ -327,11 +353,10 @@ final class AdminController extends AbstractController
      #[Route('/admin/galleries', name: 'app_admin_galleries')]
     public function galleries(GalleryRepository $gr,Request $request,EntityManagerInterface $em): Response
     {
-      
-
-        $form= $this->createForm(ItemPositionType::class);
+        $form = $this->createForm(ItemPositionType::class);
         $form->handleRequest($request);
-
+        $galleries = $gr->findBy([],['position' => "ASC"]);
+        
         if ($form->isSubmitted() && $form->isValid()) {
             $img1ID = $form->get("item1ID")->getData();
             $img1Position = $form->get("item1Position")->getData();
@@ -344,13 +369,22 @@ final class AdminController extends AbstractController
             if ($img1 && $img2 ) {
                 $img1->setPosition($img1Position);
                 $img2->setPosition($img2Position);
-                $em->flush();
+                try {
+                    $em->flush();
+                } catch (\Throwable $th) {
+                    $this->adminLogger->error('Error:',['message' => $th->getMessage()]);
+                    $this->addFlash('error',$th->getMessage());
+
+                    return $this->render('admin/galleries.html.twig',[
+                        'galleries' => $galleries,
+                        'form' => $form
+                    ], new Response("eee", Response::HTTP_UNPROCESSABLE_ENTITY));
+                }
+               
                 return $this->redirectToRoute('app_admin_galleries');
             }
 
         }
-
-        $galleries = $gr->findBy([],['position' => "ASC"]);
         return $this->render('admin/galleries.html.twig',[
             'galleries' => $galleries,
             'form' => $form
@@ -366,16 +400,22 @@ final class AdminController extends AbstractController
         
         $deleteForm->handleRequest($request);
 
-        if($deleteForm->isSubmitted() && $deleteForm->isValid() && $deleteForm->getConfig()->getMethod() === "POST"){
+        if($deleteForm->isSubmitted() && $deleteForm->isValid()){
             $id = $deleteForm->get("imageID")->getData();
             $image = $gr->findOneBy(['id'=>$id]);
             $imageSrc = $image->getSrc();
             $em->remove($image);
-            $em->flush();
 
-            if (file_exists("uploads/images/galleries/" . $imageSrc)) {
-                unlink("uploads/images/galleries/" . $imageSrc);
+            try {
+                $em->flush();
+                if (file_exists("uploads/images/galleries/" . $imageSrc)) {
+                    unlink("uploads/images/galleries/" . $imageSrc);
+                }
+                $this->addFlash('success','Supprimée');
+            } catch (\Throwable $th) {
+                $this->addFlash('error',$th->getMessage());
             }
+           
             return $this->redirectToRoute('app_admin_gallery',['name'=> $name]);
         }
        
@@ -394,15 +434,18 @@ final class AdminController extends AbstractController
             if ($img1 && $img2 ) {
                 $img1->setPosition($img1Position);
                 $img2->setPosition($img2Position);
-                $em->flush();
 
+                try {
+                    $em->flush();
+                    $this->addFlash('success','Position modifièe');
+                } catch (\Throwable $th) {
+                    $this->addFlash('error',$th->getMessage());
+                }
                 return $this->redirectToRoute('app_admin_gallery',['name'=> $name]);
             }
-
         }
         
-            // fetch images by gallery name using repository helper
-            $images = $gr->findByGalleryName($name);
+        $images = $gr->findByGalleryName($name);
 
         return $this->render('admin/gallery.html.twig',[
             'images' => $images,
@@ -440,16 +483,14 @@ final class AdminController extends AbstractController
 
             try {
                 $em->flush();
+                $image->move("uploads/images/gallery/",$imageName);
             } catch (\Throwable $th) {
-
+                $this->addFlash('error',$th->getMessage());
                 return $this->render('admin/newGallery.html.twig',[
-                    'form' => $form,
-                    'error' => $th->getMessage()
+                    'form' => $form
                 ],new Response(null,500));
             }
-         
-
-            $image->move("uploads/images/gallery/",$imageName);
+            $this->addFlash('success',"Galerie Créé");
 
             return $this->redirectToRoute('app_admin_newGallery');
         }
@@ -465,7 +506,6 @@ final class AdminController extends AbstractController
     {
         $gallery = $gr->findOneBy(['name' => $name]);
         $form = $this->createForm(CreateGalleryType::class,$gallery);
-        $error = "";
 
         $deleteForm = $this->createFormBuilder()
         ->setAction($this->generateUrl("app_admin_delete_gallery",['id' => $gallery->getId()]))
@@ -498,10 +538,17 @@ final class AdminController extends AbstractController
                     $image->move("uploads/images/gallery/",$imageSrc);
                 }
 
+                $this->addFlash('success','Galerie modifiée');
                 return $this->redirectToRoute('app_admin_galleries');
                 
             } catch (\Throwable $th) {
-                $error = $th->getMessage();
+                $this->addFlash('error',$th->getMessage());
+                return $this->render('admin/newGallery.html.twig',[
+                'form' => $form,
+                'gallery' => $gallery,
+                'deleteForm' => $deleteForm,
+                'formErrors' => $form->getErrors(true)
+                ],new Response(null,500));
             }
         }
 
@@ -509,7 +556,7 @@ final class AdminController extends AbstractController
             'form' => $form,
             'gallery' => $gallery,
             'deleteForm' => $deleteForm,
-            'error' => $error
+            'formErrors' => $form->getErrors(true)
         ]);
     }
 
@@ -519,20 +566,25 @@ final class AdminController extends AbstractController
         $images = $gallery->getImages();
         $em->remove($gallery);
         $imgSrc = $gallery->getSrc();
-        $em->flush();
+        try {
+           $em->flush();
 
-        if(file_exists("uploads/images/gallery/" . $imgSrc )){
-            unlink("uploads/images/gallery/" . $imgSrc );
-        }
-
-        foreach ($images as $key => $img) {
-            $imgPath = "uploads/images/galleries/" . $img->getSrc();
-
-            if (file_exists($imgPath)) {
-                unlink($imgPath);
+            if(file_exists("uploads/images/gallery/" . $imgSrc )){
+                unlink("uploads/images/gallery/" . $imgSrc );
             }
-        }
 
+            foreach ($images as $key => $img) {
+                $imgPath = "uploads/images/galleries/" . $img->getSrc();
+
+                if (file_exists($imgPath)) {
+                    unlink($imgPath);
+                }
+            }
+
+      
+        } catch (\Throwable $th) {
+            $this->addFlash('error',$th->getMessage());
+        }
         return $this->redirectToRoute('app_admin_galleries');
      }
 
@@ -549,25 +601,25 @@ final class AdminController extends AbstractController
             $images = $form->get("files")->getData();
             $imgNames = [];
             $filesToMove = [];
-                $lastPosition = $gi->createQueryBuilder('g')
-                ->select('MAX(g.position)')
-                ->where("g.gallery = :id")
-                ->setParameter("id",$gallery->getId())
-                ->setMaxResults(1);
-                $query = $lastPosition->getQuery();
-                $position = ($query->getSingleScalarResult() ?? 0) + 1;
+            $lastPosition = $gi->createQueryBuilder('g')
+            ->select('MAX(g.position)')
+            ->where("g.gallery = :id")
+            ->setParameter("id",$gallery->getId())
+            ->setMaxResults(1);
+            $query = $lastPosition->getQuery();
+            $position = ($query->getSingleScalarResult() ?? 0) + 1;
 
-                foreach ($images as $key => $img) {
-                    $galleryImage = new GalleryImages();
-                    $src = "g-img-" . bin2hex(random_bytes(18)) . ".webp";
-                    $imgNames[] = $src;
-                    $filesToMove[] = $img;
-                    $galleryImage->setSrc($src);
-                    $galleryImage->setGallery($gallery);
-                    $galleryImage->setPosition($position + $key);
-                    $gallery->addImage($galleryImage);
-                    $em->persist($galleryImage);
-                }
+            foreach ($images as $key => $img) {
+                $galleryImage = new GalleryImages();
+                $src = "g-img-" . bin2hex(random_bytes(18)) . ".webp";
+                $imgNames[] = $src;
+                $filesToMove[] = $img;
+                $galleryImage->setSrc($src);
+                $galleryImage->setGallery($gallery);
+                $galleryImage->setPosition($position + (count($images)) - $key);
+                $gallery->addImage($galleryImage);
+                $em->persist($galleryImage);
+            }
 
             try {
                 $em->flush();
@@ -594,4 +646,25 @@ final class AdminController extends AbstractController
             'name' => $name
         ]);
      }
+
+     #[Route('/admin/logs', name: 'app_admin_logs')]
+    public function logs(Kernel $kernel): Response
+    {
+        $path = $kernel->getProjectDir() . '/var/log/admin.log';
+        $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        $entries = [];
+
+        foreach ($lines as $line) {
+            $data = json_decode($line, true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $entries[] = $data;
+            } else {
+                $entries[] = ['message' => $line];
+            }
+        }
+        
+        return $this->render('admin/logs.html.twig', [
+            'array' => $entries
+        ]);
+    }
 }

@@ -1,0 +1,23 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block title %}Admin LOGS{% endblock %}
+
+{% block body %}
+    <main class="admin-page admin-logs">
+        <div class="admin-header">
+            <a href="/admin/home">Sortir</a>
+        </div>
+        <h1>LOGS</h1>
+
+        <div class="admin-logs-messages-container">
+        {% for row in array|reverse %}
+            <p>
+                <span class="admin-logs-levelName">{{row.level_name}} : </span> 
+                <span class="admin-logs-message">{{row.message}} </span> 
+                <span class="admin-logs-date">- {{row.datetime|date('j F, Y H:i', 'Europe/Rome')}}</span>
+            </p>
+        {% endfor %}
+        </div>
+       
+    </main>
+{% endblock %}

@@ -10,25 +10,27 @@ export default class extends Controller {
     static targets = ['fileInput', 'image'];
 
     initialize() {
-       this.onFileChange.bind(this)
-       this.lastImagePath = this.imageTarget.src
+       this.onFileChange = this.onFileChange.bind(this)
+       this.lastImagePath =  this.imageTarget.src
+       this.image = this.imageTarget 
     }
 
     connect() {
-        this.fileInputTarget.addEventListener("change",(e)=>this.onFileChange(e,this.imageTarget,this.lastImagePath))
+        this.fileInputTarget.addEventListener("change",this.onFileChange)
     }
 
    
     disconnect() {
-       this.fileInputTarget.removeEventListener("change",(e)=>this.onFileChange(e,this.imageTarget,this.lastImagePath))
+       this.fileInputTarget.removeEventListener("change",this.onFileChange)
     }
 
-    onFileChange(e,img,lastPath){
-        const file = e.target.files[0]
+    onFileChange(e){
+        const file = this.image ? e.target.files[0] : null
         if (file) {
-           img.src = URL.createObjectURL(file);
+           this.image.src = URL.createObjectURL(file);
+           this.image.classList.remove('newGallery-img-hidden')
         }else{
-            img.src  = lastPath
+            this.image.src  = this.lastImagePath
         }
     }
 }

@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin_base.html.twig' %}
 
 {% block title %}Admin gallery Add Images{% endblock %}
 
@@ -10,10 +10,11 @@
                 <a href="/admin/galleries/{{name}}">Precedent</a>
             </div>
         </div>
+        <h1>Galerie {{name}}</h1>
        {{form_start(form)}}
         {{form_widget(form)}}
         <div class="gallery-images-container" data-add-images-target="container">
-
+            
         </div>
         <input type="submit" value="Sauvegarder">
        {{form_end(form)}}

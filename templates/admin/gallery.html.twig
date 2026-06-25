@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin_base.html.twig' %}
 
 {% block title %}Admin gallery{% endblock %}
 
@@ -12,7 +12,7 @@
             </div>
             <a href="/admin/gallery/{{galleryName|lower}}/add-images">Ajouter les images</a>
         </div>
-       
+         <h1>Galerie {{galleryName}}</h1>
          <div class="admin-gallery">
             {% if images is defined %}
                 {% for img in images %}
@@ -21,8 +21,16 @@
                         <button data-id='{{img.id}}' data-name="{{img.galleryName}}" class="delete-button">Effacer</button>
                     </div>
                 {% endfor %}
+                    
 
-                {# form to change image position #}
+        {% endif %}
+         </div>
+         {% if images is defined and images is empty %}
+                <p class="text-center font-large">Il n'y a pas d'image</p>
+        {% endif %}
+
+        {% if images is defined %}
+             {# form to change image position #}
                 <div class="hidden">
                     {{form_start(form)}}
                     {{form_end(form)}}
@@ -32,16 +40,8 @@
                 <div class="hidden">
                     {{form_start(deleteForm)}}
                     {{form_end(deleteForm)}}
-                </div>       
-
-                {% if  error is defined and error %}
-                    {{error}}
-                {% endif %}
+                </div>  
         {% endif %}
-         </div>
-       
-        
-    
     </main>
 
 {% endblock %}

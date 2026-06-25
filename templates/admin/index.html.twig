@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin_base.html.twig' %}
 
 {% block title %}Admin Home{% endblock %}
 
@@ -6,6 +6,7 @@
     <main class="admin-page admin-home">
         <div class="admin-header">
             <a href="/admin/logout">Logout</a>
+            <a href="/admin/logs">LOGS</a>
         </div>
         <div class="flex-col justify-center admin-home-links-container">
             <a class="admin-home-link" href="/admin/newProject">Nouveau Projet</a>

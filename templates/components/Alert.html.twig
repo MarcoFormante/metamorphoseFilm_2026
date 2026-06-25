@@ -1,0 +1,31 @@
+
+
+<div class='alert'>
+    <div class="alert-container">
+       
+        {% if messages[0] is not empty   %}
+            <div>
+                {% for message in messages[0]|split("\n") %}
+                    {% if message|trim|split('\n') %}
+                        <p class="alert-error">- {{message}}</p>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            {% elseif messages[1] is not empty %}
+            <div>
+                {% for message in messages[1] %}
+                    <p class="alert-error">- {{message}}</p>
+                {% endfor %}
+            </div>
+
+             {% elseif messages[2] is not empty %}
+              <div>
+                {% for message in messages[2] %}
+                    <p class="alert-success">- {{message}}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+    </div>
+    
+</div>

@@ -16,23 +16,23 @@ return [
         'path' => './assets/app.js',
         'entrypoint' => true,
     ],
-    '@hotwired/stimulus' => [
-        'version' => '3.2.2',
-    ],
     '@symfony/stimulus-bundle' => [
         'path' => './vendor/symfony/stimulus-bundle/assets/dist/loader.js',
+    ],
+    '@hotwired/stimulus' => [
+        'version' => '3.2.2',
     ],
     '@hotwired/turbo' => [
         'version' => '8.0.23',
     ],
     'swiper' => [
-        'version' => '12.1.4',
+        'version' => '12.2.0',
     ],
     'swiper/swiper-bundle.min.js' => [
-        'version' => '12.1.4',
+        'version' => '12.2.0',
     ],
     'swiper/css' => [
-        'version' => '12.1.4',
+        'version' => '12.2.0',
     ],
     'swiper/modules/keyboard' => [
         'version' => '12.2.0',

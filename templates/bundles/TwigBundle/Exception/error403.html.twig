@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+{% block title %}Erreur{% endblock %}
+{% block body %}
+<main class="page-error">
+    <h1>403</h1>
+   
+    {% if exception.message === "project_403" %}
+        <div class="error-message">
+            <p>Ce Projet n'est pas disponible pour le moment</p>
+        </div>
+    {% else %}
+        <div class="error-message">
+            <p>La page demandée n'a pas pu être trouvée.</p>
+        </div>
+    {% endif %}
+    
+    <p>
+        Veuillez vérifier l'URL ou retourner à la <a href="{{ path('app_home') }}">page d'accueil</a>.
+    </p>
+</main>
+
+{% endblock %}

@@ -1,9 +1,11 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin_base.html.twig' %}
 
 {% block title %}Admin new Project{% endblock %}
 
   
 {% block body %}
+   
+    <twig:Alert type="alert" messages='{{messages}}' />
 
     <main data-controller="newProject" class="admin-page admin-form-page">
         <div class="admin-header">
@@ -19,6 +21,7 @@
                         <a href="/admin/home">Precedent</a>
                     </div>
                 {% endif %}
+
             <div class="delete-btn-container">
                 {% if project is defined %}
                     <div>
@@ -61,16 +64,7 @@
          </div>
 
           <input type="submit" value="Submit">
-           {{ form_errors(form) }}
-            {{form_end(form)}}
-
-            
-        {% if errors is defined %}
-            <p> errors:</p>
-            {% for error in errors %}
-                <p>{{error}}</p>
-            {% endfor %}
-        {% endif %}
+        {{form_end(form)}}
         
     </main>
 {% endblock %}
