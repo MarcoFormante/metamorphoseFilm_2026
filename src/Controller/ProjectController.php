@@ -87,6 +87,7 @@ final class ProjectController extends AbstractController
         } catch (\Doctrine\ORM\NoResultException) {
             $prevSlug = null;
         }
+        $cookie = $request->cookies->get('cookie-consent','');
 
         return $this->render('project/index.html.twig', [
             'project' => $project,
@@ -94,7 +95,8 @@ final class ProjectController extends AbstractController
             'staff' => $staff,
             'createdStaff' => $createdStaff ?? [],
             'next' => $nextSlug,
-            'prev' => $prevSlug
+            'prev' => $prevSlug,
+            'cookie' => $cookie
         ],$response);
     }
 }

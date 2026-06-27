@@ -39,25 +39,25 @@
     blockers.forEach(blocker => {
         blocker.addEventListener('click',()=>caricaQuestoVideo(blocker))
     });
-function caricaQuestoVideo(container) {
-  const videoId = container.getAttribute('data-video-id');
+    function caricaQuestoVideo(container) {
+    const videoId = container.getAttribute('data-video-id');
   
-  if (videoId) {
-    container.innerHTML = `
-      <iframe 
-        width="100%" 
-        height="100%" 
-        src="https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1" 
-        frameborder="0" 
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-        allowfullscreen
-        style="position: absolute; top:0; left:0; width:100%; height:100%;">
-      </iframe>`;
-    
-    container.removeAttribute('onclick');
-    container.style.cursor = 'default';
-  }
-}
+    if (videoId) {
+        container.innerHTML = `
+        <iframe 
+            width="100%" 
+            height="100%" 
+            src="https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen
+            style="position: absolute; top:0; left:0; width:100%; height:100%;">
+        </iframe>`;
+        
+        container.removeAttribute('onclick');
+        container.style.cursor = 'default';
+    }
+    }
 </script>
 
 {% endblock %}

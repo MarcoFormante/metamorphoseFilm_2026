@@ -9,35 +9,35 @@ import { Controller } from '@hotwired/stimulus';
 export default class extends Controller {
 
     initialize() {
-        
-    //    this.iframe = this.element.querySelector('iframe')
+        this.videoCover = this.element.querySelector('.video-blocker')
+        this.addRealYTBVideo = this.addRealYTBVideo.bind(this)
     }
 
     connect() {
-
-        //     this.element.querySelector('.showYTVBtn').addEventListener('click',(e)=>{
-        //     const src = this.iframe.dataset.src
-        //     this.iframe.src = src
-        //  })
-        
-         
-         
-        // Called every time the controller is connected to the DOM
-        // (on page load, when it's added to the DOM, moved in the DOM, etc.)
-
-        // Here you can add event listeners on the element or target elements,
-        // add or remove classes, attributes, dispatch custom events, etc.
-        // this.fooTarget.addEventListener('click', this._fooBar)
+        this.videoCover.addEventListener('click',this.addRealYTBVideo)
     }
 
-    // Add custom controller actions here
-    // fooBar() { this.fooTarget.classList.toggle(this.bazClass) }
+    
 
     disconnect() {
-        // Called anytime its element is disconnected from the DOM
-        // (on page change, when it's removed from or moved in the DOM, etc.)
-
-        // Here you should remove all event listeners added in "connect()" 
-        // this.fooTarget.removeEventListener('click', this._fooBar)
+        this.videoCover.removeEventListener('click',this.addRealYTBVideo)
     }
+
+    addRealYTBVideo() {
+        const videoId = this.videoCover.getAttribute('data-video-id');
+    
+        if (videoId) {
+            this.videoCover.innerHTML = `
+            <iframe 
+                width="100%" 
+                height="100%" 
+                src="https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen
+                style="position: absolute; top:0; left:0; width:100%; height:100%;">
+            </iframe>`;
+        }
+    }
+
 }

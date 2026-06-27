@@ -26,10 +26,32 @@
                     {% endfor %}
                 </ul>
             </div>
-             <div class="ytb-video-container">
-                <iframe width="560" height="315" src="{{project.youtubeVideo|replace({'watch?v=' : 'embed/'})|split('&')[0]}}?autoplay=1&mute=1" allowfullscreen data-poster=""></iframe>
-                {# <iframe data-src="{{project.youtubeVideo|replace({'watch?v=' : 'embed/'})|split('&')[0]}}?autoplay=1&mute=1" src="https://i.ytimg.com/vi/{{project.youtubeVideo|replace({'https://www.youtube.com/watch?v=' : ''})|split('&')[0]}}/maxresdefault.jpg" allowfullscreen scrolling="no"></iframe> #}
-                {# <button class="showYTVBtn">CLick</button> #}
+             
+                {% if cookie is defined  %}
+                    {% if cookie == '' or cookie == 'false' %}
+                     {% set videoId = project.youtubeVideo|split('=')[1]|split('&')[0] %}
+                     <div class="ytb-video-container ytb-video-container-no-cookie">
+                            <div class="video-blocker" data-video-id="{{videoId}}">
+                                <img src="https://i.ytimg.com/vi/{{videoId}}/maxresdefault.jpg" alt="image cover {{project.name}}" class="video-cover">
+                                <div class="video-title-wrapper">
+                                    <span class="video-title">{{project.name}}</span>
+                                </div>
+                                <div class="play-btn">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="#ffffff">
+                                        <path d="M8 5v14l11-7z"/>
+                                    </svg>
+                                </div>
+                                <span class="youtube-label">YouTube</span>
+                            </div>
+                        </div>
+                        {% elseif cookie == 'true' %}
+                            <div class="ytb-video-container">
+                                <iframe width="560" height="315" src="{{project.youtubeVideo|replace({'watch?v=' : 'embed/'})|split('&')[0]}}?autoplay=1&mute=1" allowfullscreen data-poster=""></iframe>
+                            </div>
+                        {% endif %}
+                    
+                {% endif %}
+               
             </div>
 
             <div class="project-assets">
@@ -40,16 +62,16 @@
                 </div>
 
                 <div class="project-staff">
-                    <twig:Staffitem title="Production" :staffType="staff?.production"/>
-                    <twig:Staffitem title="Artiste" :staffType="staff?.artists"/>
-                    <twig:Staffitem title="Montage" :staffType="staff?.montage"/>
-                    <twig:Staffitem title="Cadrage" :staffType="staff?.cadrage"/>
-                    <twig:Staffitem title="Pilote de drone" :staffType="staff?.droniste"/>
-                    <twig:Staffitem title="Photographe de plateau" :staffType="staff?.phPlateau"/>
-                    <twig:Staffitem title="Chef Opérateur" :staffType="staff?.decorateurs"/>
+                    <twig:StaffItem title="Production" :staffType="staff?.production"/>
+                    <twig:StaffItem title="Artiste" :staffType="staff?.artists"/>
+                    <twig:StaffItem title="Montage" :staffType="staff?.montage"/>
+                    <twig:StaffItem title="Cadrage" :staffType="staff?.cadrage"/>
+                    <twig:StaffItem title="Pilote de drone" :staffType="staff?.droniste"/>
+                    <twig:StaffItem title="Photographe de plateau" :staffType="staff?.phPlateau"/>
+                    <twig:StaffItem title="Chef Opérateur" :staffType="staff?.decorateurs"/>
                     
                     {% for row in createdStaff %}
-                        <twig:Staffitem :title="row.value1" :staffType="row.value2"/>
+                        <twig:StaffItem :title="row.value1" :staffType="row.value2"/>
                     {% endfor %} 
                 </div>             
             </div>

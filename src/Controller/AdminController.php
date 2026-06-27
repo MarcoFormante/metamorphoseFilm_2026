@@ -64,6 +64,8 @@ final class AdminController extends AbstractController
         $form->handleRequest($request);
         $formErrors = $form->getErrors(true);
 
+        
+
         if ($form->isSubmitted() && $form->isValid()) {
           
                 $lastOrderIndex = $pr->createQueryBuilder('p')
@@ -153,7 +155,6 @@ final class AdminController extends AbstractController
                     ], new Response(null, Response::HTTP_UNPROCESSABLE_ENTITY));
                 }
        }
-       
         return $this->render('admin/newProject.html.twig', [
             'form' => $form,
             'formErrors' => $formErrors 

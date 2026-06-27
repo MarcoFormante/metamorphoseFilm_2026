@@ -55,7 +55,7 @@ class NewProjectType extends AbstractType
                 'required' => $isCreateForm,
                 'constraints' => [
                     new File(
-                        maxSize:'15M',
+                        maxSize:'25M',
                         mimeTypes:['video/mp4'],
                         mimeTypesMessage:'La Video doit etre en MP4',
                         maxSizeMessage:'La video ne doit pas dépasser 10 MB.',
@@ -82,7 +82,7 @@ class NewProjectType extends AbstractType
                 'required' => $isCreateForm,
                 'constraints' => [
                     new Image(
-                        maxSize:'2M',
+                        maxSize:'5M',
                         mimeTypes:['image/jpeg','image/png','image/webp'],
                         mimeTypesMessage:"L`image-{$i} doit etre en JPEG,PNG ou WEBP et etre moins de 2MB",
                         maxSizeMessage: "L'image-{$i} ne doit pas dépasser 2 MB.",

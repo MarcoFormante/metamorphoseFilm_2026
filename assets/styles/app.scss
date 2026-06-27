@@ -551,11 +551,20 @@ form[name=new_project]{
         background-color: black;
         border: 1px solid black;
         max-width: 90vw;
-        max-height: min(50vw, 500px);
+        max-height: min(50vw, 600px);
         overflow: hidden;
         display: flex;
         justify-content: center;
-        height: 500px;
+        height: 600px;
+
+        &-no-cookie{
+            display: block;
+
+            .video-blocker{
+                width: 100%;
+                height: 100%;
+            }
+        }
 
         iframe{
             height: 100%;
@@ -1921,3 +1930,76 @@ body{
         cursor: pointer;
     }
 }
+
+
+  .cookie-icon-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 32px;
+    height: 32px;
+    color: #fff;
+    cursor: pointer;
+    z-index: 100;
+  }
+
+  .cookie-banner{
+    background-color: black;
+    width: 300px;
+    padding: 20px;
+    height: 380px;
+    position: fixed;
+    bottom: 35px;
+    right: 55px;
+    transition: transform 0.3s;
+    transform-origin: 100% 100%;
+    z-index: 10;
+    border-radius: 30px 30px 0 30px;
+    border: 3px solid $primary-color;
+    box-shadow: 0 0 30px $primary-color;
+
+    &-hidden{
+        transform: scale(0)
+    }
+
+    .cookie-banner-text{
+        @extend .poppins-light;
+        color: #fff;
+
+        a{
+            font-weight: bold;
+            color: #fff;
+        }
+
+        &-title{
+            font-size: 18px;
+            font-weight: 700;
+            @extend .poppins-medium;
+        }
+    }
+  }
+
+  .cookie-btns-container{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 30px;
+  }
+
+
+  .cookie-action-btn{
+    appearance: none;
+    padding: 10px 30px;
+    width: fit-content;
+    border: 2px solid black;
+    border-radius: 50px;
+    background-color: #fff;
+    @extend .poppins-medium;
+    cursor: pointer;
+    transition: all 0.3s;
+
+    &:hover{
+        background-color: #000000;
+        color: $primary-color;
+    }
+  }
