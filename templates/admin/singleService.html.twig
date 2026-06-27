@@ -1,0 +1,60 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block title %}Admin single Service{% endblock %}
+
+{% block body %}
+    <main class="admin-page single-services" data-controller="singleService">
+        <div class="admin-header">
+            <div class="flex-row gap-10">
+                <a href="/admin/logout">Logout</a>
+                <a href="/admin/services">Precedent</a>
+            </div>
+            <a href="/admin/services/{{serviceName}}/new">Creer une video</a>
+        </div>
+        <h1>{{serviceName}}</h1>
+        <br/>
+        {% if videos is defined %}
+            {% if videos is empty %}
+                <p>Y a pas de videos</p>
+                {% else %}
+                <div class="videos-container {{videos|length % 2 === 1 ? 'videos-container-odd' : null}}" >
+                    {% for video in videos %}
+                      {% set videoId = video.videoLink|split('=')[1]|split('&')[0] %}
+                        <div data-id="{{video.id}}" data-position="{{video.position}}" draggable="true" class="video-blocker {{ video.isShort ? 'video-blocker-short' : '' }}" data-video-id="{{videoId}}" onclick="caricaQuestoVideo(this)">
+                            <img src="https://i.ytimg.com/vi/{{videoId}}/hqdefault.jpg" alt="Copertina Video" class="video-cover">
+                            {% if video.isShort %}
+                                <span class="isShort-text">SHORT</span>
+                            {% endif %}
+                            <div class="video-blocker-actions-container">
+                                <a href="/admin/services/{{video.id}}/edit">Modifier</a>
+                                <button class="delete-btn"  data-id="{{video.id}}">Effacer</button>
+                            </div>
+                            <div class="video-title-wrapper">
+                                <span class="video-title">{{video.title}}</span>
+                            </div>
+                            <div class="play-btn">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="#ffffff">
+                                    <path d="M8 5v14l11-7z"/>
+                                </svg>
+                            </div>
+                            <span class="youtube-label">YouTube</span>
+                        </div>
+                {% endfor %}
+                </div>
+            {% endif %}
+        {% endif %}
+        <div class="hidden">
+            {{form_start(positionForm)}}
+            {{form_end(positionForm)}}
+        </div>
+
+         <div class="hidden">
+            {{form_start(deleteForm)}}
+            <input class="deleteform-delete-btn" type="submit" value="deleteVideo">
+            {{form_end(deleteForm)}}
+        </div>
+    
+    </main>
+
+   
+{% endblock %}

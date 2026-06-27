@@ -3,7 +3,7 @@
 {% block title %}{{project.name}}{% endblock %}
 
 {% block body %}
-    <main class="single-project">
+    <main class="single-project" data-controller="singleProject">
         <article>
             <div>
                 {% if next %}
@@ -26,9 +26,10 @@
                     {% endfor %}
                 </ul>
             </div>
-
              <div class="ytb-video-container">
-                <iframe width="560" height="315" src="{{project.youtubeVideo|replace({'watch?v=' : 'embed/'})}}?autoplay=1&mute=1" allowfullscreen></iframe>
+                <iframe width="560" height="315" src="{{project.youtubeVideo|replace({'watch?v=' : 'embed/'})|split('&')[0]}}?autoplay=1&mute=1" allowfullscreen data-poster=""></iframe>
+                {# <iframe data-src="{{project.youtubeVideo|replace({'watch?v=' : 'embed/'})|split('&')[0]}}?autoplay=1&mute=1" src="https://i.ytimg.com/vi/{{project.youtubeVideo|replace({'https://www.youtube.com/watch?v=' : ''})|split('&')[0]}}/maxresdefault.jpg" allowfullscreen scrolling="no"></iframe> #}
+                {# <button class="showYTVBtn">CLick</button> #}
             </div>
 
             <div class="project-assets">

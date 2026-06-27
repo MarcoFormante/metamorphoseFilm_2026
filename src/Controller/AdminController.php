@@ -8,21 +8,26 @@ use App\Entity\GalleryImages;
 use App\Entity\Project;
 use App\Entity\ProjectImages;
 use App\Entity\ProjectStaff;
+use App\Entity\ServiceVideo;
 use App\Form\AddGalleryImagesType;
 use App\Form\CreateGalleryType;
 use App\Form\DeleteImageType;
 use App\Form\DeleteProjectType;
+use App\Form\DeleteServiceVideoType;
 use App\Form\ItemPositionType;
 use App\Form\NewProjectType;
+use App\Form\ServiceVideoType;
 use App\Kernel;
 use App\Repository\GalleryImagesRepository;
 use App\Repository\GalleryRepository;
 use App\Repository\ProjectImagesRepository;
 use App\Repository\ProjectRepository;
+use App\Repository\ServiceVideoRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -66,7 +71,6 @@ final class AdminController extends AbstractController
                 $query = $lastOrderIndex->getQuery();
                 $newOrderIndex = ($query->getSingleScalarResult() ?? 0) + 1;
 
-              
                 if ($form->has('isActive')) {
                     $project->setActive((bool)$form->get("isActive")->getData());
                 }
@@ -176,9 +180,9 @@ final class AdminController extends AbstractController
             if ($p1 && $p2 && $P1Position && $P2Position) {
                 $p1->setOrderIndex($P1Position);
                 $p2->setOrderIndex($P2Position);
-
                 try {
                     $em->flush();
+                    $this->addFlash('success','Position modifiée');
                 } catch (\Throwable $th) {
                     $this->addFlash('error',$th->getMessage());
                 }
@@ -317,7 +321,7 @@ final class AdminController extends AbstractController
                 }
 
                 $this->addFlash('success',"Projet Modifié");
-                return $this->redirectToRoute('app_admin_edit_project',['id' => $p->getId()]);
+                return $this->redirectToRoute('app_admin_projects');
 
             } catch (\Throwable $th) {
                 if($th->getCode() === 1062){
@@ -491,8 +495,7 @@ final class AdminController extends AbstractController
                 ],new Response(null,500));
             }
             $this->addFlash('success',"Galerie Créé");
-
-            return $this->redirectToRoute('app_admin_newGallery');
+            return $this->redirectToRoute('app_admin_galleries');
         }
 
         return $this->render('admin/newGallery.html.twig',[
@@ -667,4 +670,129 @@ final class AdminController extends AbstractController
             'array' => $entries
         ]);
     }
+
+
+    //Services
+    #[Route('/admin/services', name: 'app_admin_services')]
+    public function services(ServiceVideoRepository $sv,Request $request,EntityManagerInterface $em): Response
+    {
+        return $this->render('admin/services.html.twig', [
+          
+        ]);
+    }
+
+    #[Route('/admin/services/{name}', name: 'app_admin_single_services')]
+    public function singleService(string $name,ServiceVideoRepository $sv,Request $request,EntityManagerInterface $em): Response
+    {
+        $videos = $sv->findBy(['category' => $name],['position' => "ASC"]);
+        $deleteForm = $this->createForm(DeleteServiceVideoType::class);
+        $form = $this->createForm(ItemPositionType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            
+            $P1ID = $form->get("item1ID")->getData();
+            $P1Position = $form->get("item1Position")->getData();
+            $P2ID = $form->get("item2ID")->getData();
+            $P2Position = $form->get("item2Position")->getData();
+
+            $p1 = $sv->findOneBy(['id'=>$P1ID]);
+            $p2 = $sv->findOneBy(['id'=>$P2ID]);
+
+            if ($p1 && $p2 && $P1Position && $P2Position) {
+                $p1->setPosition($P1Position);
+                $p2->setPosition($P2Position);
+                try {
+                    $em->flush();
+                    $this->addFlash('success','Position modifiée');
+                } catch (\Throwable $th) {
+                    $this->addFlash('error',$th->getMessage());
+                }
+            }else{
+                $this->addFlash('error',"Erreur pendant la modification: Variable Position Manquante");
+            }
+            return $this->redirectToRoute('app_admin_single_services',['name' => $name]);
+        }
+
+        return $this->render('admin/singleService.html.twig', [
+            'videos' => $videos,
+            'positionForm' => $form,
+            'serviceName' => $name,
+            'deleteForm' => $deleteForm
+        ]);
+    }
+
+
+     #[Route('/admin/services/{serviceName}/new', name: 'app_admin_services_new')]
+    public function newService(string $serviceName, Request $request, EntityManagerInterface $em,ServiceVideoRepository $sv): Response
+    {   
+        $video = new ServiceVideo();
+        $form = $this->createForm(ServiceVideoType::class,$video);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $lastVideo = $sv->findOneBy(['category' => $serviceName],['position' => 'DESC']);
+            $lastPosition = $lastVideo ?  $lastVideo->getPosition() : 0;
+            $video->setIsShort((bool)$form->get('isShort')->getData());
+            $video->setPosition($lastPosition + 1);
+            $em->persist($video);
+
+            try {
+                 $em->flush();
+                 $this->addFlash('success','Créé');
+                 return $this->redirectToRoute('app_admin_services_new',['serviceName' => $serviceName]);
+            } catch (\Throwable $th) {
+                $this->addFlash('error',$th->getMessage());
+                 return $this->render('admin/newService.html.twig', [
+                    'form' => $form,
+                    'serviceName' => $serviceName
+                ],new Response(null,Response::HTTP_UNPROCESSABLE_ENTITY));
+            }
+        }
+       
+        return $this->render('admin/newService.html.twig', [
+            'form' => $form,
+            'serviceName' => $serviceName
+        ]);
+    }
+
+
+    #[Route('/admin/services/{id}/edit', name: 'app_admin_services_editVideo',methods:['GET','POST'])]
+     public function editServiceVideo(?ServiceVideo $video, EntityManagerInterface $em, Request $request):Response
+     {
+        if (!$video) {
+            return $this->redirectToRoute('app_admin_services');
+        }
+            $form = $this->createForm(ServiceVideoType::class,$video);
+            $form->handleRequest($request);
+            $category = $video->getCategory();
+            if ($form->isSubmitted() && $form->isValid()) {
+                $em->flush();
+                $this->addFlash('success','Video Modifié');
+                return $this->redirectToRoute('app_admin_single_services',['name' => $category]);
+            }
+           
+            return $this->render('admin/newService.html.twig', [
+                'form' => $form,
+                'serviceName' => $category
+            ]);
+     }
+
+    #[Route('/admin/services/{id}/delete', name: 'app_admin_services_deleteVideo',methods:['POST'])]
+     public function deleteServiceVideo(?ServiceVideo $video, EntityManagerInterface $em, Request $request):RedirectResponse
+     {
+        if (!$video) {
+            return $this->redirectToRoute('app_admin_services');
+        }
+            $form = $this->createForm(DeleteServiceVideoType::class);
+            $form->handleRequest($request);
+            
+            if ($form->isSubmitted() && $form->isValid()) {
+                $em->remove($video);
+                $em->flush();
+                $this->addFlash('success', 'Video effacée.');
+            }
+            $category = $video->getCategory();
+        return $this->redirectToRoute('app_admin_single_services',['name' => $category]);
+     }
 }

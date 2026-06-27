@@ -3,5 +3,67 @@
 {% block title %}À propos{% endblock %}
 
 {% block body %}
+<main class="about main-padding title-mobile-center" >
+    <twig:pageTitle title1="À Propos" title2="" />
+    <p class="about-desc">Tout a commencé avec 3 esprits créatifs et passionnés, qui ont uni leurs forces pour donner naissance à une aventure unique.</p>
 
+    <div class="about-person-cards">
+        <div class="about-person-container">
+            <a aria-label="Profile instagram de Thibaud RICHARD" href="https://www.instagram.com/thibaud.richard/">
+                <div class="about-person">
+                    <figure>
+                        <img src="\static\images\thibaud-metamorphose.webp" alt="Thibaud RICHARD - Metamorphose film">
+                    </figure>
+                    <div>
+                        <p class="person-name person-text">Thibaud RICHARD</p>
+                        <p ><pre class="person-job person-text">RÉALISATION    CADRAGE    MONTAGE    EFFETS SPECIAUX</pre></p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="about-person-container about-person-container-reverse">
+            <a aria-label="Profile instagram de Napy" href="https://www.instagram.com/thibaud.richard/">
+                <div class="about-person">
+                    <figure>
+                        <img src="\static\images\napy-metamorphose-web.webp" alt="Napy - Metamorphose film">
+                    </figure>
+                    <div>
+                        <p class="person-name person-text">NAPY</p>
+                        <p ><pre class="person-job person-text">RÉALISATION    PHOTOGRAPHIE    ÉTALONNAGE    PILOTAGE DRONE  </pre></p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+
+        <div class="about-person-container">
+            <a aria-label="Profile instagram de Vincent PAULY" href="https://www.instagram.com/thibaud.richard/">
+                <div class="about-person">
+                    <figure>
+                        <img src="\static\images\vincent-metamorphose.webp" alt="Vincent PAULY - Metamorphose film">
+                    </figure>
+                    <div>
+                        <p class="person-name person-text">Vincent PAULY</p>
+                        <p ><pre class="person-job person-text">RÉALISATION    CADRAGE    MONTAGE    STORYBOARD</pre></p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <h2 class="bigTitle">Contact</h2>
+    <div class="about-contact-desc-container">
+        <p class="about-contact-desc"> Si vous souhaitez passer une commande, établir un partenariat, formuler une demande ou simplement obtenir des informations ?</p>
+        <p class="about-contact-desc">Metamorphose est à votre service afin de répondre à votre demande dans les plus brefs délais !</p>
+    </div>
+    <div class="about-contact-container">
+        <ul>
+            <li><a href="https://www.instagram.com/metamorphosefilm/" class="about-contact-insta">Instagram {% include "_partials/instagram.html.twig" %}</a></li>
+            <li><a href="mailto:metamorphoseproduction@gmail.com" class="about-contact-email">Email {% include "_partials/email.html.twig" %}</a></li>
+            <li><a href="https://www.linkedin.com/company/metamorphose-film/" class="about-contact-linkedin">Linkedin {% include "_partials/linkedin.html.twig" %}</a></li>
+        </ul>
+    </div>
+</main>
 {% endblock %}
+

@@ -1,0 +1,21 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block title %}Admin services{% endblock %}
+
+{% block body %}
+    <main class="admin-page admin-services" data-controller="singleService">
+        <div class="admin-header">
+            <div class="flex-row gap-10">
+                <a href="/admin/logout">Logout</a>
+                <a href="/admin/home">Precedent</a>
+            </div>
+        </div>
+         <div class="admin-services-container">
+            <a href="/admin/services/publicitaire">Publicitaire</a>
+            <a href="/admin/services/corporate">Corporate</a>
+            <a href="/admin/services/evenementiel">Événementiel</a>
+        </div>
+    </main>
+
+   
+{% endblock %}

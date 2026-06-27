@@ -5,6 +5,9 @@ export default class extends Controller {
         const projects = this.element.querySelectorAll("a");
         let draggedProject = null
         let droppedProject = null
+       
+       
+        
         
         projects.forEach(p => {
             p.addEventListener("dragstart",(e)=>{

@@ -2,9 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\Project;
 use App\Entity\ProjectStaff;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -15,12 +13,14 @@ class ProjectStaffType extends AbstractType
     {
         $builder
             ->add('production')
-            ->add('artists')
+            ->add('artists',null,['label' => 'Artistes'])
             ->add('montage')
             ->add('cadrage')
-            ->add('droniste')
+            ->add('droniste',null,['label' =>'Pilote de drone'])
             ->add('ph_plateau')
-            ->add('decorateurs')
+            ->add('decorateurs',null,[
+                'label' => 'Chef Opérateur'
+            ])
         ;
     }
 

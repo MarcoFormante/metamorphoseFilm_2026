@@ -1,0 +1,22 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block title %}Admin new Service{% endblock %}
+
+{% block body %}
+    <main class="admin-page admin-services">
+        <div class="admin-header">
+            <div class="flex-row gap-10">
+                <a href="/admin/logout">Logout</a>
+                <a href="/admin/services/{{serviceName}}">Precedent</a>
+            </div>
+        </div>
+        <h1>{{serviceName|capitalize}}</h1>
+        <br/>
+       {{form_start(form)}}
+        {{form_widget(form.category,{'attr':{'value':serviceName}})}}
+       {{form_widget(form)}}
+      
+       <input type="submit" value="Créer">
+       {{form_end(form)}}
+    </main>
+{% endblock %}

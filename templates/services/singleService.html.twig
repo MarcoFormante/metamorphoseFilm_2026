@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Service {{serviceName}}{% endblock %}
+
+{% block body %}
+<main class="main-padding single-services" >
+    <twig:backBtn href="/services" />
+    <twig:pageTitle title1="Services" title2="{{serviceName}}" />
+   
+     {% if videos is defined %}
+            {% if videos is empty %}
+                <p>Y a pas de videos</p>
+                {% else %}
+                <div class="videos-container {{videos|length % 2 === 1 ? 'videos-container-odd' : null}}" >
+                    {% for video in videos %}
+                       {% set videoId = video.videoLink|split('=')[1]|split('&')[0] %}
+                        <div  class="video-blocker {{ video.isShort ? 'video-blocker-short' : '' }}" data-video-id="{{videoId}}" onclick="caricaQuestoVideo(this)">
+                            <img src="https://i.ytimg.com/vi/{{videoId}}/maxresdefault.jpg" alt="Copertina Video" class="video-cover">
+                            <div class="video-title-wrapper">
+                                <span class="video-title">{{video.title}}</span>
+                            </div>
+                            <div class="play-btn">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="#ffffff">
+                                    <path d="M8 5v14l11-7z"/>
+                                </svg>
+                            </div>
+                            <span class="youtube-label">YouTube</span>
+                        </div>
+                {% endfor %}
+                </div>
+            {% endif %}
+        {% endif %}
+</main>
+
+<script>
+
+    const blockers = document.querySelectorAll('.video-blocker');
+
+    blockers.forEach(blocker => {
+        blocker.addEventListener('click',()=>caricaQuestoVideo(blocker))
+    });
+function caricaQuestoVideo(container) {
+  const videoId = container.getAttribute('data-video-id');
+  
+  if (videoId) {
+    container.innerHTML = `
+      <iframe 
+        width="100%" 
+        height="100%" 
+        src="https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1" 
+        frameborder="0" 
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+        allowfullscreen
+        style="position: absolute; top:0; left:0; width:100%; height:100%;">
+      </iframe>`;
+    
+    container.removeAttribute('onclick');
+    container.style.cursor = 'default';
+  }
+}
+</script>
+
+{% endblock %}
+ 

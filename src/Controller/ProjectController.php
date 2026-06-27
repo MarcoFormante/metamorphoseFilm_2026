@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Repository\DeletedRepository;
 use App\Repository\ProjectRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Routing\Attribute\Route;
@@ -12,8 +13,11 @@ use Symfony\Component\Routing\Attribute\Route;
 final class ProjectController extends AbstractController
 {
     #[Route('/projet/{slug}', name: 'app_project')]
-    public function index(string $slug, ProjectRepository $repository,DeletedRepository $dr): Response
+    public function index(string $slug, ProjectRepository $repository,DeletedRepository $dr,Request $request): Response
     {
+
+        
+        
         $project = $repository->findOneBy(['slug' => $slug]);
 
 
@@ -31,6 +35,18 @@ final class ProjectController extends AbstractController
             throw new HttpException(404,"project_404");
         }
 
+        $etagVersion = $slug . '_' . $project->getUpdatedAt()->getTimestamp();
+        $etag = md5($etagVersion);
+
+        $response = new Response();
+        $response->setEtag($etag);
+        $response->setPublic();
+        $response->setMaxAge(3600);
+
+
+        if ($response->isNotModified($request)) {
+            return $response;
+        }
 
 
         $images = $project->getProjectImages();
@@ -79,7 +95,7 @@ final class ProjectController extends AbstractController
             'createdStaff' => $createdStaff ?? [],
             'next' => $nextSlug,
             'prev' => $prevSlug
-        ]);
+        ],$response);
     }
 }
 

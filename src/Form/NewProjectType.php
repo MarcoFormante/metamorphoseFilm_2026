@@ -29,15 +29,33 @@ class NewProjectType extends AbstractType
                 'mapped' => false,
                 'required' => false,
                 'data' => $options['data'] ? $options['data']->isActive() : false,
+                'label' => 'Active'
             ])
-            ->add('name')
-            ->add('youtube_video')
+            ->add('name',null,[
+                'label' => 'Nom du projet'
+            ])
+            ->add('abrName',null,[
+                'label' => 'Nom pour petits ecrans'
+            ])
+            ->add('slug',null,[
+                'label' => 'URL-(SLUG)'
+            ])
+            ->add('made_by',null,[
+                'label' => 'Realisé par'
+            ])
+            ->add('youtube_video',null,[
+                'label' => 'YouTube Link'
+            ])
+            ->add('collab_with',null,[
+                'required' =>true,
+                'label' =>'Collab avec'
+            ])
             ->add('background_video',FileType::class,[
                 'mapped' => false,
                 'required' => $isCreateForm,
                 'constraints' => [
                     new File(
-                        maxSize:'10M',
+                        maxSize:'15M',
                         mimeTypes:['video/mp4'],
                         mimeTypesMessage:'La Video doit etre en MP4',
                         maxSizeMessage:'La video ne doit pas dépasser 10 MB.',
@@ -50,22 +68,15 @@ class NewProjectType extends AbstractType
                    
                 'attr' => [
                     'accept' => 'video/mp4',
-                    'class' =>'inpt-bg-video',
+                    'class' =>'inpt-bg-video line-bottom',
                     'name' => "backgroundVideo",
                     ( !$isCreateForm ? 'data-last' : "create") => !$isCreateForm ? $project->getBackgroundVideo() : "true"
                 ]
             ])
-            ->add('made_by')
-            ->add('collab_with',null,[
-                'required' =>true
-            ])
-           
-            ->add('abrName')
-            ->add('slug')
         ;
         
-
         for ($i=1; $i <= 6 ; $i++) { 
+            $lineBottomClass = $i === 6 ? 'line-bottom' : '' ;
             $builder->add("image" . $i ,FileType::class,[
                 'mapped' => false,
                 'required' => $isCreateForm,
@@ -84,13 +95,13 @@ class NewProjectType extends AbstractType
                 ],
                 'attr' => [
                     'accept' => 'image/jpeg, image/png, image/webp',
-                    'class' => 'inpt-img',
-                   ( !$isCreateForm ? 'data-last' : "create") => !$isCreateForm ? $images[$i]?->getSrc() : "true"
+                    'class' => "inpt-img {$lineBottomClass}",
+                   ( !$isCreateForm ? 'data-last' : "create") => !$isCreateForm ? $images[$i - 1]?->getSrc() : "true"
                 ]
             ]);
             if (!$isCreateForm) {
-                $builder->add("lastImage" . $i + 1,HiddenType::class,[
-                    'data' => $images[$i] ? $images[$i]->getSrc() : "",
+                $builder->add("lastImage" . $i ,HiddenType::class,[
+                    'data' => $images[$i - 1] ? $images[$i - 1]->getSrc() : "",
                     'mapped' => false,
                     'attr' => ['hidden' => true,'class' => 'lastImageInput']
                 ]);

@@ -12,12 +12,19 @@
         </div>
             
         <div class="admin_projects_container">
-            {% if projects %}
+            {% if projects is defined %}
                 {% for project in projects %}
+                <div>
                     <a href="/admin/projects/{{project.id}}" draggable="true" data-position="{{project.orderIndex}}" data-id="{{project.id}}" data-isActive="{{project.active}}">{{project.name}}</a>
+                </div>
                 {% endfor %}
             {% endif %}
         </div>
+
+        {% if projects is defined and projects is empty %}
+            <p class="text-center font-large">Il n'y a pas de Projet</p>
+            <a class="text-center font-large block text-primary" href="/admin/newProject">Créez un nouveau Projet</a>
+        {% endif %}
       
 
         <div class="hidden">

@@ -38,7 +38,7 @@
         {{form_start(form)}}
         {{form_widget(form)}}
        
-         <button class="add_staff" type="button">AJOUTER</button>
+       
          
          <div class="new_staff_container">
             
@@ -62,8 +62,8 @@
             {% endif %}
                    
          </div>
-
-          <input type="submit" value="Submit">
+           <button class="add_staff" type="button">AJOUTER AUTRE STAFF</button>
+          <input type="submit" value="{{project is defined ? 'Modifier' : 'Créer'}} le projet">
         {{form_end(form)}}
         
     </main>

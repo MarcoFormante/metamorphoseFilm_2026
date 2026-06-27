@@ -12,7 +12,7 @@ use Symfony\UX\Turbo\TurboBundle;
 final class HomeController extends AbstractController
 {
     #[Route('/', name: 'app_home')]
-    public function index(ProjectRepository $projectRepository,Request $request,): Response
+    public function index(ProjectRepository $projectRepository,Request $request): Response
     {
       
         $count = $projectRepository->count([]);
