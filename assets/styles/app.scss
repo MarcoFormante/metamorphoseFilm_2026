@@ -976,7 +976,7 @@ form{
             display: block;
             appearance: none;
             border-radius: 50%;
-            border: 1px solid #fff;
+            border: 3px solid #fff;
             width: 30px;
             height: 30px;
             background: transparent;
@@ -986,6 +986,12 @@ form{
             align-items: center;
             justify-content: center;
             cursor: pointer;
+
+            &:hover{
+                background-color: #fff;
+                color: #000000;
+                font-weight: 600;
+            }
 
             &-right{
                 right: 2%;
@@ -1002,14 +1008,13 @@ form{
             top: 2%;
             font-size: medium;
             width: 20px;
-            background-color: $primary-color;
             border: none;
             height: 20px;
             cursor: pointer;
-            color: #fff;
             border-radius: 25px;
             @extend .poppins-bold;
             line-height: 0;
+            transform: scale(1.2);
         }
     }
 }
@@ -1118,7 +1123,7 @@ h1.bigTitle{
             border: 3px solid white;
             height: clamp(300px, 20vw, 400px);
             width: 100%;
-            transition: background-color .3s ease-in-out;
+            transition: all .2s ease-in-out,;
             color: #fff;
 
             @media screen and (max-width:1024px) {
@@ -1147,7 +1152,8 @@ h1.bigTitle{
             }
 
             &:hover{
-                background-color: #fff;
+                // background-color: #fff;
+                box-shadow:  0px 0px 30px #fff;
                 
                 a{
                     color: $primary-color;
@@ -1261,12 +1267,11 @@ h1.bigTitle{
 
                     h4{
                         @extend .poppins-bold;
-                        font-size: 24px;
                         transition: color 0.3s;
-                        font-size: clamp(.5em, 1.5vw, 24px);
+                        font-size: clamp(20px, 1.5vw, 24px);
 
                         @media screen and (max-width:1024px) {
-                            font-size: 18px;
+                            font-size: 24px;
                         }
                     }      
                  }
@@ -1466,9 +1471,7 @@ main.page-error{
         color: red;
         @extend .poppins-semibold;
     }
-    .admin-logs-message{
-
-    }
+   
     .admin-logs-date{
         color: rgb(80, 80, 226);
         @extend .poppins-semibold;
@@ -1537,7 +1540,8 @@ main.page-error{
     .about-contact-desc{
         font-size: clamp(14px, 2vw, 18px);
         margin-bottom: 0;
-         @media screen and (max-width: 1024px) {
+
+        @media screen and (max-width: 1024px) {
             padding: 0;
         }
     }
@@ -1622,6 +1626,10 @@ main.page-error{
             gap: 24px;
             justify-content: center;
             align-items: center;
+
+            @media screen and (max-width:1024px) {
+                flex-direction: column;
+            }
         }
         
 
@@ -1629,8 +1637,17 @@ main.page-error{
             list-style: none;
             border: 3px solid  #fff;
             border-radius: 50px;
-            min-width: 350px;
+            width: 350px;
             transition: background 0.3s;
+            transform: scale(0.9);
+
+            @media screen and (max-width:500px) {
+                transform: scale(0.8);
+            }
+
+            @media screen and (max-width:1024px) {
+                width: 300px;
+            }
 
             svg{
                 &.stroke-change-on-hover path,rect,circle{
@@ -1674,6 +1691,14 @@ main.page-error{
             justify-content:center;
             gap: 16px;
             transition: color 0.3s;
+
+            @media screen and (max-width:1024px) {
+                justify-content: space-between;
+                text-align: center;
+            }
+
+           
+
         }
     }
 }

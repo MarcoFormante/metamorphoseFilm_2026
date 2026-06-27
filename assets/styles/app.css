@@ -864,7 +864,7 @@ form select {
      -moz-appearance: none;
           appearance: none;
   border-radius: 50%;
-  border: 1px solid #fff;
+  border: 3px solid #fff;
   width: 30px;
   height: 30px;
   background: transparent;
@@ -873,6 +873,11 @@ form select {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+}
+.gallery-images .show-gallery .show-gallery-btn:hover {
+  background-color: #fff;
+  color: #000000;
+  font-weight: 600;
 }
 .gallery-images .show-gallery .show-gallery-btn-right {
   right: 2%;
@@ -886,13 +891,12 @@ form select {
   top: 2%;
   font-size: medium;
   width: 20px;
-  background-color: #f13900;
   border: none;
   height: 20px;
   cursor: pointer;
-  color: #fff;
   border-radius: 25px;
   line-height: 0;
+  transform: scale(1.2);
 }
 
 body:has(.show-gallery-on) {
@@ -983,7 +987,7 @@ h1.bigTitle .title2 {
   border: 3px solid white;
   height: clamp(300px, 20vw, 400px);
   width: 100%;
-  transition: background-color 0.3s ease-in-out;
+  transition: all 0.2s ease-in-out;
   color: #fff;
 }
 @media screen and (max-width: 1024px) {
@@ -1011,7 +1015,7 @@ h1.bigTitle .title2 {
   }
 }
 .services ul.services-cards-projects-section li:hover {
-  background-color: #fff;
+  box-shadow: 0px 0px 30px #fff;
 }
 .services ul.services-cards-projects-section li:hover a {
   color: #f13900;
@@ -1116,13 +1120,12 @@ h1.bigTitle .title2 {
   color: #f13900;
 }
 .services ul.services-cards-projects-realization li.services-card-container button .card-front h4 {
-  font-size: 24px;
   transition: color 0.3s;
-  font-size: clamp(0.5em, 1.5vw, 24px);
+  font-size: clamp(20px, 1.5vw, 24px);
 }
 @media screen and (max-width: 1024px) {
   .services ul.services-cards-projects-realization li.services-card-container button .card-front h4 {
-    font-size: 18px;
+    font-size: 24px;
   }
 }
 .services ul.services-cards-projects-realization li.services-card-container button .card-back {
@@ -1406,12 +1409,28 @@ main.page-error a {
   justify-content: center;
   align-items: center;
 }
+@media screen and (max-width: 1024px) {
+  .about .about-contact-container ul {
+    flex-direction: column;
+  }
+}
 .about .about-contact-container li {
   list-style: none;
   border: 3px solid #fff;
   border-radius: 50px;
-  min-width: 350px;
+  width: 350px;
   transition: background 0.3s;
+  transform: scale(0.9);
+}
+@media screen and (max-width: 500px) {
+  .about .about-contact-container li {
+    transform: scale(0.8);
+  }
+}
+@media screen and (max-width: 1024px) {
+  .about .about-contact-container li {
+    width: 300px;
+  }
 }
 .about .about-contact-container li svg.stroke-change-on-hover path, .about .about-contact-container li svg rect, .about .about-contact-container li svg circle {
   transition: all 0.3s;
@@ -1442,6 +1461,12 @@ main.page-error a {
   justify-content: center;
   gap: 16px;
   transition: color 0.3s;
+}
+@media screen and (max-width: 1024px) {
+  .about .about-contact-container a {
+    justify-content: space-between;
+    text-align: center;
+  }
 }
 
 body {
