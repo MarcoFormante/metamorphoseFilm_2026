@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Repository\DeletedRepository;
 use App\Repository\ProjectRepository;
+use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,12 +16,10 @@ final class ProjectController extends AbstractController
     #[Route('/projet/{slug}', name: 'app_project')]
     public function index(string $slug, ProjectRepository $repository,DeletedRepository $dr,Request $request): Response
     {
-
-        
         
         $project = $repository->findOneBy(['slug' => $slug]);
-
-
+        $cookie = $request->cookies->get('cookie-consent','');
+    
         if ($project && !$project->isActive()) {
             throw new HttpException(403,"project_403");
         }
@@ -35,14 +34,16 @@ final class ProjectController extends AbstractController
             throw new HttpException(404,"project_404");
         }
 
-        $etagVersion = $slug . '_' . $project->getUpdatedAt()->getTimestamp();
+        
+
+        $etagVersion = $slug . '_' . $project->getUpdatedAt()->getTimestamp() . $cookie ;
         $etag = md5($etagVersion);
 
         $response = new Response();
         $response->setEtag($etag);
-        $response->setPublic();
+        $response->setPrivate();
         $response->setMaxAge(3600);
-
+        $response->setVary('Cookie');
 
         if ($response->isNotModified($request)) {
             return $response;
@@ -87,7 +88,7 @@ final class ProjectController extends AbstractController
         } catch (\Doctrine\ORM\NoResultException) {
             $prevSlug = null;
         }
-        $cookie = $request->cookies->get('cookie-consent','');
+      
 
         return $this->render('project/index.html.twig', [
             'project' => $project,

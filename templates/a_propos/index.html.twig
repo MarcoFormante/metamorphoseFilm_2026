@@ -7,7 +7,7 @@
     <twig:pageTitle title1="À Propos" title2="" />
     <p class="about-desc">Tout a commencé avec 3 esprits créatifs et passionnés, qui ont uni leurs forces pour donner naissance à une aventure unique.</p>
 
-    <div class="about-person-cards">
+    <div class="about-person-cards" data-controller="cards">
         <div class="about-person-container">
             <a aria-label="Profile instagram de Thibaud RICHARD" href="https://www.instagram.com/thibaud.richard/">
                 <div class="about-person">
@@ -16,11 +16,27 @@
                     </figure>
                     <div>
                         <p class="person-name person-text">Thibaud RICHARD</p>
-                        <p ><pre class="person-job person-text">RÉALISATION    CADRAGE    MONTAGE    EFFETS SPECIAUX</pre></p>
+                        <ul class="person-job-list">
+                            <li class="person-job person-text">
+                                RÉALISATION 
+                            </li>
+                            <li class="person-job person-text">
+                                 CADRAGE 
+                            </li>
+                            <li class="person-job person-text">
+                                MONTAGE 
+                            </li>
+                            <li class="person-job person-text">
+                                EFFETS SPECIAUX 
+                            </li>
+                           
+                        </ul> 
                     </div>
                 </div>
             </a>
         </div>
+
+       
 
         <div class="about-person-container about-person-container-reverse">
             <a aria-label="Profile instagram de Napy" href="https://www.instagram.com/napy.video/">
@@ -30,7 +46,23 @@
                     </figure>
                     <div>
                         <p class="person-name person-text">NAPY</p>
-                        <p ><pre class="person-job person-text">RÉALISATION    PHOTOGRAPHIE    ÉTALONNAGE    PILOTAGE DRONE  </pre></p>
+                        <ul class="person-job-list">
+                            <li class="person-job person-text">
+                                RÉALISATION 
+                            </li>
+                            <li class="person-job person-text">
+                                PHOTOGRAPHIE 
+                            </li>
+                            <li class="person-job person-text">
+                                ÉTALONNAGE 
+                            </li>
+                            <li class="person-job person-text">
+                                PILOTAGE 
+                            </li>
+                            <li class="person-job person-text">
+                                DRONE
+                            </li>
+                        </ul> 
                     </div>
                 </div>
             </a>
@@ -45,11 +77,117 @@
                     </figure>
                     <div>
                         <p class="person-name person-text">Vincent PAULY</p>
-                        <p ><pre class="person-job person-text">RÉALISATION    CADRAGE    MONTAGE    STORYBOARD</pre></p>
+                         <ul class="person-job-list">
+                            <li class="person-job person-text">
+                                RÉALISATION 
+                            </li>
+                            <li class="person-job person-text">
+                                 CADRAGE 
+                            </li>
+                            <li class="person-job person-text">
+                                MONTAGE 
+                            </li>
+                            <li class="person-job person-text">
+                                STORYBOARD 
+                            </li>
+                           
+                        </ul>
                     </div>
                 </div>
             </a>
         </div>
+    </div>
+
+    <div class="about-person-cards-mobile">
+        <ul class="cards-list" data-controller="cards">
+            <li class="card-container">
+                <button aria-pressed="false" aria-expanded="false" class="card-btn">
+                    <div class="card-flipper">
+                        <div class="card-front">
+                            <figure>
+                                <figcaption class="person-name person-text">Thibaud RICHARD</figcaption>
+                                <img src="\static\images\thibaud-metamorphose.webp" alt="Thibaud RICHARD - Metamorphose film">
+                            </figure>
+                        </div>
+                        <div class="card-back" aria-hidden="true">
+                            <ul class="person-job-list">
+                            <li class="person-job person-text">
+                                RÉALISATION 
+                            </li>
+                            <li class="person-job person-text">
+                                 CADRAGE 
+                            </li>
+                            <li class="person-job person-text">
+                                MONTAGE 
+                            </li>
+                            <li class="person-job person-text">
+                                EFFETS SPECIAUX 
+                            </li>
+                           
+                        </ul>
+                        </div>
+                    </div>
+                </button>
+            </li>
+           
+            <li class="card-container">
+                <button aria-pressed="false" aria-expanded="false" class="card-btn">
+                    <div class="card-flipper">
+                        <div class="card-front">
+                            <figure>
+                                <figcaption class="person-name person-text">Napy</figcaption>
+                                <img src="\static\images\napy-metamorphose-web.webp" alt="Napy - Metamorphose film">
+                            </figure>
+                        </div>
+                        <div class="card-back" aria-hidden="true">
+                            <ul class="person-job-list">
+                            <li class="person-job person-text">
+                                RÉALISATION 
+                            </li>
+                            <li class="person-job person-text">
+                                PHOTOGRAPHIE 
+                            </li>
+                            <li class="person-job person-text">
+                                ÉTALONNAGE 
+                            </li>
+                            <li class="person-job person-text">
+                                PILOTAGE DRONE
+                            </li>
+                        </ul>
+                        </div>
+                    </div>
+                </button>
+            </li>
+
+            <li class="card-container">
+                <button aria-pressed="false" aria-expanded="false" class="card-btn">
+                    <div class="card-flipper">
+                        <div class="card-front">
+                            <figure>
+                                <figcaption class="person-name person-text">Vincent PAULY</figcaption>
+                                <img src="\static\images\vincent-metamorphose.webp" alt="Vincent PAULY - Metamorphose film">
+                            </figure>
+                        </div>
+                        <div class="card-back" aria-hidden="true">
+                            <ul class="person-job-list">
+                            <li class="person-job person-text">
+                                RÉALISATION 
+                            </li>
+                            <li class="person-job person-text">
+                                CADRAGE 
+                            </li>
+                            <li class="person-job person-text">
+                                MONTAGE 
+                            </li>
+                            <li class="person-job person-text">
+                                STORYBOARD 
+                            </li>
+                        </ul>
+                        </div>
+                    </div>
+                </button>
+            </li>
+        </ul>
     </div>
 
     <h2 class="bigTitle">Contact</h2>

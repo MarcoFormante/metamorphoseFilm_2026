@@ -2,18 +2,23 @@
     {% set route = ""%}
 {% endif %}
 
-<header class="app-header">
+<header class="app-header" data-controller="header">
     <nav>
         <div class="logo-link">
             <a href="/" aria-label="Metamorphose Film - Accueil" >
                 {% include "_partials/logo.html.twig" %}
             </a>
         </div>
-        <ul>
+        <ul class="header-links-container" data-header-target="linksContainer">
             <li><a href="/galerie" class="{{route === "galerie" ? "activeRoute" : ""}}">Galerie</a></li>
             <li><a href="/services" class="{{route === "services" ? "activeRoute" : ""}}">Services</a></li>
             <li><a href="/a-propos" class="{{route === "a-propos" ? "activeRoute" : ""}}">À propos</a></li>
         </ul>
     </nav>
+     <div class="header-hamburger-btn" data-header-target="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+    </div>
 </header>
 

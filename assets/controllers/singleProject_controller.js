@@ -14,7 +14,9 @@ export default class extends Controller {
     }
 
     connect() {
-        this.videoCover.addEventListener('click',this.addRealYTBVideo)
+        if (this.videoCover) {
+            this.videoCover.addEventListener('click',this.addRealYTBVideo)
+        }
     }
 
     

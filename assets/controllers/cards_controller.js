@@ -24,7 +24,9 @@ export default class extends Controller {
     }
 
     turnCard({currentTarget}){
-        if (!currentTarget.classList.contains("services-card-btn-on")) {
+       
+        
+        if (!currentTarget.classList.contains("card-btn-on")) {
             currentTarget.ariaExpanded = true
             currentTarget.ariaPressed = true
             currentTarget.querySelector(".card-front").ariaHidden = true;
@@ -36,7 +38,6 @@ export default class extends Controller {
              currentTarget.querySelector(".card-front").ariaHidden = false;
             currentTarget.querySelector(".card-back").ariaHidden = true;
         }
-        currentTarget.classList.toggle("services-card-btn-on")
-        
+        currentTarget.classList.toggle("card-btn-on")
     }
 }

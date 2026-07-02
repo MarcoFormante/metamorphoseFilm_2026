@@ -2,16 +2,21 @@
 
 {% block title %}{{project.name}}{% endblock %}
 
+{% block meta %}
+    {# <meta name="turbo-cache-control" content="no-cache"> #}
+{% endblock %}
+
 {% block body %}
+
     <main class="single-project" data-controller="singleProject">
         <article>
             <div>
                 {% if next %}
-                    <a aria-label="Aller au prochain projet" href="/projet/{{next}}" class="single-project-fixed-btn single-project-nextBtn">></a>
+                    <a aria-label="Aller au prochain projet" href="/projet/{{next}}"  class="single-project-fixed-btn single-project-nextBtn">></a>
                 {% endif %}
 
                 {% if prev %}
-                    <a aria-label="Aller au projet precedent" href="/projet/{{prev}}" class="single-project-fixed-btn single-project-prevBtn"><</a>
+                    <a aria-label="Aller au projet precedent" href="/projet/{{prev}}"  class="single-project-fixed-btn single-project-prevBtn"><</a>
                 {% endif %}
             </div>
            
@@ -62,16 +67,16 @@
                 </div>
 
                 <div class="project-staff">
-                    <twig:StaffItem title="Production" :staffType="staff?.production"/>
-                    <twig:StaffItem title="Artiste" :staffType="staff?.artists"/>
-                    <twig:StaffItem title="Montage" :staffType="staff?.montage"/>
-                    <twig:StaffItem title="Cadrage" :staffType="staff?.cadrage"/>
-                    <twig:StaffItem title="Pilote de drone" :staffType="staff?.droniste"/>
-                    <twig:StaffItem title="Photographe de plateau" :staffType="staff?.phPlateau"/>
-                    <twig:StaffItem title="Chef Opérateur" :staffType="staff?.decorateurs"/>
+                    <twig:StaffItem title="Production" staffType="{{staff.production ?? ""}}"/>
+                    <twig:StaffItem title="Artiste" staffType="{{staff.artists ?? ""}}"/>
+                    <twig:StaffItem title="Montage" staffType="{{staff.montage ?? ""}}"/>
+                    <twig:StaffItem title="Cadrage" staffType="{{staff.cadrage ?? ""}}"/>
+                    <twig:StaffItem title="Pilote de drone" staffType="{{staff.droniste ?? ""}}"/>
+                    <twig:StaffItem title="Photographe de plateau" staffType="{{staff.phPlateau ?? ""}}"/>
+                    <twig:StaffItem title="Chef Opérateur" staffType="{{staff.decorateurs ?? ""}}"/>
                     
                     {% for row in createdStaff %}
-                        <twig:StaffItem :title="row.value1" :staffType="row.value2"/>
+                        <twig:StaffItem title="{{row.value1 ?? ""}}" staffType="{{row.value2 ?? ""}}"/>
                     {% endfor %} 
                 </div>             
             </div>
