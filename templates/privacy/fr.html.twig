@@ -1,0 +1,88 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Politique de Confidentialité - Metamorphose Film{% endblock %}
+
+{% block meta %}
+    <meta name="robots" content="noindex, nofollow">
+
+    <link rel="alternate" hreflang="fr" href="{{ url(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale': 'fr'})) }}">
+    <link rel="alternate" hreflang="en" href="{{ url(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale': 'en'})) }}">
+    <link rel="alternate" hreflang="x-default" href="{{ url(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale': 'fr'})) }}">
+{% endblock %}
+
+{% block body %}
+<main class="privacy main-padding">
+ 
+    <h1>Politique de Confidentialité</h1>
+    <h2>Metamorphose Film</h2>
+
+    <br/>
+
+    <div class="lang-btns-container">
+        <a class="lang-btn lang-btn-primary" href="/privacy-policy/fr">FR</a>
+        <a class="lang-btn" href="/privacy-policy/en">EN</a>
+    </div>
+
+    <p>URL du site : <a href="https://metamorphosefilm.com">https://metamorphosefilm.com</a></p>
+
+    <p>Dernière mise à jour : Juillet 2026</p>
+    <br/>
+
+    <p>Cette Politique de Confidentialité décrit nos politiques concernant la collecte, l'utilisation et la divulgation de vos informations lorsque vous utilisez notre site Web (le "Service"). Elle vous informe de vos droits à la confidentialité et de la manière dont la loi vous protège, conformément au Règlement Général sur la Protection des Données (RGPD).</p>
+
+    <ul>
+        <li>
+            <p class="bold">1. Responsable du Traitement</p>
+            <p>Le responsable du traitement des données pour ce site est :</p>
+            <p>Nom / Marque : Métamorphose Film</p>
+            <p>Site Web : <a href="https://metamorphosefilm.com">https://metamorphosefilm.com</a></p>
+        </li>
+
+        <li>
+            <p class="bold">2. Collecte et Utilisation des Données Techniques (Hébergement)</p>
+            <p>We do not directly collect, store, or use any personal data or IP addresses for our internal purposes.</p>
+            <p>Cependant, notre hébergeur (Hostinger) peut enregistrer automatiquement certaines données techniques de navigation et les adresses IP des visiteurs dans les journaux du serveur (logs). Ce processus sert exclusivement à garantir la stabilité, le bon fonctionnement et la sécurité du site (par exemple, pour bloquer les attaques informatiques).</p>
+        </li>
+
+        <li>
+            <p class="bold">3. Gestion des Cookies et Consentement (YouTube)</p>
+            <p>Ce site utilise un bandeau de gestion du consentement pour vous permettre d'accepter ou de refuser l'activation des cookies de tiers.</p>
+            <p>Notre Cookie Technique</p>
+            <p>Lorsque vous interagissez avec le bandeau, un seul cookie technique strictly nécessaire est installé :</p>
+            <p>Nom : cookie-consent</p>
+            <p>Valeurs possibles : true ou false</p>
+            <p>Durée : 365 jours</p>
+            <p>Finalité : Mémoriser votre choix pour éviter que le bandeau ne s'affiche à chaque changement de page.</p>
+            <h3>Intégration des Vidéos YouTube</h3>
+            <p>L'affichage des vidéos présentes sur le site dépend directement de votre choix sur le bandeau :</p>
+            <p>Si vous acceptez les cookies : Le lecteur YouTube se chargera normalement, la vidéo sera visible ou démarrera automatiquement, et YouTube (Google LLC) installera ses propres cookies de suivi et de ciblage sur votre navigateur.</p>
+            <p>Si vous refusez les cookies : L'intégration de YouTube est bloquée pour protéger votre vie privée. À la place de la vidéo, vous verrez une simple image d'aperçu statique. En cliquant manuellement sur cette image, vous donnerez votre consentement spécifique pour cette vidéo : l'intégration s'activera et les cookies de YouTube seront installés.</p>
+            <p>Pour plus de détails sur les cookies utilisés par YouTube et sur la façon de les gérer, nous vous invitons à consulter la Règles de confidentialité de Google / YouTube.</p>
+        </li>
+
+        <li>
+            <p class="bold">4. Liens Externes et Plateformes Tierces</p>
+            <p>Sur notre page de contact, des liens vous permettent d'interagir avec nous ou de nos suivre sur des plateformes externes :</p>
+            <p>E-mail : Un lien direct pour nous envoyer un e-mail (nous collecterons votre adresse uniquement pour vous répondre).</p>
+            <p>Instagram : Lien vers notre profil officiel.</p>
+            <p>LinkedIn : Lien vers notre profil officiel.</p>
+            <p>En cliquant sur ces liens, vous quittez notre site et êtes redirigé vers des plateformes externes. Ces sites tiers peuvent collecter des données sur vous, utiliser leurs propres cookies ou suivre vos interactions (notamment si vous êtes déjà connecté à vos comptes sur ces réseaux sociaux).</p>
+            <p>Vous pouvez prendre connaissance de la manière dont ces plateformes gèrent vos données en cliquant directement sur les liens officiels de leurs politiques :</p>
+            <p>Politique de confidentialité d'Instagram : <a href="https://privacycenter.instagram.com/">Ici</a></p>
+            <p>Politique de confidentialité de LinkedIn : <a href="https://www.linkedin.com/legal/privacy-policy">Ici</a></p>
+        </li>
+
+        <li>
+            <p class="bold">5. Vos Droits (RGPD)</p>
+            <p>En tant qu'utilisateur résidant dans l'Union Européenne, vous disposez d'un droit d'accès aux données vous concernant, de rectification, de limitation ou de suppression définitive ("Droit à l'oubli"). Vous pouvez également retirer votre consentement aux cookies à tout moment en effaçant l'historique de votre navigateur.</p>
+            <p>Note pratique sur l'accès les données : Comme ce site ne propose pas d'espace membre, de newsletter ou de base de données utilisateurs, nous ne conservons aucune information personnelle sur le serveur. Les seules données traitées sont les messages envoyés spontanément par e-mail, que nous conservons temporairement dans notre boîte de réception dans le seul but de répondre à vos demandes.</p>
+            <p>Pour toute question ou pour exercer vos droits, vous pouvez nous contacter directement via les canaux indiqués sur le site. Vous avez également le droit d'introduire une réclamation auprès de l'autorité de contrôle compétente (en France, la CNIL).</p>
+        </li>
+
+        <li>
+            <p class="bold">6. Informations de Contact</p>
+            <p>Email: <a class="mail" href="mailto:metamorphoseproductions@gmail.com">metamorphoseproductions@gmail.com</a></p>
+        </li>
+    </ul>
+</main>
+{% endblock %}

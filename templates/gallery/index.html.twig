@@ -2,16 +2,50 @@
 
 {% block title %}Galerie{% endblock %}
 
+{% block meta %}
+    {% set pageDescription = "Explorez les galeries photos et réalisations visuelles de Métamorphose Film. Découvrez nos projets à travers notre portfolio artistique." %}
+
+    <!-- SEO Specifico della pagina -->
+    <meta name="description" content="{{ pageDescription }}">
+    <meta name="keywords" content="portfolio photo, galerie photo, photographie professionnelle, réalisations visuelles, projets artistiques, metamorphose film">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph Specifico -->
+    <meta property="og:title" content="Galerie Photo & Portfolio - Metamorphose Film">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ app.request.getUri() }}">
+    <meta property="og:description" content="{{ pageDescription }}">
+
+    <!-- Twitter Specifico -->
+    <meta name="twitter:title" content="Galerie Photo & Portfolio - Metamorphose Film">
+    <meta name="twitter:description" content="{{ pageDescription }}">
+
+    <!-- Dati Strutturati per la Pagina di Raccolta -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      "name": "Galerie Photo - Metamorphose Film",
+      "description": "{{ pageDescription }}",
+      "url": "{{ app.request.getUri() }}",
+      "about": {
+        "@type": "Organization",
+        "name": "Metamorphose Film"
+      }
+    }
+    </script>
+{% endblock %}
+
 {% block body %}
 <main class="galleries">
     <ul class="gallery-list">
         {% if galleries %}
             {% for gallery in galleries %}
                 <li>
-                    <a href="/galerie/{{gallery.name|lower}}">
+                    <a href="/galerie/{{ gallery.name|lower }}">
                         <figure>
-                            <img src="{{asset('uploads/images/gallery/' ~ gallery.src )}}" alt="Galerie d'images, categorie {{gallery.name}}" width="300" height="420">
-                            <figcaption>{{gallery.name|capitalize}}</figcaption>
+                            <img src="{{ asset('uploads/images/gallery/' ~ gallery.src) }}" alt="Galerie d'images, catégorie {{ gallery.name }}" width="300" height="420">
+                            <figcaption>{{ gallery.name|capitalize }}</figcaption>
                         </figure>
                     </a>
                 </li>
@@ -19,5 +53,4 @@
         {% endif %}
     </ul>
 </main>
-
 {% endblock %}

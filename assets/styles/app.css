@@ -179,6 +179,7 @@ body {
   text-decoration: none;
   text-transform: uppercase;
   transition: color 0.3s;
+  letter-spacing: 2px;
 }
 .swiper-slide figcaption h2:hover a {
   -webkit-text-stroke-color: #f13900;
@@ -420,7 +421,7 @@ form[name=new_project] img {
   font-style: normal;
 }
 
-.poppins-light, .cookie-banner .cookie-banner-text, .about .about-desc, .about .about-contact-desc, .services-email, .services .cards-list .card-container button .card-back ul li, .services h2, .backButton, .gallery-images .show-gallery .show-gallery-btn, .single-project .madeBy li, .single-project .project-staff li, .single-project-fixed-btn, .app-header, body:has(.admin-page) {
+.poppins-light, .privacy, .cookie-banner .cookie-banner-text, .about .about-desc, .about .about-contact-desc, .services-email, .services .cards-list .card-container button .card-back ul li, .services h2, .backButton, .gallery-images .show-gallery .show-gallery-btn, .single-project .madeBy li, .single-project .project-staff li, .single-project-fixed-btn, .app-header, body:has(.admin-page) {
   font-family: "Poppins", sans-serif;
   font-weight: 300;
   font-style: normal;
@@ -518,6 +519,7 @@ form[name=new_project] img {
 
 .single-project {
   position: relative;
+  margin-top: 50px;
 }
 .single-project-fixed-btn {
   color: #fff;
@@ -534,9 +536,10 @@ form[name=new_project] img {
 }
 @media screen and (max-width: 1024px) {
   .single-project-fixed-btn {
-    top: 0%;
+    top: -35px;
     opacity: 1;
     position: absolute;
+    right: 0%;
   }
 }
 .single-project-fixed-btn:hover {
@@ -2068,4 +2071,29 @@ body {
     position: absolute;
     z-index: 1;
   }
+}
+.privacy {
+  color: #fff;
+}
+.privacy a {
+  color: #f13900;
+}
+.privacy .bold {
+  font-weight: bold;
+}
+.privacy .lang-btns-container {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+.privacy .lang-btn {
+  border: 1px solid #fff;
+  padding: 12px 15px;
+  border-radius: 8px;
+  font-weight: bold;
+  color: #fff;
+}
+.privacy .lang-btn-primary {
+  background-color: #f13900;
+  color: #fff;
 }/*# sourceMappingURL=app.css.map */

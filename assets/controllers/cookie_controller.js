@@ -39,7 +39,10 @@ export default class extends Controller {
     }
 
     setCookie(cname, cvalue) {
-        document.cookie = cname + "=" + cvalue + ";"  + ";path=/";
+        const d = new Date();
+        d.setTime(d.getTime() + (365 * 24 * 60 * 60 * 1000));
+        let expires = "expires="+ d.toUTCString();
+        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
         document.location.reload()
     }
 

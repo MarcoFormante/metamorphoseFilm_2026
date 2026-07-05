@@ -1,45 +1,84 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{project.name}}{% endblock %}
+{% block title %}{{ project.name }}{% endblock %}
+
+{% set videoId = project.youtubeVideo|split('=')[1]|split('&')[0] %}
+{% set projectDescription = "Découvrez " ~ project.name ~ ", une réalisation audiovisuelle créative par Métamorphose Film." %}
 
 {% block meta %}
-    {# <meta name="turbo-cache-control" content="no-cache"> #}
+    <meta name="description" content="{{ projectDescription }}">
+    <meta name="keywords" content="{{ project.name }}, clip {{ project.name }}, production {{ project.name }}, réalisation {{ project?.madeBy }}, clip musical, metamorphose film">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:title" content="{{ project.name }} - Metamorphose Film">
+    <meta property="og:type" content="video.other">
+    <meta property="og:url" content="{{ app.request.getUri() }}">
+    <meta property="og:description" content="{{ projectDescription }}">
+    <meta property="og:image" content="https://i.ytimg.com/vi/{{ videoId }}/maxresdefault.jpg">
+    <meta property="og:image:alt" content="Cover {{ project.name }}">
+
+    <meta name="twitter:title" content="{{ project.name }} - Metamorphose Film">
+    <meta name="twitter:description" content="{{ projectDescription }}">
+    <meta name="twitter:image" content="https://i.ytimg.com/vi/{{ videoId }}/maxresdefault.jpg">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "VideoObject",
+      "name": "{{ project.name }}",
+      "description": "{{ projectDescription }}",
+      "thumbnailUrl": [
+        "https://i.ytimg.com/vi/{{ videoId }}/maxresdefault.jpg"
+      ],
+      "uploadDate": "2026-01-01T00:00:00+00:00",
+      "embedUrl": "https://www.youtube.com/embed/{{ videoId }}",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Metamorphose Film",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://metamorphosefilm.com/apple-touch-icon.png",
+          "width": 180,
+          "height": 180
+        }
+      }
+    }
+    </script>
 {% endblock %}
 
 {% block body %}
-
     <main class="single-project" data-controller="singleProject">
         <article>
             <div>
                 {% if next %}
-                    <a aria-label="Aller au prochain projet" href="/projet/{{next}}"  class="single-project-fixed-btn single-project-nextBtn">></a>
+                    <a aria-label="Aller au prochain projet" href="/projet/{{ next }}" class="single-project-fixed-btn single-project-nextBtn">></a>
                 {% endif %}
 
                 {% if prev %}
-                    <a aria-label="Aller au projet precedent" href="/projet/{{prev}}"  class="single-project-fixed-btn single-project-prevBtn"><</a>
+                    <a aria-label="Aller au projet precedent" href="/projet/{{ prev }}" class="single-project-fixed-btn single-project-prevBtn"><</a>
                 {% endif %}
             </div>
            
-            <video src="{{asset("/uploads/videos/" ~ project.backgroundVideo)}}" width="100%" height="100%" autoplay muted loop playsinline preload="none"></video>
-            <h1>{{project.name}}</h1>
+            <video src="{{ asset("/uploads/videos/" ~ project.backgroundVideo) }}" width="100%" height="100%" autoplay muted loop playsinline preload="none"></video>
+            <h1>{{ project.name }}</h1>
 
             <div class="madeBy">
                 <h2>Realisé par</h2>
                 <ul>
                     {% for item in project?.madeBy|split(',') %}
-                        <li>{{item}}</li>
+                        <li>{{ item }}</li>
                     {% endfor %}
                 </ul>
             </div>
-             
-                {% if cookie is defined  %}
+            
+            <div class="video-container-wrapper">
+                {% if cookie is defined %}
                     {% if cookie == '' or cookie == 'false' %}
-                     {% set videoId = project.youtubeVideo|split('=')[1]|split('&')[0] %}
-                     <div class="ytb-video-container ytb-video-container-no-cookie">
-                            <div class="video-blocker" data-video-id="{{videoId}}">
-                                <img src="https://i.ytimg.com/vi/{{videoId}}/maxresdefault.jpg" alt="image cover {{project.name}}" class="video-cover">
+                        <div class="ytb-video-container ytb-video-container-no-cookie">
+                            <div class="video-blocker" data-video-id="{{ videoId }}">
+                                <img src="https://i.ytimg.com/vi/{{ videoId }}/maxresdefault.jpg" alt="image cover {{ project.name }}" class="video-cover">
                                 <div class="video-title-wrapper">
-                                    <span class="video-title">{{project.name}}</span>
+                                    <span class="video-title">{{ project.name }}</span>
                                 </div>
                                 <div class="play-btn">
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="#ffffff">
@@ -49,40 +88,35 @@
                                 <span class="youtube-label">YouTube</span>
                             </div>
                         </div>
-                        {% elseif cookie == 'true' %}
-                            <div class="ytb-video-container">
-                                <iframe width="560" height="315" src="{{project.youtubeVideo|replace({'watch?v=' : 'embed/'})|split('&')[0]}}?autoplay=1&mute=1" allowfullscreen data-poster=""></iframe>
-                            </div>
-                        {% endif %}
-                    
+                    {% elseif cookie == 'true' %}
+                        <div class="ytb-video-container">
+                            <iframe width="560" height="315" src="{{ project.youtubeVideo|replace({'watch?v=' : 'embed/'})|split('&')[0] }}?autoplay=1&mute=1" allowfullscreen data-poster=""></iframe>
+                        </div>
+                    {% endif %}
                 {% endif %}
-               
             </div>
 
             <div class="project-assets">
                 <div class="project-images">
                     {% for image in images %}
-                        <img src="/uploads/images/projects/{{image.src}}" alt="" width="300">
+                        <img src="/uploads/images/projects/{{ image.src }}" alt="Photographie {{ loop.index }} du projet {{ project.name }} - Metamorphose Film" width="300">
                     {% endfor %}
                 </div>
 
                 <div class="project-staff">
-                    <twig:StaffItem title="Production" staffType="{{staff.production ?? ""}}"/>
-                    <twig:StaffItem title="Artiste" staffType="{{staff.artists ?? ""}}"/>
-                    <twig:StaffItem title="Montage" staffType="{{staff.montage ?? ""}}"/>
-                    <twig:StaffItem title="Cadrage" staffType="{{staff.cadrage ?? ""}}"/>
-                    <twig:StaffItem title="Pilote de drone" staffType="{{staff.droniste ?? ""}}"/>
-                    <twig:StaffItem title="Photographe de plateau" staffType="{{staff.phPlateau ?? ""}}"/>
-                    <twig:StaffItem title="Chef Opérateur" staffType="{{staff.decorateurs ?? ""}}"/>
+                    <twig:StaffItem title="Production" staffType="{{ staff.production ?? "" }}"/>
+                    <twig:StaffItem title="Artiste" staffType="{{ staff.artists ?? "" }}"/>
+                    <twig:StaffItem title="Montage" staffType="{{ staff.montage ?? "" }}"/>
+                    <twig:StaffItem title="Cadrage" staffType="{{ staff.cadrage ?? "" }}"/>
+                    <twig:StaffItem title="Pilote de drone" staffType="{{ staff.droniste ?? "" }}"/>
+                    <twig:StaffItem title="Photographe de plateau" staffType="{{ staff.phPlateau ?? "" }}"/>
+                    <twig:StaffItem title="Chef Opérateur" staffType="{{ staff.decorateurs ?? "" }}"/>
                     
                     {% for row in createdStaff %}
-                        <twig:StaffItem title="{{row.value1 ?? ""}}" staffType="{{row.value2 ?? ""}}"/>
+                        <twig:StaffItem title="{{ row.value1 ?? "" }}" staffType="{{ row.value2 ?? "" }}"/>
                     {% endfor %} 
                 </div>             
             </div>
         </article>
     </main>
-
 {% endblock %}
-
- 

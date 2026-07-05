@@ -68,6 +68,7 @@ body{
                 text-decoration: none;
                 text-transform: uppercase;
                 transition: color .3s;
+                letter-spacing: 2px;
             }
 
             &:hover{
@@ -469,6 +470,7 @@ form[name=new_project]{
 
 .single-project{
     position: relative;
+    margin-top: 50px;
 
     &-fixed-btn{
         color: #fff;
@@ -485,9 +487,10 @@ form[name=new_project]{
         transition: opacity .3s ease-in-out;
 
         @media screen and (max-width:1024px){
-            top: 0%;
+            top: -35px;
             opacity: 1;
             position: absolute;
+            right: 0%;
             
         }
 
@@ -2280,4 +2283,36 @@ body{
 
   
 }
+  }
+
+  .privacy{
+    @extend .poppins-light;
+    color: #fff;
+
+    a{
+        color: $primary-color;
+    }
+
+    .bold{
+        font-weight: bold;
+    }
+
+    .lang-btns-container{
+        display: flex;
+        justify-content: flex-end;
+        gap:10px;
+    }
+
+    .lang-btn{
+        border: 1px solid #fff;
+        padding: 12px 15px;
+        border-radius: 8px;
+        font-weight: bold;
+        color: #fff;
+
+        &-primary{
+            background-color: $primary-color;
+            color: #fff;
+        }
+    }
   }

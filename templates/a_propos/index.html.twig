@@ -2,6 +2,61 @@
 
 {% block title %}À propos{% endblock %}
 
+{% block meta %}
+    {% set pageDescription = "Découvrez l'équipe créative de Métamorphose Film : Thibaud Richard, Napy et Vincent Pauly. Passionnés de réalisation, cadrage, montage et photographie." %}
+
+    <meta name="description" content="{{ pageDescription }}">
+    <meta name="keywords" content="équipe metamorphose film, thibaud richard, napy, vincent pauly, réalisateur, cadreur, monteur, photographe corporate">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:title" content="À Propos de Nous - Metamorphose Film">
+    <meta property="og:type" content="profile">
+    <meta property="og:url" content="{{ app.request.getUri() }}">
+    <meta property="og:description" content="{{ pageDescription }}">
+    <meta property="og:image" content="https://metamorphosefilm.com/static/images/og-preview.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="À Propos de Nous - Metamorphose Film">
+    <meta name="twitter:description" content="{{ pageDescription }}">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "AboutPage",
+      "mainEntity": {
+        "@type": "Organization",
+        "name": "Metamorphose Film",
+        "url": "https://metamorphosefilm.com",
+        "logo": "https://metamorphosefilm.com/static/images/og-preview.jpg",
+        "sameAs": [
+          "https://www.instagram.com/metamorphosefilm/",
+          "https://www.linkedin.com/company/metamorphose-film/"
+        ],
+        "employee": [
+          {
+            "@type": "Person",
+            "name": "Thibaud RICHARD",
+            "jobTitle": "Réalisateur, Cadreur, Monteur, Effets Spéciaux",
+            "sameAs": "https://www.instagram.com/thibaud.richard/"
+          },
+          {
+            "@type": "Person",
+            "name": "NAPY",
+            "jobTitle": "Réalisateur, Photographe, Étalonneur, Pilote de Drone",
+            "sameAs": "https://www.instagram.com/napy.video/"
+          },
+          {
+            "@type": "Person",
+            "name": "Vincent PAULY",
+            "jobTitle": "Réalisateur, Cadreur, Monteur, Storyboarder",
+            "sameAs": "https://www.instagram.com/vincii_pauly/"
+          }
+        ]
+      }
+    }
+    </script>
+{% endblock %}
+
 {% block body %}
 <main class="about main-padding title-mobile-center" >
     <twig:pageTitle title1="À Propos" title2="" />
@@ -12,85 +67,54 @@
             <a aria-label="Profile instagram de Thibaud RICHARD" href="https://www.instagram.com/thibaud.richard/">
                 <div class="about-person">
                     <figure>
-                        <img src="\static\images\thibaud-metamorphose.webp" alt="Thibaud RICHARD - Metamorphose film">
+                        <img src="\static\images\thibaud-metamorphose.webp" alt="Thibaud RICHARD - Réalisation et Montage chez Metamorphose film">
                     </figure>
                     <div>
                         <p class="person-name person-text">Thibaud RICHARD</p>
                         <ul class="person-job-list">
-                            <li class="person-job person-text">
-                                RÉALISATION 
-                            </li>
-                            <li class="person-job person-text">
-                                 CADRAGE 
-                            </li>
-                            <li class="person-job person-text">
-                                MONTAGE 
-                            </li>
-                            <li class="person-job person-text">
-                                EFFETS SPECIAUX 
-                            </li>
-                           
+                            <li class="person-job person-text">RÉALISATION</li>
+                            <li class="person-job person-text">CADRAGE</li>
+                            <li class="person-job person-text">MONTAGE</li>
+                            <li class="person-job person-text">EFFETS SPECIAUX</li>
                         </ul> 
                     </div>
                 </div>
             </a>
         </div>
-
-       
 
         <div class="about-person-container about-person-container-reverse">
             <a aria-label="Profile instagram de Napy" href="https://www.instagram.com/napy.video/">
                 <div class="about-person">
                     <figure>
-                        <img src="\static\images\napy-metamorphose-web.webp" alt="Napy - Metamorphose film">
+                        <img src="\static\images\napy-metamorphose-web.webp" alt="Napy - Réalisation, Photographie et Drone chez Metamorphose film">
                     </figure>
                     <div>
                         <p class="person-name person-text">NAPY</p>
                         <ul class="person-job-list">
-                            <li class="person-job person-text">
-                                RÉALISATION 
-                            </li>
-                            <li class="person-job person-text">
-                                PHOTOGRAPHIE 
-                            </li>
-                            <li class="person-job person-text">
-                                ÉTALONNAGE 
-                            </li>
-                            <li class="person-job person-text">
-                                PILOTAGE 
-                            </li>
-                            <li class="person-job person-text">
-                                DRONE
-                            </li>
+                            <li class="person-job person-text">RÉALISATION</li>
+                            <li class="person-job person-text">PHOTOGRAPHIE</li>
+                            <li class="person-job person-text">ÉTALONNAGE</li>
+                            <li class="person-job person-text">PILOTAGE</li>
+                            <li class="person-job person-text">DRONE</li>
                         </ul> 
                     </div>
                 </div>
             </a>
         </div>
 
-
         <div class="about-person-container">
             <a aria-label="Profile instagram de Vincent PAULY" href="https://www.instagram.com/vincii_pauly/">
                 <div class="about-person">
                     <figure>
-                        <img src="\static\images\vincent-metamorphose.webp" alt="Vincent PAULY - Metamorphose film">
+                        <img src="\static\images\vincent-metamorphose.webp" alt="Vincent PAULY - Réalisation e Storyboard chez Metamorphose film">
                     </figure>
                     <div>
                         <p class="person-name person-text">Vincent PAULY</p>
                          <ul class="person-job-list">
-                            <li class="person-job person-text">
-                                RÉALISATION 
-                            </li>
-                            <li class="person-job person-text">
-                                 CADRAGE 
-                            </li>
-                            <li class="person-job person-text">
-                                MONTAGE 
-                            </li>
-                            <li class="person-job person-text">
-                                STORYBOARD 
-                            </li>
-                           
+                            <li class="person-job person-text">RÉALISATION</li>
+                            <li class="person-job person-text">CADRAGE</li>
+                            <li class="person-job person-text">MONTAGE</li>
+                            <li class="person-job person-text">STORYBOARD</li>
                         </ul>
                     </div>
                 </div>
@@ -111,20 +135,11 @@
                         </div>
                         <div class="card-back" aria-hidden="true">
                             <ul class="person-job-list">
-                            <li class="person-job person-text">
-                                RÉALISATION 
-                            </li>
-                            <li class="person-job person-text">
-                                 CADRAGE 
-                            </li>
-                            <li class="person-job person-text">
-                                MONTAGE 
-                            </li>
-                            <li class="person-job person-text">
-                                EFFETS SPECIAUX 
-                            </li>
-                           
-                        </ul>
+                                <li class="person-job person-text">RÉALISATION</li>
+                                <li class="person-job person-text">CADRAGE</li>
+                                <li class="person-job person-text">MONTAGE</li>
+                                <li class="person-job person-text">EFFETS SPECIAUX</li>
+                            </ul>
                         </div>
                     </div>
                 </button>
@@ -141,19 +156,11 @@
                         </div>
                         <div class="card-back" aria-hidden="true">
                             <ul class="person-job-list">
-                            <li class="person-job person-text">
-                                RÉALISATION 
-                            </li>
-                            <li class="person-job person-text">
-                                PHOTOGRAPHIE 
-                            </li>
-                            <li class="person-job person-text">
-                                ÉTALONNAGE 
-                            </li>
-                            <li class="person-job person-text">
-                                PILOTAGE DRONE
-                            </li>
-                        </ul>
+                                <li class="person-job person-text">RÉALISATION</li>
+                                <li class="person-job person-text">PHOTOGRAPHIE</li>
+                                <li class="person-job person-text">ÉTALONNAGE</li>
+                                <li class="person-job person-text">PILOTAGE DRONE</li>
+                            </ul>
                         </div>
                     </div>
                 </button>
@@ -170,19 +177,11 @@
                         </div>
                         <div class="card-back" aria-hidden="true">
                             <ul class="person-job-list">
-                            <li class="person-job person-text">
-                                RÉALISATION 
-                            </li>
-                            <li class="person-job person-text">
-                                CADRAGE 
-                            </li>
-                            <li class="person-job person-text">
-                                MONTAGE 
-                            </li>
-                            <li class="person-job person-text">
-                                STORYBOARD 
-                            </li>
-                        </ul>
+                                <li class="person-job person-text">RÉALISATION</li>
+                                <li class="person-job person-text">CADRAGE</li>
+                                <li class="person-job person-text">MONTAGE</li>
+                                <li class="person-job person-text">STORYBOARD</li>
+                            </ul>
                         </div>
                     </div>
                 </button>
@@ -204,4 +203,3 @@
     </div>
 </main>
 {% endblock %}
-

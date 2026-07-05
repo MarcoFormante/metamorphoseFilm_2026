@@ -1,14 +1,51 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Galerie {{name}}{% endblock %}
+{% block title %}Galerie {{ name }}{% endblock %}
+
+{% block meta %}
+    {% set galleryTitle = "Galerie " ~ name|capitalize %}
+    {% set pageDescription = "Découvrez l'album photo " ~ name|capitalize ~ " par Métamorphose Film. Explorez nos captures artistiques et réalisations visuelles." %}
+
+    <!-- SEO Specifico della pagina -->
+    <meta name="description" content="{{ pageDescription }}">
+    <meta name="keywords" content="galerie photo {{ name }}, album photo {{ name }}, shooting {{ name }}, photographie d'art, portfolio metamorphose">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph Specifico -->
+    <meta property="og:title" content="{{ galleryTitle }} - Metamorphose Film">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="{{ app.request.getUri() }}">
+    <meta property="og:description" content="{{ pageDescription }}">
+
+    <!-- Twitter Specifico -->
+    <meta name="twitter:title" content="{{ galleryTitle }} - Metamorphose Film">
+    <meta name="twitter:description" content="{{ pageDescription }}">
+
+    <!-- Dati Strutturati per la Galleria Immagini -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ImageGallery",
+      "name": "{{ galleryTitle }}",
+      "description": "{{ pageDescription }}",
+      "url": "{{ app.request.getUri() }}",
+      "provider": {
+        "@type": "Organization",
+        "name": "Metamorphose Film"
+      }
+    }
+    </script>
+{% endblock %}
 
 {% block body %}
 <main class="gallery-images" data-controller="galleryImages">
     <twig:backBtn href="/galerie" />
-    <twig:pageTitle title1="Galerie" title2="{{name|capitalize}}" />
+    <twig:pageTitle title1="Galerie" title2="{{ name|capitalize }}" />
+    
     <div class="image-list">
         {% for image in images %}
-            <img class="gallery-img" src="{{asset('/uploads/images/galleries/' ~ image.src)}}" alt="" width="360" height="546"/>
+            {# Ottimizzato l'attributo alt per evitare descrizioni vuote, utile lato SEO e accessibilità #}
+            <img class="gallery-img" src="{{ asset('/uploads/images/galleries/' ~ image.src) }}" alt="Photo de la galerie {{ name|capitalize }}" width="360" height="546"/>
         {% endfor %}
     </div>
 
@@ -31,7 +68,5 @@
         <button aria-label="suivant" class="show-gallery-btn show-gallery-btn-right">></button>
         <button aria-label="arriere" class="show-gallery-btn show-gallery-btn-left"><</button>
     </div>
-   
 </main>
-{% endblock body%}
-
+{% endblock %}

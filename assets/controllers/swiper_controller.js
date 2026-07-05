@@ -14,6 +14,7 @@ export default class extends Controller {
             keyboard: {
                 enabled: true,
             },
+            speed:1000
         });
         
     }

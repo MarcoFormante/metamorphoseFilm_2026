@@ -1,64 +1,98 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Service {{serviceName}}{% endblock %}
+{% block title %}Service {{ serviceName|capitalize }}{% endblock %}
+
+{% block meta %}
+    {% set formattedService = serviceName|capitalize %}
+    {% set pageDescription = "Découvrez nos réalisations et productions audiovisuelles dans la catégorie " ~ formattedService ~ ". Une expertise ciblée signée Métamorphose Film." %}
+
+    <!-- SEO Specifico del servizio dinamico -->
+    <meta name="description" content="{{ pageDescription }}">
+    <meta name="keywords" content="production {{ serviceName }}, vidéo {{ serviceName }}, film {{ serviceName }}, réalisation {{ serviceName }}, production audiovisuelle, metamorphose film">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph Specifico -->
+    <meta property="og:title" content="Production {{ formattedService }} - Metamorphose Film">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ app.request.getUri() }}">
+    <meta property="og:description" content="{{ pageDescription }}">
+
+    <!-- Twitter Specifico -->
+    <meta name="twitter:title" content="Production {{ formattedService }} - Metamorphose Film">
+    <meta name="twitter:description" content="{{ pageDescription }}">
+
+    <!-- Dati Strutturati Dinamici del Servizio -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "name": "Production {{ formattedService }}",
+      "serviceType": "Production Audiovisuelle",
+      "provider": {
+        "@type": "Organization",
+        "name": "Metamorphose Film",
+        "url": "https://metamorphosefilm.com"
+      },
+      "description": "{{ pageDescription }}"
+    }
+    </script>
+{% endblock %}
 
 {% block body %}
-<main class="main-padding single-services" >
+<main class="main-padding single-services">
     <twig:backBtn href="/services" />
     <twig:pageTitle title1="Services" title2="{{serviceName}}" />
    
-     {% if videos is defined %}
-            {% if videos is empty %}
-                <p>Y a pas de videos</p>
-                {% else %}
-                <div class="videos-container {{videos|length % 2 === 1 ? 'videos-container-odd' : null}}" >
-                    {% for video in videos %}
-                       {% set videoId = video.videoLink|split('=')[1]|split('&')[0] %}
-                        <div  class="video-blocker {{ video.isShort ? 'video-blocker-short' : '' }}" data-video-id="{{videoId}}" onclick="caricaQuestoVideo(this)">
-                            <img src="https://i.ytimg.com/vi/{{videoId}}/maxresdefault.jpg" alt="Copertina Video" class="video-cover">
-                            <div class="video-title-wrapper">
-                                <span class="video-title">{{video.title}}</span>
-                            </div>
-                            <div class="play-btn">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="#ffffff">
-                                    <path d="M8 5v14l11-7z"/>
-                                </svg>
-                            </div>
-                            <span class="youtube-label">YouTube</span>
+    {% if videos is defined %}
+        {% if videos is empty %}
+            <p>Y a pas de videos</p>
+        {% else %}
+            <div class="videos-container {{ videos|length % 2 == 1 ? 'videos-container-odd' : null }}">
+                {% for video in videos %}
+                    {% set videoId = video.videoLink|split('=')[1]|split('&')[0] %}
+                    <div class="video-blocker {{ video.isShort ? 'video-blocker-short' : '' }}" data-video-id="{{videoId}}" onclick="caricaQuestoVideo(this)">
+                        <img src="https://i.ytimg.com/vi/{{videoId}}/maxresdefault.jpg" alt="Couverture de la vidéo : {{ video.title }} - Metamorphose Film" class="video-cover">
+                        <div class="video-title-wrapper">
+                            <span class="video-title">{{video.title}}</span>
                         </div>
+                        <div class="play-btn">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="#ffffff">
+                                <path d="M8 5v14l11-7z"/>
+                            </svg>
+                        </div>
+                        <span class="youtube-label">YouTube</span>
+                    </div>
                 {% endfor %}
-                </div>
-            {% endif %}
+            </div>
         {% endif %}
+    {% endif %}
 </main>
 
 <script>
-
     const blockers = document.querySelectorAll('.video-blocker');
 
     blockers.forEach(blocker => {
-        blocker.addEventListener('click',()=>caricaQuestoVideo(blocker))
+        blocker.addEventListener('click', () => caricaQuestoVideo(blocker))
     });
+
     function caricaQuestoVideo(container) {
-    const videoId = container.getAttribute('data-video-id');
-  
-    if (videoId) {
-        container.innerHTML = `
-        <iframe 
-            width="100%" 
-            height="100%" 
-            src="https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1" 
-            frameborder="0" 
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-            allowfullscreen
-            style="position: absolute; top:0; left:0; width:100%; height:100%;">
-        </iframe>`;
-        
-        container.removeAttribute('onclick');
-        container.style.cursor = 'default';
-    }
+        const videoId = container.getAttribute('data-video-id');
+      
+        if (videoId) {
+            container.innerHTML = `
+            <iframe 
+                width="100%" 
+                height="100%" 
+                src="https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen
+                style="position: absolute; top:0; left:0; width:100%; height:100%;">
+            </iframe>`;
+            
+            container.removeAttribute('onclick');
+            container.style.cursor = 'default';
+        }
     }
 </script>
-
 {% endblock %}
- 

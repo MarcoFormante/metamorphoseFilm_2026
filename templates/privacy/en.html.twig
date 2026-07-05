@@ -1,0 +1,89 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Privacy Policy - Metamorphose Film{% endblock %}
+
+{% block meta %}
+    <meta name="robots" content="noindex, nofollow">
+
+    <link rel="alternate" hreflang="fr" href="{{ url(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale': 'fr'})) }}">
+    <link rel="alternate" hreflang="en" href="{{ url(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale': 'en'})) }}">
+    <link rel="alternate" hreflang="x-default" href="{{ url(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale': 'fr'})) }}">
+{% endblock %}
+
+{% block body %}
+<main class="privacy main-padding">
+ 
+    <h1>Privacy Policy</h1>
+    <h2>Metamorphose Film</h2>
+
+    <br/>
+
+    <div class="lang-btns-container">
+        <a class="lang-btn" href="/privacy-policy/fr">FR</a>
+        <a class="lang-btn lang-btn-primary" href="/privacy-policy/en">EN</a>
+    </div>
+
+    <p>Site URL: <a href="https://metamorphosefilm.com">https://metamorphosefilm.com</a></p>
+
+    <p>Last updated: July 2026</p>
+
+    <br/>
+
+    <p>This Privacy Policy describes our policies regarding the collection, use, and disclosure of your information when you use our website (the "Service"). It informs you about your privacy rights and how the law protects you, in accordance with the General Data Protection Regulation (GDPR).</p>
+
+    <ul>
+        <li>
+            <p class="bold">1. Data Controller</p>
+            <p>The data controller for this website is:</p>
+            <p>Name / Brand: Métamorphose Film</p>
+            <p>Website: <a href="https://metamorphosefilm.com">https://metamorphosefilm.com</a></p>
+        </li>
+
+        <li>
+            <p class="bold">2. Collection and Use of Technical Data (Hosting)</p>
+            <p>We do not directly collect, store, or use any personal data or IP addresses for our internal purposes.</p>
+            <p>However, our hosting provider (Hostinger) may automatically record certain technical browsing data and visitors' IP addresses in the server logs. This process is used exclusively to ensure the stability, proper functioning, and security of the website (for instance, to block cyberattacks).</p>
+        </li>
+
+        <li>
+            <p class="bold">3. Cookie Management and Consent (YouTube)</p>
+            <p>This website uses a consent management banner to allow you to accept or refuse the activation of third-party cookies.</p>
+            <p>Our Technical Cookie</p>
+            <p>When you interact with the banner, a single strictly necessary technical cookie is installed:</p>
+            <p>Name: cookie-consent</p>
+            <p>Possible values: true or false</p>
+            <p>Duration: 365 days</p>
+            <p>Purpose: To remember your choice so that the banner does not reappear on every page change.</p>
+            <h3>YouTube Video Integration</h3>
+            <p>The display of videos on this site depends directly on your choice on the banner:</p>
+            <p>If you accept cookies: The YouTube player will load normally, the video will be visible or start automatically, and YouTube (Google LLC) will install its own tracking and targeting cookies on your browser.</p>
+            <p>If you refuse cookies: The YouTube integration is blocked to protect your privacy. Instead of the video, you will see a simple static preview image. By clicking manually on this image, you give your specific consent for this video: the integration will activate and YouTube cookies will be installed.</p>
+            <p>For more details on the cookies used by YouTube and how to manage them, we invite you to consult the Google / YouTube Privacy Policy.</p>
+        </li>
+
+        <li>
+            <p class="bold">4. External Links and Third-Party Platforms</p>
+            <p>On our contact page, links allow you to interact with us or follow us on external platforms:</p>
+            <p>E-mail: A direct link to send us an e-mail (we will collect your address only to reply to you).</p>
+            <p>Instagram: Link to our official profile.</p>
+            <p>LinkedIn: Link to our official profile.</p>
+            <p>By clicking on these links, you leave our site and are redirected to external platforms. These third-party sites may collect data about you, use their own cookies, or track your interactions (especially if you are already logged into your accounts on these social networks).</p>
+            <p>You can learn more about how these platforms manage your data by clicking directly on the official links of their policies:</p>
+            <p>Instagram Privacy Policy: <a href="https://privacycenter.instagram.com/">Here</a></p>
+            <p>LinkedIn Privacy Policy: <a href="https://www.linkedin.com/legal/privacy-policy">Here</a></p>
+        </li>
+
+        <li>
+            <p class="bold">5. Your Rights (GDPR)</p>
+            <p>As a resident of the European Union, you have the right to access your data, request its rectification, restriction, or permanent deletion ("Right to be forgotten"). You can also withdraw your consent to cookies at any time by clearing your browser history.</p>
+            <p>Practical note on data access: As this site does not feature a member area, newsletter, or user database, we do not store any personal information on the server. The only data processed are messages sent spontaneously by e-mail, which we temporarily keep in our inbox for the sole purpose of responding to your requests.</p>
+            <p>For any questions or to exercise your rights, you can contact us directly through the channels indicated on the site. You also have the right to lodge a complaint with the competent supervisory authority (in France, the CNIL).</p>
+        </li>
+
+        <li>
+            <p class="bold">6. Contact Information</p>
+            <p>Email: <a class="mail" href="mailto:metamorphoseproductions@gmail.com">metamorphoseproductions@gmail.com</a></p>
+        </li>
+    </ul>
+</main>
+{% endblock %}
