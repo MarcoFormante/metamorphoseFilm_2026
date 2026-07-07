@@ -1,23 +1,24 @@
 import { Controller } from '@hotwired/stimulus';
 
-
 /* stimulusFetch: 'lazy' */
 export default class extends Controller {
 
     initialize() {
-        this.videoCover = this.element.querySelector('.video-blocker')
-        this.addRealYTBVideo = this.addRealYTBVideo.bind(this)
+        this.addRealYTBVideo = this.addRealYTBVideo.bind(this);
     }
 
     connect() {
+        this.videoCover = this.element.querySelector('.video-blocker');
+        
         if (this.videoCover) {
-            this.videoCover.addEventListener('click',this.addRealYTBVideo)
+            this.videoCover.addEventListener('click', this.addRealYTBVideo);
         }
     }
 
-
     disconnect() {
-        this.videoCover.removeEventListener('click',this.addRealYTBVideo)
+        if (this.videoCover) {
+            this.videoCover.removeEventListener('click', this.addRealYTBVideo);
+        }
     }
 
     addRealYTBVideo() {
@@ -36,5 +37,4 @@ export default class extends Controller {
             </iframe>`;
         }
     }
-
 }

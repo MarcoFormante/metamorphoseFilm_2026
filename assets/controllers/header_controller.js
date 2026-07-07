@@ -1,27 +1,25 @@
 import { Controller } from '@hotwired/stimulus';
 
-/*
-* The following line makes this controller "lazy": it won't be downloaded until needed
-* See https://symfony.com/bundles/StimulusBundle/current/index.html#lazy-stimulus-controllers
-*/
-
 /* stimulusFetch: 'lazy' */
 export default class extends Controller {
-    static targets = ['linksContainer','hamburger']
+    static targets = ['linksContainer', 'hamburger'];
     
     initialize() {
-        
+        this.toggleMenu = this.toggleMenu.bind(this);
     }
 
     connect() {
-       this.hamburgerTarget.addEventListener('click',()=>{
-            this.linksContainerTarget.classList.toggle('header-links-container-open')
-       })
+        this.hamburgerTarget.addEventListener('click', this.toggleMenu);
     }
 
-    
-    
     disconnect() {
-       
+        this.hamburgerTarget.removeEventListener('click', this.toggleMenu);
+    }
+
+    toggleMenu() {
+        const isOpen = this.linksContainerTarget.classList.toggle('header-links-container-open');
+        
+        this.hamburgerTarget.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        this.hamburgerTarget.setAttribute('aria-label', isOpen ? 'Fermer le menu' : 'Ouvrir le menu');
     }
 }

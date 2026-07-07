@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\GalleryRepository;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -29,6 +30,9 @@ class Gallery
      */
     #[ORM\OneToMany(mappedBy: 'gallery', targetEntity: GalleryImages::class, cascade: ['persist','remove'])]
     private Collection $images;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $updatedAt = null;
 
     public function __construct()
     {
@@ -101,6 +105,18 @@ class Gallery
                 $image->setGallery(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(): static
+    {
+        $this->updatedAt = new DateTimeImmutable('now');
 
         return $this;
     }

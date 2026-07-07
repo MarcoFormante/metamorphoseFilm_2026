@@ -1,85 +1,115 @@
 import { Controller } from '@hotwired/stimulus';
 
-/*
-* The following line makes this controller "lazy": it won't be downloaded until needed
-* See https://symfony.com/bundles/StimulusBundle/current/index.html#lazy-stimulus-controllers
-*/
-
 /* stimulusFetch: 'lazy' */
 export default class extends Controller {
 
     initialize() {
-        this.images = this.element.querySelectorAll('.gallery-img')
-        this.index = 0;
-        this.imageContainer = this.element.querySelector(".show-gallery")
-        this.newImage = this.element.querySelector(".show-gallery img")
-        this.showImage = this.showImage.bind(this)
-        this.handleKeyDown = this.handleKeyDown.bind(this)
-        this.buttons =  this.element.querySelectorAll("button")
-        this.handleNextPrev = this.handleNextPrev.bind(this)
-        this.exit = this.exit.bind(this)
-        this.count = this.images.length
-        this.exitBtn = this.element.querySelector(".show-gallery-exit")
+        this.handleKeyDown = this.handleKeyDown.bind(this);
+        this.handleNextPrev = this.handleNextPrev.bind(this);
+        this.exit = this.exit.bind(this);
+        this.onImageClick = this.onImageClick.bind(this);
+        this.next = this.next.bind(this);
+        this.prev = this.prev.bind(this);
     }
 
     connect() {
-       this.images.forEach((img,i) => {
-            img.addEventListener("click",()=>this.showImage(img,i))
-       });
+        this.images = this.element.querySelectorAll('.gallery-img');
+        this.imageContainer = this.element.querySelector(".show-gallery");
+        this.newImage = this.element.querySelector(".show-gallery img");
+        this.buttons = this.element.querySelectorAll("button");
+        this.exitBtn = this.element.querySelector(".show-gallery-exit");
+        
+        this.index = 0;
+        this.count = this.images.length;
 
-       this.buttons.forEach((btn) => {
-            btn.addEventListener("click",this.handleNextPrev)
-       })
+        this.images.forEach((img, i) => {
+            img.dataset.galleryIndex = i; // 
+            img.addEventListener("click", this.onImageClick);
+        });
 
-        this.exitBtn.addEventListener("click",this.exit)
+        this.buttons.forEach((btn) => {
+            btn.addEventListener("click", this.handleNextPrev);
+        });
 
-        window.addEventListener("keydown",this.handleKeyDown)
+        if (this.exitBtn) this.exitBtn.addEventListener("click", this.exit);
+        window.addEventListener("keydown", this.handleKeyDown);
     }
 
-   
     disconnect() {
-        window.removeEventListener('keydown',this.handleKeyDown)
+        this.images.forEach((img) => {
+            img.removeEventListener("click", this.onImageClick);
+        });
+
+        this.buttons.forEach((btn) => {
+            btn.removeEventListener("click", this.handleNextPrev);
+        });
+
+        if (this.exitBtn) this.exitBtn.removeEventListener("click", this.exit);
+        window.removeEventListener('keydown', this.handleKeyDown);
     }
 
-
-    showImage(img,index){
-        const src = img.src
-        this.newImage.src = src
-        this.index = index
-        this.nextIndex = (index + 1) > this.count - 1 ? 0 : index + 1 
-        this.prevIndex = index - 1 < 0 ? this.count - 1 : index - 1
-        this.imageContainer.classList.add("show-gallery-on")
+    onImageClick(e) {
+        const img = e.currentTarget;
+        const idx = parseInt(img.dataset.galleryIndex, 10);
+        this.showImage(img.src, idx);
     }
 
-    exit(){
-        if (this.imageContainer.classList.contains("show-gallery-on")) {
-            this.imageContainer.classList.remove("show-gallery-on")
-            this.newImage.src = ""
+    showImage(src, index) {
+        this.newImage.src = src;
+        this.index = index;
+        this.updateIndices();
+        this.imageContainer.classList.add("show-gallery-on");
+    }
+
+    updateIndices() {
+        this.nextIndex = (this.index + 1) > this.count - 1 ? 0 : this.index + 1;
+        this.prevIndex = (this.index - 1) < 0 ? this.count - 1 : this.index - 1;
+    }
+
+    exit() {
+        if (this.imageContainer && this.imageContainer.classList.contains("show-gallery-on")) {
+            this.imageContainer.classList.remove("show-gallery-on");
+            this.newImage.src = "";
         }
     }
 
     handleKeyDown(e) {
-        if (e.code === "Escape" && this.imageContainer.classList.contains("show-gallery-on")) {
+     if (!this.imageContainer.classList.contains("show-gallery-on")) return;
+
+        if (e.code === "Escape") {
             this.exit();
-        }
-    }
-
-    handleNextPrev({target}){
-        if (target.classList.contains("show-gallery-btn-right")) {
-            this.newImage.src = this.images[this.nextIndex].src
-            this.index = this.nextIndex
-            this.nextIndex = (this.index + 1) > this.count - 1 ? 0 : this.index + 1 
-            this.prevIndex = this.index - 1 < 0 ? this.count - 1 : this.index - 1
+        } else if (e.code === "ArrowRight") {
+            console.log("ciao");
             
-        }
-        else if (target.classList.contains("show-gallery-btn-left")) {
-            this.newImage.src = this.images[this.prevIndex].src
-            this.index = this.prevIndex
-            this.nextIndex = (this.index + 1) > this.count - 1 ? 0 : this.index + 1 
-            this.prevIndex = this.index - 1 < 0 ? this.count - 2 : this.index - 1
-            console.log(this.index);
+            this.next(); 
+        } else if (e.code === "ArrowLeft") {
+            this.prev(); 
         }
     }
 
-    
+    handleNextPrev({ currentTarget }) {
+        if (currentTarget.classList.contains("show-gallery-btn-right")) {
+            this.next();
+        } else if (currentTarget.classList.contains("show-gallery-btn-left")) {
+            this.prev();
+        }
+    }
+
+    next(){
+        this.index = this.nextIndex;
+
+        if (this.images[this.index]) {
+            this.newImage.src = this.images[this.index].src;
+            this.updateIndices();
+        }
+    }
+
+    prev(){
+        this.index = this.prevIndex;
+
+        if (this.images[this.index]) {
+            this.newImage.src = this.images[this.index].src;
+            this.updateIndices();
+        }
+    }
 }

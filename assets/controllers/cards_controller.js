@@ -20,12 +20,13 @@ export default class extends Controller {
     }
 
     disconnect() {
-      
+        this.cards.forEach(card => {
+            card.removeEventListener("click", this.turnCard);
+        });
     }
 
     turnCard({currentTarget}){
        
-        
         if (!currentTarget.classList.contains("card-btn-on")) {
             currentTarget.ariaExpanded = true
             currentTarget.ariaPressed = true

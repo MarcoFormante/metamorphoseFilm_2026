@@ -36,7 +36,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class AdminController extends AbstractController
 {
    
-    public function __construct(private LoggerInterface $adminLogger)
+    public function __construct(private LoggerInterface $adminLogger,private SitemapController $sitemap)
     {
         
     }
@@ -142,6 +142,7 @@ final class AdminController extends AbstractController
                         }
                     }
 
+                    $this->sitemap->generateSitemap();
                     $this->addFlash('success',"Projet Créé");
                     return $this->redirectToRoute('app_admin_home');
 
@@ -181,6 +182,8 @@ final class AdminController extends AbstractController
             if ($p1 && $p2 && $P1Position && $P2Position) {
                 $p1->setOrderIndex($P1Position);
                 $p2->setOrderIndex($P2Position);
+                $p1->setUpdatedAt(new DateTimeImmutable('now'));
+                $p2->setUpdatedAt(new DateTimeImmutable('now'));
                 try {
                     $em->flush();
                     $this->addFlash('success','Position modifiée');
@@ -228,6 +231,7 @@ final class AdminController extends AbstractController
 
             try {
                 $em->flush();
+                $this->sitemap->generateSitemap();
                 $this->addFlash('success',"Le Projet a été supprimé");
             } catch (\Throwable $th) {
                 $this->addFlash('error',"Le Projet demandé n'existe pas");
@@ -321,6 +325,7 @@ final class AdminController extends AbstractController
                     $fileToMove['file']->move($fileToMove['path'],$fileToMove['name']);
                 }
 
+                $this->sitemap->generateSitemap();
                 $this->addFlash('success',"Projet Modifié");
                 return $this->redirectToRoute('app_admin_projects');
 
@@ -410,6 +415,7 @@ final class AdminController extends AbstractController
             $image = $gr->findOneBy(['id'=>$id]);
             $imageSrc = $image->getSrc();
             $em->remove($image);
+            $image->getGallery()->setUpdatedAt();
 
             try {
                 $em->flush();
@@ -439,7 +445,7 @@ final class AdminController extends AbstractController
             if ($img1 && $img2 ) {
                 $img1->setPosition($img1Position);
                 $img2->setPosition($img2Position);
-
+                $img1->getGallery()->setUpdatedAt();
                 try {
                     $em->flush();
                     $this->addFlash('success','Position modifièe');
@@ -486,8 +492,11 @@ final class AdminController extends AbstractController
 
             $em->persist($gallery);
 
+            $this->sitemap->updatePage('/galerie');
+
             try {
                 $em->flush();
+                $this->sitemap->generateSitemap();
                 $image->move("uploads/images/gallery/",$imageName);
             } catch (\Throwable $th) {
                 $this->addFlash('error',$th->getMessage());
@@ -533,6 +542,9 @@ final class AdminController extends AbstractController
                 $lastImage = $form->get("lastImage")->getData();
                 $gallery->setSrc($imageSrc);
             }
+
+            $gallery->setUpdatedAt();
+
             try {
                 $em->flush();
                 if ($image) {
@@ -541,7 +553,8 @@ final class AdminController extends AbstractController
                 }
                     $image->move("uploads/images/gallery/",$imageSrc);
                 }
-
+                $this->sitemap->updatePage('/galerie');
+                $this->sitemap->generateSitemap();
                 $this->addFlash('success','Galerie modifiée');
                 return $this->redirectToRoute('app_admin_galleries');
                 
@@ -584,8 +597,8 @@ final class AdminController extends AbstractController
                     unlink($imgPath);
                 }
             }
-
-      
+        $this->sitemap->updatePage('/galerie');
+        $this->sitemap->generateSitemap();
         } catch (\Throwable $th) {
             $this->addFlash('error',$th->getMessage());
         }
@@ -625,12 +638,15 @@ final class AdminController extends AbstractController
                 $em->persist($galleryImage);
             }
 
+            $gallery->setUpdatedAt();
+
             try {
                 $em->flush();
 
                 foreach ($filesToMove as $key => $file) {
                     $file->move("uploads/images/galleries/",$imgNames[$key]);
                 }   
+                $this->sitemap->generateSitemap();
 
                 return $this->redirectToRoute('app_admin_gallery',[
                     'name' => $name

@@ -13,12 +13,11 @@ export default class extends Controller {
         this.onDragOver = this.onDragOver.bind(this);
         this.onDrop = this.onDrop.bind(this);
         this.galleries = this.element.querySelectorAll(".admin-gallery-container");
+        this.draggedGallery = null;
+        this.droppedGallery = null;
     }
 
     connect() {
-       
-        let draggedGallery = null
-        let droppedGallery = null
         
         this.galleries.forEach(img => {
             img.addEventListener("dragstart",this.onDragStart)

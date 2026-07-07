@@ -1,5 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 
+/* stimulusFetch: 'lazy' */
 export default class extends Controller {
 
     initialize() {
@@ -7,56 +8,57 @@ export default class extends Controller {
         this.onDragOver = this.onDragOver.bind(this);
         this.onDrop = this.onDrop.bind(this);
         this.onDeleteClick = this.onDeleteClick.bind(this);
-        this.videos = this.element.querySelectorAll(".video-blocker");
+        
         this.draggedVideo = null;
         this.droppedVideo = null;
-        this.deleteBtns = this.element.querySelectorAll(".delete-btn");
-        this.deleteForm = this.element.querySelector('form[name=delete_service_video]');
-        
-        
     }
 
-    connect(){
-      
+    connect() {
+        this.videos = this.element.querySelectorAll(".video-blocker");
+        this.deleteBtns = this.element.querySelectorAll(".delete-btn");
+        this.deleteForm = this.element.querySelector('form[name=delete_service_video]');
+
         this.videos.forEach(video => {
-            video.addEventListener("dragstart",this.onDragStart)
-
-            video.addEventListener("dragover",this.onDragOver)
-
-            video.addEventListener("drop",this.onDrop)
+            video.addEventListener("dragstart", this.onDragStart);
+            video.addEventListener("dragover", this.onDragOver);
+            video.addEventListener("drop", this.onDrop);
         });
 
-
         this.deleteBtns.forEach(btn => {
-            btn.addEventListener('click',this.onDeleteClick);
-        })
+            btn.addEventListener('click', this.onDeleteClick);
+        });
     }
 
     disconnect() {
-         this.videos.forEach(video => {
-            video.removeEventListener("dragstart",this.onDragStart)
+        this.videos.forEach(video => {
+            video.removeEventListener("dragstart", this.onDragStart);
+            video.removeEventListener("dragover", this.onDragOver);
+            video.removeEventListener("drop", this.onDrop);
+        });
 
-            video.removeEventListener("dragover",this.onDragOver)
-
-            video.removeEventListener("drop",this.onDrop)
+        this.deleteBtns.forEach(btn => {
+            btn.removeEventListener('click', this.onDeleteClick);
         });
     }
 
-    onDragStart(e){
-        
+    onDragStart(e) {
         if (this.draggedVideo !== e.currentTarget && !this.draggedVideo) {
-            this.draggedVideo = e.currentTarget
+            this.draggedVideo = e.currentTarget;
         }
     }
 
-    onDragOver(e){
-        e.preventDefault()
-        if (e.target !== this.draggedVideo ) {
-            this.droppedVideo = e.currentTarget
+    onDragOver(e) {
+        e.preventDefault();
+        // Usiamo currentTarget per garantire il confronto corretto con il blocco video principale
+        if (e.currentTarget !== this.draggedVideo) {
+            this.droppedVideo = e.currentTarget;
         }
     }
 
-    onDrop(){
+    onDrop(e) {
+        e.preventDefault();
+        if (!this.draggedVideo || !this.droppedVideo) return;
+
         const data = [
             {
                 id: this.draggedVideo.dataset.id,
@@ -66,26 +68,32 @@ export default class extends Controller {
                 id: this.droppedVideo.dataset.id,
                 position: this.draggedVideo.dataset.position
             },
-        ]
+        ];
         
         const inputs = this.element.querySelectorAll("input");
-        console.log(inputs);
         
-        inputs[0].value = data[0].id
-        inputs[1].value = data[0].position
-        inputs[2].value = data[1].id
-        inputs[3].value = data[1].position
+        if (inputs.length >= 4) {
+            inputs[0].value = data[0].id;
+            inputs[1].value = data[0].position;
+            inputs[2].value = data[1].id;
+            inputs[3].value = data[1].position;
+            
+            const submitBtn = this.element.querySelector("button#item_position_submit");
+            if (submitBtn) submitBtn.click();
+        }
         
-        this.element.querySelector("button#item_position_submit").click()
-        this.draggedVideo = null
-        this.droppedVideo = null
+        this.draggedVideo = null;
+        this.droppedVideo = null;
     }
 
+    onDeleteClick(e) {
+        e.preventDefault();
+        if (!this.deleteForm) return;
 
-    onDeleteClick(e){
-            e.preventDefault()
-            const id = e.currentTarget.dataset.id
-            this.deleteForm.action = `/admin/services/${id}/delete`
-            this.element.querySelector('.deleteform-delete-btn').click()
-        }
+        const id = e.currentTarget.dataset.id;
+        this.deleteForm.action = `/admin/services/${id}/delete`;
+        
+        const submitDelete = this.element.querySelector('.deleteform-delete-btn');
+        if (submitDelete) submitDelete.click();
+    }
 }

@@ -1,93 +1,113 @@
 import { Controller } from '@hotwired/stimulus';
 
+/* stimulusFetch: 'lazy' */
 export default class extends Controller {
+
+    initialize() {
+        this.onFileChange = this.onFileChange.bind(this);
+        this.addStaffRow = this.addStaffRow.bind(this);
+    }
+
     connect() {
-        const files = this.element.querySelectorAll("input[type=file]");
-        files.forEach(file => {
-            file.addEventListener('change',(e)=>{
-                //if video input changes
-                if (e.target.classList.contains("inpt-bg-video") ) {
+        this.fileInputs = this.element.querySelectorAll("input[type=file]");
+        this.addStaffBtn = this.element.querySelector(".add_staff");
 
-                    const video = document.createElement("video");    
-                    if (!this.element.querySelector(".video-bg")) {
-                        e.target.parentNode.appendChild(video);
-                        video.width = 300
-                        video.height = 200
-                        video.controls = true
-                        video.classList.add("video-bg")
-                        video.src = URL.createObjectURL(e.target.files[0])
-                    }else{
-                        if ( e.target.files[0] !== undefined) {
-                            this.element.querySelector(".video-bg").src = URL.createObjectURL(e.target.files[0])
-                        }
-                    }
-                }
-                 //if image input changes
-                if(e.target.name.includes("image")){
-                    const className = e.target.name
-                    
-                    if (!e.target.parentNode.querySelector("img")) {
-                        const image = document.createElement("img"); 
-                        image.classList.add(className)
-                        e.target.parentNode.appendChild(image);
-                        image.width = 300
-                        image.height = 200
-                        image.src = URL.createObjectURL(e.target.files[0])
-                    }else{
-                        if (e.target.files[0] !== undefined) {
-                            e.target.parentNode.querySelector("img").src = URL.createObjectURL(e.target.files[0])
-                        }
-                    }
-                }
-                
-            })
-       })
+        this.fileInputs.forEach(file => {
+            file.addEventListener('change', this.onFileChange);
+        });
 
-       
-        this.element.querySelector(".add_staff").addEventListener("click",() => createStaffNodes(this.element))
-        const lastImages = this.element.querySelectorAll("input[data-last].inpt-img");
-        if (lastImages.length) {
-            lastImages.forEach(li => {
-                const lastImageValue = li.dataset.last
-                const parentNode = li.parentNode
-                const image = document.createElement("img"); 
-                const className = li.name
-                image.classList.add(className)
-                parentNode.appendChild(image);
-                image.width = 300
-                image.height = 200
-                image.src = "/uploads/images/projects/" + lastImageValue
-            })           
+        if (this.addStaffBtn) {
+            this.addStaffBtn.addEventListener("click", this.addStaffRow);
         }
 
-        const lastVideo = this.element.querySelector("input[data-last].inpt-bg-video");
-         if (lastVideo) {
-            const lastVideoValue = lastVideo.dataset.last
-            const video = document.createElement("video");  
-            lastVideo.parentNode.appendChild(video);
-            video.width = 300
-            video.height = 200
-            video.controls = true
-            video.classList.add("video-bg")
-            video.src = "/uploads/videos/" + lastVideoValue
+        this.renderInitialPreviews();
+    }
+
+    disconnect() {
+        this.fileInputs.forEach(file => {
+            file.removeEventListener('change', this.onFileChange);
+        });
+
+        if (this.addStaffBtn) {
+            this.addStaffBtn.removeEventListener("click", this.addStaffRow);
         }
     }
-}
 
+    onFileChange(e) {
+        const input = e.currentTarget;
+        const file = input.files[0];
+        const parent = input.parentNode;
 
+        if (input.classList.contains("inpt-bg-video")) {
+            let video = this.element.querySelector(".video-bg");
+            if (!video) {
+                video = document.createElement("video");
+                video.width = 300;
+                video.height = 200;
+                video.controls = true;
+                video.classList.add("video-bg");
+                parent.appendChild(video);
+            }
+            if (file) video.src = URL.createObjectURL(file);
+        }
 
-function createStaffNodes(element){
-    const newStaffContainer = element.querySelector(".new_staff_container");
-    const childsLength = element.querySelectorAll(".new_staff_item").length;
-    const container = element.querySelector(".new_staff_item");
-    const cloneNode = container.cloneNode(true)
+        if (input.name.includes("image")) {
+            let image = parent.querySelector("img");
+            if (!image) {
+                image = document.createElement("img");
+                image.width = 300;
+                image.height = 200;
+                parent.appendChild(image);
+            }
+            if (file) image.src = URL.createObjectURL(file);
+        }
+    }
 
-    cloneNode.querySelectorAll("label")[0].htmlFor += childsLength 
-    cloneNode.querySelectorAll("label")[1].htmlFor += childsLength 
-    cloneNode.querySelectorAll("input")[0].id += childsLength 
-    cloneNode.querySelectorAll("input")[1].id += childsLength 
-    cloneNode.querySelectorAll("input")[0].value = "" 
-    cloneNode.querySelectorAll("input")[1].value = "" 
+    renderInitialPreviews() {
+        const lastImages = this.element.querySelectorAll("input[data-last].inpt-img");
+        lastImages.forEach(li => {
+            const image = document.createElement("img");
+            image.width = 300;
+            image.height = 200;
+            image.src = "/uploads/images/projects/" + li.dataset.last;
+            li.parentNode.appendChild(image);
+        });
 
-    newStaffContainer.appendChild(cloneNode);
+        const lastVideo = this.element.querySelector("input[data-last].inpt-bg-video");
+        if (lastVideo) {
+            const video = document.createElement("video");
+            video.width = 300;
+            video.height = 200;
+            video.controls = true;
+            video.classList.add("video-bg");
+            video.src = "/uploads/videos/" + lastVideo.dataset.last;
+            lastVideo.parentNode.appendChild(video);
+        }
+    }
+
+    addStaffRow() {
+        const newStaffContainer = this.element.querySelector(".new_staff_container");
+        const container = this.element.querySelector(".new_staff_item");
+        
+        if (!newStaffContainer || !container) return;
+
+        const childsLength = this.element.querySelectorAll(".new_staff_item").length;
+        const cloneNode = container.cloneNode(true);
+
+        const labels = cloneNode.querySelectorAll("label");
+        const inputs = cloneNode.querySelectorAll("input");
+
+        if (labels.length >= 2) {
+            labels[0].htmlFor += childsLength;
+            labels[1].htmlFor += childsLength;
+        }
+        if (inputs.length >= 2) {
+            inputs[0].id += childsLength;
+            inputs[1].id += childsLength;
+            inputs[0].value = "";
+            inputs[1].value = "";
+        }
+
+        newStaffContainer.appendChild(cloneNode);
+    }
 }
