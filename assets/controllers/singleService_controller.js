@@ -49,7 +49,6 @@ export default class extends Controller {
 
     onDragOver(e) {
         e.preventDefault();
-        // Usiamo currentTarget per garantire il confronto corretto con il blocco video principale
         if (e.currentTarget !== this.draggedVideo) {
             this.droppedVideo = e.currentTarget;
         }

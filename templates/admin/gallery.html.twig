@@ -11,13 +11,15 @@
                 <a href="/admin/galleries">Precedent</a>
             </div>
             <a href="/admin/gallery/{{galleryName|lower}}/add-images">Ajouter les images</a>
+            <a class="admin-gallery-add-desc-btn hidden" href="/admin/gallery/add-desc?">Modifier Description</a>
         </div>
          <h1>Galerie {{galleryName}}</h1>
+         <button data-selected="false" class="admin-gallery-mod-btn">Modalité Selection</button>
          <div class="admin-gallery">
             {% if images is defined %}
                 {% for img in images %}
-                    <div>
-                        <img draggable="true" data-id="{{img.id}}" data-position="{{img.position}}" src="{{asset('/uploads/images/galleries/' ~ img.src)}}" alt="" width="200" height="250"/>
+                    <div data-description="{{img.description}}">
+                        <img draggable="true" data-id="{{img.id}}" data-position="{{img.position}}"   src="{{asset('/uploads/images/galleries/' ~ img.src)}}" alt="" width="200" height="250"/>
                         <button data-id='{{img.id}}' data-name="{{img.galleryName}}" class="delete-button">Effacer</button>
                     </div>
                 {% endfor %}

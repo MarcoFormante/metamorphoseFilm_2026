@@ -252,6 +252,32 @@ body {
   gap: 20px;
   justify-content: center;
 }
+.admin-gallery div.image-selected {
+  outline: 5px solid #f13900;
+  position: relative;
+}
+.admin-gallery div.image-selected::after {
+  content: attr(data-description);
+  position: absolute;
+  color: #fff;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(179, 94, 38, 0.3568627451);
+  overflow-wrap: break-word;
+  font-size: 12px;
+}
+.admin-gallery-mod-btn {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  border: none;
+  padding: 10px 15px;
+  color: #fff;
+  background-color: #f13900;
+  margin-bottom: 50px;
+}
 .admin-gallery .hidden {
   display: none;
 }
@@ -421,7 +447,7 @@ form[name=new_project] img {
   font-style: normal;
 }
 
-.poppins-light, .privacy, .cookie-banner .cookie-banner-text, .about .about-desc, .about .about-contact-desc, .services-email, .services .cards-list .card-container button .card-back ul li, .services h2, .backButton, .gallery-images .show-gallery .show-gallery-btn, .single-project .madeBy li, .single-project .project-staff li, .single-project-fixed-btn, .app-header, body:has(.admin-page) {
+.poppins-light, .image-desc-container p, .admin-gallery-add-desc form textarea, .privacy, .cookie-banner .cookie-banner-text, .about .about-desc, .about .about-contact-desc, .services-email, .services .cards-list .card-container button .card-back ul li, .services h2, .backButton, .gallery-images .show-gallery .show-gallery-btn, .single-project .madeBy li, .single-project .project-staff li, .single-project-fixed-btn, .app-header, body:has(.admin-page) {
   font-family: "Poppins", sans-serif;
   font-weight: 300;
   font-style: normal;
@@ -534,9 +560,9 @@ form[name=new_project] img {
   opacity: 0.4;
   transition: opacity 0.3s ease-in-out;
 }
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 1250px) {
   .single-project-fixed-btn {
-    top: -35px;
+    top: -45px;
     opacity: 1;
     position: absolute;
     right: 0%;
@@ -849,6 +875,9 @@ form select {
   justify-content: space-between;
   margin-bottom: 50px;
 }
+.admin-page .admin-header.justify-right {
+  justify-content: right;
+}
 
 .gallery-list {
   display: grid;
@@ -948,8 +977,13 @@ form select {
   z-index: 100;
 }
 .gallery-images .show-gallery-on {
-  display: grid;
-  place-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+}
+.gallery-images .show-gallery-on img {
+  aspect-ratio: 1/2;
 }
 .gallery-images .show-gallery img {
   -o-object-fit: cover;
@@ -1863,7 +1897,7 @@ body {
   height: 32px;
   color: #fff;
   cursor: pointer;
-  z-index: 100;
+  z-index: 99;
 }
 
 .cookie-banner {
@@ -2096,4 +2130,70 @@ body {
 .privacy .lang-btn-primary {
   background-color: #f13900;
   color: #fff;
+}
+
+.admin-gallery-add-desc .add-desc-images-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.admin-gallery-add-desc .add-desc-images-container img {
+  max-width: 200px;
+}
+.admin-gallery-add-desc form {
+  max-width: 500px;
+  margin: 50px auto;
+}
+.admin-gallery-add-desc form textarea {
+  max-width: 500px;
+  min-height: 200px;
+  padding: 10px;
+}
+
+.admin-gallery-add-desc-btn {
+  background-color: #000000;
+  color: #fff;
+  padding: 10px;
+}
+
+.image-desc-container {
+  max-width: 500px;
+  min-height: 15%;
+  padding: 8px 12px;
+}
+.image-desc-container p {
+  color: #fff;
+  background-color: #000000;
+  font-size: 14px;
+  z-index: 101;
+  position: relative;
+}
+.image-desc-container-no-desc {
+  min-height: 0;
+}
+
+.gallery-images:has(.image-desc-container) .show-gallery-on img {
+  width: 100%;
+  -o-object-fit: contain;
+     object-fit: contain;
+  transition: all 0.3s;
+  height: 70vh;
+}
+
+.gallery-images:has(.image-desc-container-no-desc) .show-gallery-on img {
+  width: 100%;
+  -o-object-fit: contain;
+     object-fit: contain;
+  height: 100vh;
+}
+.gallery-images:has(.image-desc-container-no-desc) .image-desc-container-no-desc {
+  padding: 0;
+}
+
+.admin-dev button {
+  max-width: -moz-fit-content;
+  max-width: fit-content;
+  padding: 15px;
+  margin: auto;
 }/*# sourceMappingURL=app.css.map */

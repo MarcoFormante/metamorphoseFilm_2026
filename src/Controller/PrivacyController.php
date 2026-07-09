@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -9,7 +10,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class PrivacyController extends AbstractController
 {
     #[Route('/privacy-policy/{lang}', name: 'app_privacy')]
-    public function index(string $lang): Response
+    public function index(string $lang, LoggerInterface $adminLogger): Response
     {
         if (in_array($lang,['fr','en'])) {
            
@@ -17,6 +18,7 @@ final class PrivacyController extends AbstractController
                'route'=> 'privacy-policy'
             ]);
         }else{
+            $adminLogger->alert('User searched bad Language in privacy-policy page');
             return $this->render('home/index.html.twig', [
                'route'=> 'home'
             ]);

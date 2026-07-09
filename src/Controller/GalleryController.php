@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Gallery;
 use App\Repository\GalleryImagesRepository;
 use App\Repository\GalleryRepository;
+use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,9 +27,10 @@ final class GalleryController extends AbstractController
 
 
   #[Route('/galerie/{name}', name: 'app_gallery_images')]
-    public function getGalleryImages(#[MapEntity(mapping: ['name' => 'name'])] ?Gallery $gallery,string $name,GalleryImagesRepository $gr): Response
+    public function getGalleryImages(#[MapEntity(mapping: ['name' => 'name'])] ?Gallery $gallery,string $name,GalleryImagesRepository $gr, LoggerInterface $adminLogger): Response
     {
         if (!$gallery) {
+            $adminLogger->alert('User searched bad gallery name in url: galerie/{name}');
             throw $this->createNotFoundException("gallery");
         }
 

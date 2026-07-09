@@ -59,6 +59,7 @@ class SitemapController extends AbstractController
 
             
             $sitemap->write();
+            $this->addFlash('success','SiteMap mis à jour');
     
             return true;
         } catch (\Throwable $th) {

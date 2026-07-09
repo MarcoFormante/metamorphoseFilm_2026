@@ -25,14 +25,22 @@ use App\Repository\ProjectRepository;
 use App\Repository\ServiceVideoRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Validator\Constraints\Length;
 
-
+#[IsGranted('ROLE_ADMIN')]
 final class AdminController extends AbstractController
 {
    
@@ -43,7 +51,8 @@ final class AdminController extends AbstractController
 
      #[Route('/admin/home', name: 'app_admin_home')]
     public function index(): Response
-    {
+    {   
+        
         return $this->render('admin/index.html.twig', [
             
         ]);
@@ -489,6 +498,7 @@ final class AdminController extends AbstractController
             ->getSingleScalarResult();
 
             $gallery->setPosition(($position ?? 0) + 1);
+            $gallery->setUpdatedAt();
 
             $em->persist($gallery);
 
@@ -605,6 +615,61 @@ final class AdminController extends AbstractController
         return $this->redirectToRoute('app_admin_galleries');
      }
 
+     #[Route('/admin/gallery/add-desc', name: 'app_admin_gallery_add_desc', methods: ['GET','POST'])]
+        public function galleryAddDesc( Request $request,GalleryImagesRepository $gi,EntityManagerInterface $em): Response
+        {
+            $ids = $request->query->get('ids');
+            $count = $request->query->get('count');
+
+            if (!$ids || !$count ) {
+                return $this->redirectToRoute('app_admin_galleries');
+            }
+
+         
+            $arrayOfIDS = explode(',',$ids);
+
+            $images = $gi->findBy(['id' => $arrayOfIDS],['id' => 'ASC']);
+            $galleryName = $images[0]->getGalleryName();
+
+            $form = $this->createFormBuilder()
+            ->add('Description',TextareaType::class,[
+                'data' => $count == 1 ? $images[0]->getDescription() : '',
+                'required' => false,
+                'attr' => [
+                    'maxlength' => 255,
+                    'placeholder' => 'Max 255 caractères'
+                ],
+                'constraints' => [
+                    new Length(
+                    max: 255,
+                    maxMessage :'La description ne doit pas dépasser {{ limit }} caractères.'
+                    ) 
+                ]
+            ])->getForm();
+
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $desc = $form->get('Description')->getData();
+                foreach ($images as $img) {
+                    $img->setDescription($desc);
+                }
+                $this->addFlash('success','Description modifiée');
+                $em->flush();
+                return $this->redirectToRoute('app_admin_gallery',[
+                    'name' => $galleryName
+                ]);
+            }
+
+
+            return $this->render("admin/galleryAddDesc.html.twig",[
+                'images' => $images,
+                'galleryName' => $galleryName,
+                'form' => $form
+            ]);
+        }
+
+
 
      #[Route('/admin/gallery/{name}/add-images', name: 'app_admin_gallery_add_images', methods: ['GET','POST'])]
      public function galleryAddImages(string $name, Request $request,EntityManagerInterface $em,GalleryRepository $gr,GalleryImagesRepository $gi): Response
@@ -667,8 +732,8 @@ final class AdminController extends AbstractController
         ]);
      }
 
-     #[Route('/admin/logs', name: 'app_admin_logs')]
-    public function logs(Kernel $kernel): Response
+     #[Route('/admin/dev', name: 'app_admin_dev')]
+    public function adminDev(Kernel $kernel, Request $request,KernelInterface $kernelInterface): Response
     {
         $path = $kernel->getProjectDir() . '/var/log/admin.log';
         $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
@@ -682,16 +747,50 @@ final class AdminController extends AbstractController
                 $entries[] = ['message' => $line];
             }
         }
+
+        $deleteLogsForm = $this->createFormBuilder()
+        ->add('deleteLogs',SubmitType::class)
+        ->getForm();
+
+        $form = $this->createFormBuilder()
+        ->add('deleteCache',SubmitType::class)
+        ->getForm();
+
+        $form->handleRequest($request);
+        $deleteLogsForm->handleRequest($request);
+
+        if($deleteLogsForm->isSubmitted() && $deleteLogsForm->isValid()){
+            file_put_contents($path, '');
+            $this->addFlash('success', 'I log sono stati svuotati con successo!');
+            return $this->redirectToRoute('app_admin_dev');
+        }
+
+        if($form->isSubmitted() && $form->isValid()){
+        $application = new Application($kernelInterface);
+
+        $input = new ArrayInput([
+            'command' => 'cache:clear',
+        ]);
+
+        $output = new NullOutput();
+        $application->run($input, $output);
+
+        $this->addFlash('success', 'La cache è stata svuotata');
+
+        return $this->redirectToRoute('app_admin_home');
+        }
         
-        return $this->render('admin/logs.html.twig', [
-            'array' => $entries
+        return $this->render('admin/dev.html.twig', [
+            'array' => $entries,
+            'form' => $form,
+            'logsForm' => $deleteLogsForm
         ]);
     }
 
 
     //Services
     #[Route('/admin/services', name: 'app_admin_services')]
-    public function services(ServiceVideoRepository $sv,Request $request,EntityManagerInterface $em): Response
+    public function services(): Response
     {
         return $this->render('admin/services.html.twig', [
           

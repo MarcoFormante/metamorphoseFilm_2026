@@ -22,7 +22,6 @@ export default class extends Controller {
 
         if (files.length) {
             for (let index = 0; index < files.length; index++) {
-                // Generiamo l'anteprima accedendo direttamente a this.containerTarget
                 this.containerTarget.innerHTML += `<img src='${URL.createObjectURL(files[index])}' width='200' height='130' alt=''/>`;
             }
         }

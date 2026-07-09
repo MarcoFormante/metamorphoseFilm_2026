@@ -1,12 +1,16 @@
 {% extends 'admin_base.html.twig' %}
 
-{% block title %}Admin LOGS{% endblock %}
+{% block title %}Admin Dev Page{% endblock %}
 
 {% block body %}
-    <main class="admin-page admin-logs">
-        <div class="admin-header">
-            <a href="/admin/home">Sortir</a>
+    <main class="admin-page admin-dev">
+        <div class="admin-header justify-right">
+            <a  href="/admin/home">Sortir</a>
         </div>
+        {{form_start(logsForm)}}
+        {{form_end(logsForm)}}
+        {{form_start(form)}}
+        {{form_end(form)}}
         <h1>LOGS</h1>
 
         <div class="admin-logs-messages-container">

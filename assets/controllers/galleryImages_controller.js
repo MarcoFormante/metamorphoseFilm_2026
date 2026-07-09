@@ -10,6 +10,8 @@ export default class extends Controller {
         this.onImageClick = this.onImageClick.bind(this);
         this.next = this.next.bind(this);
         this.prev = this.prev.bind(this);
+        this.descText = this.element.querySelector('.img-desc');
+        this.descContainer = this.element.querySelector('.image-desc-container');
     }
 
     connect() {
@@ -50,12 +52,14 @@ export default class extends Controller {
 
     onImageClick(e) {
         const img = e.currentTarget;
+      
         const idx = parseInt(img.dataset.galleryIndex, 10);
         this.showImage(img.src, idx);
     }
 
     showImage(src, index) {
         this.newImage.src = src;
+       
         this.index = index;
         this.updateIndices();
         this.imageContainer.classList.add("show-gallery-on");
@@ -64,6 +68,13 @@ export default class extends Controller {
     updateIndices() {
         this.nextIndex = (this.index + 1) > this.count - 1 ? 0 : this.index + 1;
         this.prevIndex = (this.index - 1) < 0 ? this.count - 1 : this.index - 1;
+        const desc = this.images[this.index].dataset.description 
+        this.descText.innerText = desc
+        if (!desc) {
+            this.descContainer.classList.add('image-desc-container-no-desc')
+        }else{
+             this.descContainer.classList.remove('image-desc-container-no-desc')
+        }
     }
 
     exit() {
@@ -79,8 +90,6 @@ export default class extends Controller {
         if (e.code === "Escape") {
             this.exit();
         } else if (e.code === "ArrowRight") {
-            console.log("ciao");
-            
             this.next(); 
         } else if (e.code === "ArrowLeft") {
             this.prev(); 
@@ -97,7 +106,6 @@ export default class extends Controller {
 
     next(){
         this.index = this.nextIndex;
-
         if (this.images[this.index]) {
             this.newImage.src = this.images[this.index].src;
             this.updateIndices();
@@ -106,7 +114,6 @@ export default class extends Controller {
 
     prev(){
         this.index = this.prevIndex;
-
         if (this.images[this.index]) {
             this.newImage.src = this.images[this.index].src;
             this.updateIndices();

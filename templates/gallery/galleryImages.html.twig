@@ -41,16 +41,18 @@
 <main class="gallery-images" data-controller="galleryImages">
     <twig:backBtn href="/galerie" />
     <twig:pageTitle title1="Galerie" title2="{{ name|capitalize }}" />
-    
-    <div class="image-list">
-        {% for image in images %}
-            {# Ottimizzato l'attributo alt per evitare descrizioni vuote, utile lato SEO e accessibilità #}
-            <img class="gallery-img" src="{{ asset('/uploads/images/galleries/' ~ image.src) }}" alt="Photo de la galerie {{ name|capitalize }}" width="360" height="546"/>
-        {% endfor %}
-    </div>
+        <div class="image-list">
+            {% for image in images %}
+                <img data-description="{{image.description}}" class="gallery-img" src="{{ asset('/uploads/images/galleries/' ~ image.src) }}" alt="Photo {{loop.index}} de la galerie {{ name|capitalize }}. {{image.description}}" width="360" height="546"/>
+            {% endfor %}
+        </div>
 
-    <div class="show-gallery">
+    <div class="show-gallery flex-col">
         <img src="" alt="">
+        <div class="image-desc-container">
+            <p class="img-desc"></p>
+        </div>
+        
         <button aria-label="fermer" class="show-gallery-exit">
             <svg 
             xmlns="http://www.w3.org/2000/svg" 

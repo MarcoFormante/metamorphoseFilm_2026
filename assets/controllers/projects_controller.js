@@ -23,7 +23,6 @@ export default class extends Controller {
     }
 
     disconnect() {
-        // Rimozione speculare e pulizia totale della memoria
         this.projects.forEach(p => {
             p.removeEventListener("dragstart", this.onDragStart);
             p.removeEventListener("dragover", this.onDragOver);

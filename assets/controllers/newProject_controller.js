@@ -48,7 +48,11 @@ export default class extends Controller {
                 video.classList.add("video-bg");
                 parent.appendChild(video);
             }
-            if (file) video.src = URL.createObjectURL(file);
+            if (file){
+                video.src = URL.createObjectURL(file);
+            } else{
+                video.src = "/uploads/videos/" + e.currentTarget.dataset.last;
+            }
         }
 
         if (input.name.includes("image")) {
@@ -59,7 +63,11 @@ export default class extends Controller {
                 image.height = 200;
                 parent.appendChild(image);
             }
-            if (file) image.src = URL.createObjectURL(file);
+            if (file){
+                image.src = URL.createObjectURL(file);
+            }else{
+                image.src = "/uploads/images/projects/" + e.currentTarget.dataset.last;
+            }
         }
     }
 

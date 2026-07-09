@@ -4,7 +4,8 @@ namespace App\Controller;
 
 use App\Repository\DeletedRepository;
 use App\Repository\ProjectRepository;
-use DateTime;
+use Doctrine\ORM\NoResultException;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,13 +15,14 @@ use Symfony\Component\Routing\Attribute\Route;
 final class ProjectController extends AbstractController
 {
     #[Route('/projet/{slug}', name: 'app_project')]
-    public function index(string $slug, ProjectRepository $repository,DeletedRepository $dr,Request $request): Response
+    public function index(string $slug, ProjectRepository $repository,DeletedRepository $dr,Request $request,LoggerInterface $adminLogger): Response
     {
         
         $project = $repository->findOneBy(['slug' => $slug]);
         $cookie = $request->cookies->get('cookie-consent','');
     
         if ($project && !$project->isActive()) {
+            $adminLogger->alert('Not Active Project in projet/{slug} : ' . $slug);
             throw new HttpException(403,"project_403");
         }
 
@@ -28,9 +30,10 @@ final class ProjectController extends AbstractController
             $deletedProject = $dr->findOneBy(["slug" => $slug]);
 
             if ($deletedProject) {
+                $adminLogger->alert('Deleted Project in projet/{slug} : ' . $slug);
                 throw new HttpException(410,"project_410");
             }
-
+            $adminLogger->alert('Project not found in projet/{slug} : ' . $slug);
             throw new HttpException(404,"project_404");
         }
 
@@ -60,6 +63,7 @@ final class ProjectController extends AbstractController
         $nextQuery = $repository->createQueryBuilder('p')
         ->select('p.slug as next')
         ->where('p.orderIndex > :id' )
+        ->andWhere('p.isActive = 1')
         ->setParameter('id',$project->getOrderIndex())
         ->orderBy('p.orderIndex', 'ASC')
         ->setMaxResults(1)
@@ -71,6 +75,7 @@ final class ProjectController extends AbstractController
         $prevQuery = $repository->createQueryBuilder('p')
         ->select('p.slug as prev')
         ->where('p.orderIndex < :id' )
+        ->andWhere('p.isActive = 1')
         ->setParameter('id',$project->getOrderIndex())
         ->orderBy('p.orderIndex', 'DESC')
         ->setMaxResults(1)
@@ -79,13 +84,13 @@ final class ProjectController extends AbstractController
        
         try {
             $nextSlug = $nextQuery->getSingleScalarResult();
-        } catch (\Doctrine\ORM\NoResultException) {
+        } catch (NoResultException) {
             $nextSlug = null;
         }
 
         try {
             $prevSlug = $prevQuery->getSingleScalarResult();
-        } catch (\Doctrine\ORM\NoResultException) {
+        } catch (NoResultException) {
             $prevSlug = null;
         }
       
