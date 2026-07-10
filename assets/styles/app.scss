@@ -53,6 +53,10 @@ body{
         left: 0%;
         padding-left: 32px;
         transform: translateY(-50%);
+
+        @media screen and (max-width:360px) {
+            left: -5%;
+        }
         
 
         h2 {
@@ -65,8 +69,7 @@ body{
                 text-wrap: wrap;
                 color: transparent;
                 cursor: pointer;
-                line-height: 1;
-                display: inline;
+                display: block;
                 text-decoration: none;
                 text-transform: uppercase;
                 transition: color .3s;

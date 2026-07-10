@@ -64,9 +64,7 @@
   align-items: center;
   gap: 5px;
   cursor: pointer;
-  border: 1px solid rgba(255, 255, 255, 0.329);
   border-radius: 4px;
-  box-shadow: 0 0 5px white;
   z-index: 10;
 }
 @media screen and (max-width: 1024px) {
@@ -167,6 +165,11 @@ body {
   padding-left: 32px;
   transform: translateY(-50%);
 }
+@media screen and (max-width: 360px) {
+  .swiper-slide figcaption {
+    left: -5%;
+  }
+}
 .swiper-slide figcaption h2 a {
   background: transparent;
   font-size: clamp(35px, 7vw, 120px);
@@ -174,8 +177,7 @@ body {
   text-wrap: wrap;
   color: transparent;
   cursor: pointer;
-  line-height: 1;
-  display: inline;
+  display: block;
   text-decoration: none;
   text-transform: uppercase;
   transition: color 0.3s;
