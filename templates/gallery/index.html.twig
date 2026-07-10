@@ -40,7 +40,7 @@
                 <li>
                     <a href="/galerie/{{ gallery.name|lower }}">
                         <figure>
-                            <img src="{{ asset('uploads/images/gallery/' ~ gallery.src) }}" alt="Galerie d'images, catégorie {{ gallery.name }}" width="300" height="420">
+                            <img src="{{ asset('/uploads/images/gallery/' ~ gallery.src) }}" alt="Galerie d'images, catégorie {{ gallery.name }}" width="300" height="420">
                             <figcaption>{{ gallery.name|capitalize }}</figcaption>
                         </figure>
                     </a>

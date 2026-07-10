@@ -1,0 +1,4 @@
+ 'app' => [
+        'path' => './public_html/assets/app-0llyyjE.js',
+        'entrypoint' => true,
+    ],
