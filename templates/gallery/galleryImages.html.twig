@@ -6,22 +6,18 @@
     {% set galleryTitle = "Galerie " ~ name|capitalize %}
     {% set pageDescription = "Découvrez l'album photo " ~ name|capitalize ~ " par Métamorphose Film. Explorez nos captures artistiques et réalisations visuelles." %}
 
-    <!-- SEO Specifico della pagina -->
     <meta name="description" content="{{ pageDescription }}">
     <meta name="keywords" content="galerie photo {{ name }}, album photo {{ name }}, shooting {{ name }}, photographie d'art, portfolio metamorphose">
     <meta name="robots" content="index, follow">
 
-    <!-- Open Graph Specifico -->
     <meta property="og:title" content="{{ galleryTitle }} - Metamorphose Film">
     <meta property="og:type" content="article">
     <meta property="og:url" content="{{ app.request.getUri() }}">
     <meta property="og:description" content="{{ pageDescription }}">
 
-    <!-- Twitter Specifico -->
     <meta name="twitter:title" content="{{ galleryTitle }} - Metamorphose Film">
     <meta name="twitter:description" content="{{ pageDescription }}">
 
-    <!-- Dati Strutturati per la Galleria Immagini -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",

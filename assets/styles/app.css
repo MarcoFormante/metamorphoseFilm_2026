@@ -2196,4 +2196,8 @@ body {
   max-width: fit-content;
   padding: 15px;
   margin: auto;
+}
+
+::-webkit-scrollbar {
+  display: none;
 }/*# sourceMappingURL=app.css.map */

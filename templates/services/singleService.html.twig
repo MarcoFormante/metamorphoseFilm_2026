@@ -6,22 +6,18 @@
     {% set formattedService = serviceName|capitalize %}
     {% set pageDescription = "Découvrez nos réalisations et productions audiovisuelles dans la catégorie " ~ formattedService ~ ". Une expertise ciblée signée Métamorphose Film." %}
 
-    <!-- SEO Specifico del servizio dinamico -->
     <meta name="description" content="{{ pageDescription }}">
     <meta name="keywords" content="production {{ serviceName }}, vidéo {{ serviceName }}, film {{ serviceName }}, réalisation {{ serviceName }}, production audiovisuelle, metamorphose film">
     <meta name="robots" content="index, follow">
 
-    <!-- Open Graph Specifico -->
     <meta property="og:title" content="Production {{ formattedService }} - Metamorphose Film">
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ app.request.getUri() }}">
     <meta property="og:description" content="{{ pageDescription }}">
 
-    <!-- Twitter Specifico -->
     <meta name="twitter:title" content="Production {{ formattedService }} - Metamorphose Film">
     <meta name="twitter:description" content="{{ pageDescription }}">
 
-    <!-- Dati Strutturati Dinamici del Servizio -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",

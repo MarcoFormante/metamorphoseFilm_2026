@@ -37,7 +37,7 @@
         "name": "Metamorphose Film",
         "logo": {
           "@type": "ImageObject",
-          "url": "https://metamorphosefilm.com/apple-touch-icon.png",
+          "url": "{{ app.request.getSchemeAndHttpHost() ~ asset('apple-touch-icon.png')}}",
           "width": 180,
           "height": 180
         }
@@ -99,7 +99,7 @@
             <div class="project-assets">
                 <div class="project-images">
                     {% for image in images %}
-                        <img src="/uploads/images/projects/{{ image.src }}" alt="Photographie {{ loop.index }} du projet {{ project.name }} - Metamorphose Film" width="300">
+                        <img src="{{asset("/uploads/images/projects/" ~ image.src)}}" alt="Photographie {{ loop.index }} du projet {{ project.name }} - Metamorphose Film" width="300">
                     {% endfor %}
                 </div>
 

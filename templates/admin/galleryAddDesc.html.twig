@@ -13,7 +13,7 @@
         {% if images %}
         <div class="add-desc-images-container">
             {% for img in images %}
-                <img src="/uploads/images/galleries/{{img.src}}" alt="">
+                <img src="{{asset('/uploads/images/galleries/' ~ img.src)}}" alt="">
             {% endfor %}
         </div>
         {% endif %}

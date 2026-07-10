@@ -5,22 +5,18 @@
 {% block meta %}
     {% set pageDescription = "Découvrez nos réalisations de clips vidéos musicaux. Une direction artistique unique et une narration visuelle rythmée signée Métamorphose Film." %}
 
-    <!-- SEO Specifico del servizio -->
     <meta name="description" content="{{ pageDescription }}">
     <meta name="keywords" content="clip vidéo, clip musical, réalisation clip, production audiovisuelle musique, tournage artiste, montage vidéo musique, metamorphose film">
     <meta name="robots" content="index, follow">
 
-    <!-- Open Graph Specifico -->
     <meta property="og:title" content="Réalisation de Clips Vidéos - Metamorphose Film">
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ app.request.getUri() }}">
     <meta property="og:description" content="{{ pageDescription }}">
 
-    <!-- Twitter Specifico -->
     <meta name="twitter:title" content="Réalisation de Clips Vidéos - Metamorphose Film">
     <meta name="twitter:description" content="{{ pageDescription }}">
 
-    <!-- Dati Strutturati dello Specifico Servizio -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
