@@ -11,99 +11,111 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\ItemInterface;
+use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
 final class ProjectController extends AbstractController
 {
     #[Route('/projet/{slug}', name: 'app_project')]
-    public function index(string $slug, ProjectRepository $repository,DeletedRepository $dr,Request $request,LoggerInterface $adminLogger): Response
-    {
-        
-        $project = $repository->findOneBy(['slug' => $slug]);
-        $cookie = $request->cookies->get('cookie-consent','');
-    
-        if ($project && !$project->isActive()) {
+    public function index(string $slug, ProjectRepository $repository,DeletedRepository $dr,Request $request,LoggerInterface $adminLogger,TagAwareCacheInterface $cache): Response
+    {   
+        $projectCheck = $repository->findOneBy(['slug' => $slug]);
+
+        if ($projectCheck && !$projectCheck->isActive()) {
             $adminLogger->alert('Not Active Project in projet/{slug} : ' . $slug);
-            throw new HttpException(403,"project_403");
+            throw new HttpException(403, "project_403");
         }
-
-        if (!$project) {
+        
+        if (!$projectCheck) {
             $deletedProject = $dr->findOneBy(["slug" => $slug]);
-
             if ($deletedProject) {
                 $adminLogger->alert('Deleted Project in projet/{slug} : ' . $slug);
-                throw new HttpException(410,"project_410");
+                throw new HttpException(410, "project_410");
             }
             $adminLogger->alert('Project not found in projet/{slug} : ' . $slug);
-            throw new HttpException(404,"project_404");
+            throw new HttpException(404, "project_404");
         }
-
-        
-
-        $etagVersion = $slug . '_' . $project->getUpdatedAt()->getTimestamp() . $cookie ;
-        $etag = md5($etagVersion);
 
         $response = new Response();
-        $response->setEtag($etag);
-        $response->setPrivate();
-        $response->setMaxAge(3600);
-        $response->setVary('Cookie');
+        $etag = md5($projectCheck->getId() . $projectCheck->getUpdatedAt()?->getTimestamp());
+        $response->setETag($etag);
+        $response->headers->set('Cache-Control', 'public, no-cache, must-revalidate');
 
         if ($response->isNotModified($request)) {
-            return $response;
-        }
+        return $response; 
+    }
 
+        $cacheKey = 'project-data-' . $projectCheck->getId();
+        $projectData = $cache->get($cacheKey, function(ItemInterface $item) use ($repository, $projectCheck) {
+            $item->expiresAfter(86400);
+            $item->tag(['projects','project-' . $projectCheck->getId()]);
+            $images = [];
+            foreach ($projectCheck->getProjectImages() as $image) {
+                $images[] = [
+                    'id' => $image->getId(),
+                    'src' => $image->getSrc(), 
+                ];
+            }
 
-        $images = $project->getProjectImages();
-        $staff = $project->getProjectStaff(); 
+            $staff = $projectCheck->getProjectStaff(); 
+            $createdStaff = [];
+            if ($staff) {
+                $createdStaff = json_decode($staff->getMoreStaffFields(), true) ?? [];
+            }
 
-        if ($staff) {
-            $createdStaff = json_decode($staff->getMoreStaffFields(),true);
-        }
+            $nextQuery = $repository->createQueryBuilder('p')
+                ->select('p.slug as next')
+                ->where('p.orderIndex > :id')
+                ->andWhere('p.isActive = 1')
+                ->setParameter('id', $projectCheck->getOrderIndex())
+                ->orderBy('p.orderIndex', 'ASC')
+                ->setMaxResults(1)
+                ->getQuery();
+            
+            $prevQuery = $repository->createQueryBuilder('p')
+                ->select('p.slug as prev')
+                ->where('p.orderIndex < :id')
+                ->andWhere('p.isActive = 1')
+                ->setParameter('id', $projectCheck->getOrderIndex())
+                ->orderBy('p.orderIndex', 'DESC')
+                ->setMaxResults(1)
+                ->getQuery();
 
-        $nextQuery = $repository->createQueryBuilder('p')
-        ->select('p.slug as next')
-        ->where('p.orderIndex > :id' )
-        ->andWhere('p.isActive = 1')
-        ->setParameter('id',$project->getOrderIndex())
-        ->orderBy('p.orderIndex', 'ASC')
-        ->setMaxResults(1)
-        ->setFirstResult(0)
-        ->getQuery();
-        
-       
-    
-        $prevQuery = $repository->createQueryBuilder('p')
-        ->select('p.slug as prev')
-        ->where('p.orderIndex < :id' )
-        ->andWhere('p.isActive = 1')
-        ->setParameter('id',$project->getOrderIndex())
-        ->orderBy('p.orderIndex', 'DESC')
-        ->setMaxResults(1)
-        ->setFirstResult(0)
-        ->getQuery();
-       
-        try {
-            $nextSlug = $nextQuery->getSingleScalarResult();
-        } catch (NoResultException) {
-            $nextSlug = null;
-        }
+            try {
+                $nextSlug = $nextQuery->getSingleScalarResult();
+            } catch (NoResultException) {
+                $nextSlug = null;
+            }
 
-        try {
-            $prevSlug = $prevQuery->getSingleScalarResult();
-        } catch (NoResultException) {
-            $prevSlug = null;
-        }
-      
+            try {
+                $prevSlug = $prevQuery->getSingleScalarResult();
+            } catch (NoResultException) {
+                $prevSlug = null;
+            }
+          
+            return [
+                'images' => $images,
+                'staff' => $staff,
+                'createdStaff' => $createdStaff,
+                'next' => $nextSlug,
+                'prev' => $prevSlug
+            ];
+        });
 
-        return $this->render('project/index.html.twig', [
-            'project' => $project,
-            'images' => $images,
-            'staff' => $staff,
-            'createdStaff' => $createdStaff ?? [],
-            'next' => $nextSlug,
-            'prev' => $prevSlug,
+        $cookie = $request->cookies->get('cookie-consent', '');
+
+        return  $this->render('project/index.html.twig', [
+            'project' => $projectCheck,
+            'images' => $projectData['images'],
+            'staff' => $projectData['staff'],
+            'createdStaff' => $projectData['createdStaff'],
+            'next' => $projectData['next'],
+            'prev' => $projectData['prev'],
             'cookie' => $cookie
         ],$response);
+
+        
     }
 }
 

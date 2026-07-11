@@ -47,7 +47,7 @@
                 {% for video in videos %}
                     {% set videoId = video.videoLink|split('=')[1]|split('&')[0] %}
                     <div class="video-blocker {{ video.isShort ? 'video-blocker-short' : '' }}" data-video-id="{{videoId}}" onclick="caricaQuestoVideo(this)">
-                        <img src="https://i.ytimg.com/vi/{{videoId}}/maxresdefault.jpg" alt="Couverture de la vidéo : {{ video.title }} - Metamorphose Film" class="video-cover">
+                        <img src="https://i.ytimg.com/vi/{{videoId}}/hqdefault.jpg" alt="Couverture de la vidéo : {{ video.title }} - Metamorphose Film" class="video-cover">
                         <div class="video-title-wrapper">
                             <span class="video-title">{{video.title}}</span>
                         </div>

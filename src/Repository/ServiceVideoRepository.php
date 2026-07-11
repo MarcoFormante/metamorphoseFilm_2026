@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\ServiceVideo;
+use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -19,25 +20,18 @@ class ServiceVideoRepository extends ServiceEntityRepository
 //    /**
 //     * @return ServiceVideo[] Returns an array of ServiceVideo objects
 //     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('s.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
 
-//    public function findOneBySomeField($value): ?ServiceVideo
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
-}
+
+    public function getMaxUpdatedAt(string $category): ?DateTimeImmutable
+   {
+       $date = $this->createQueryBuilder('s')
+            ->select("MAX(s.updatedAt)")
+            ->andWhere('s.category = :category')
+            ->setParameter('category',$category)
+           ->getQuery()
+          ->getSingleScalarResult()
+       ;
+
+       return new DateTimeImmutable($date);
+   }
+   }

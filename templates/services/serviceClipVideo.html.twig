@@ -44,9 +44,10 @@
         {% else %}
             <div class="videos-container {{ videos|length % 2 == 1 ? 'videos-container-odd' : null }}">
                 {% for video in videos %}
+
                     {% set videoId = video.youtubeVideo|split('=')[1]|split('&')[0] %}
                     <div class="video-blocker" data-video-id="{{videoId}}" onclick="caricaQuestoVideo(this)">
-                        <img src="https://i.ytimg.com/vi/{{videoId}}/maxresdefault.jpg" alt="Couverture du clip vidéo : {{ video.name }} - Metamorphose Film" class="video-cover">
+                        <img src="https://i.ytimg.com/vi/{{videoId}}/hqdefault.jpg" alt="Couverture du clip vidéo : {{ video.name }} - Metamorphose Film" class="video-cover">
                         <div class="video-title-wrapper">
                             <span class="video-title">{{video.name}}</span>
                         </div>

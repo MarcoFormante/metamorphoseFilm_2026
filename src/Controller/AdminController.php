@@ -39,12 +39,14 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
 #[IsGranted('ROLE_ADMIN')]
 final class AdminController extends AbstractController
 {
    
-    public function __construct(private LoggerInterface $adminLogger,private SitemapController $sitemap)
+    public function __construct(private LoggerInterface $adminLogger,private SitemapController $sitemap,private CacheInterface $cacheInterface,private TagAwareCacheInterface $tag)
     {
         
     }
@@ -53,9 +55,7 @@ final class AdminController extends AbstractController
     public function index(): Response
     {   
         
-        return $this->render('admin/index.html.twig', [
-            
-        ]);
+        return $this->render('admin/index.html.twig');
     }
     
 
@@ -73,10 +73,8 @@ final class AdminController extends AbstractController
         $form->handleRequest($request);
         $formErrors = $form->getErrors(true);
 
-        
 
         if ($form->isSubmitted() && $form->isValid()) {
-          
                 $lastOrderIndex = $pr->createQueryBuilder('p')
                 ->select('MAX(p.orderIndex)')->setMaxResults(1);
                 $query = $lastOrderIndex->getQuery();
@@ -153,6 +151,7 @@ final class AdminController extends AbstractController
 
                     $this->sitemap->generateSitemap();
                     $this->addFlash('success',"Projet Créé");
+                    $this->tag->invalidateTags(['home-projects','projects']);
                     return $this->redirectToRoute('app_admin_home');
 
                 } catch (\Exception $th) {
@@ -178,6 +177,7 @@ final class AdminController extends AbstractController
     {   
         $form = $this->createForm(ItemPositionType::class);
         $form->handleRequest($request);
+        $cacheKey = ['home-projects','projects'];
 
         if ($form->isSubmitted() && $form->isValid()) {
             $P1ID = $form->get("item1ID")->getData();
@@ -196,6 +196,7 @@ final class AdminController extends AbstractController
                 try {
                     $em->flush();
                     $this->addFlash('success','Position modifiée');
+                    $this->tag->invalidateTags($cacheKey);
                 } catch (\Throwable $th) {
                     $this->addFlash('error',$th->getMessage());
                 }
@@ -224,6 +225,8 @@ final class AdminController extends AbstractController
             return $this->redirectToRoute('app_admin_projects');    
         }
 
+        $cacheKey= 'home-projects';
+        $cacheProjectId = 'projects';
         $form = $this->createForm(NewProjectType::class,$p);
         $deleteForm = $this->createForm(DeleteProjectType::class);
 
@@ -238,9 +241,14 @@ final class AdminController extends AbstractController
 
             $em->persist($deletedProject);
 
+            $anotherProject = $em->getRepository(Project::class)->findOneBy(['isActive' => true]);
+            if ($anotherProject) {
+                $anotherProject->setUpdatedAt(new \DateTimeImmutable());
+            }
             try {
                 $em->flush();
                 $this->sitemap->generateSitemap();
+                $this->tag->invalidateTags([$cacheKey,$cacheProjectId]);               
                 $this->addFlash('success',"Le Projet a été supprimé");
             } catch (\Throwable $th) {
                 $this->addFlash('error',"Le Projet demandé n'existe pas");
@@ -287,7 +295,10 @@ final class AdminController extends AbstractController
                         $lastImage = $form->get("lastImage" . $key)->getData();
                         $filesToUnlink[] = "uploads/images/projects/" . $lastImage;
                         $imageToEdit = $pi->findOneBy(["src" => $lastImage]);
-                        $imageName = 'p-img1'  . bin2hex(random_bytes(18)) . ".webp";
+                        $imageName = 'p-img'  . $key . bin2hex(random_bytes(18)) . ".webp";
+                        if($key === 1){
+                            $p->setThumb($imageName);
+                        }
 
                         if(!$imageToEdit){
                             $imageToEdit = new ProjectImages();
@@ -336,6 +347,7 @@ final class AdminController extends AbstractController
 
                 $this->sitemap->generateSitemap();
                 $this->addFlash('success',"Projet Modifié");
+                $this->tag->invalidateTags([$cacheKey,$cacheProjectId]);   
                 return $this->redirectToRoute('app_admin_projects');
 
             } catch (\Throwable $th) {
@@ -393,7 +405,7 @@ final class AdminController extends AbstractController
                 } catch (\Throwable $th) {
                     $this->adminLogger->error('Error:',['message' => $th->getMessage()]);
                     $this->addFlash('error',$th->getMessage());
-
+                    $this->tag->invalidateTags(['galerie']);   
                     return $this->render('admin/galleries.html.twig',[
                         'galleries' => $galleries,
                         'form' => $form
@@ -432,6 +444,7 @@ final class AdminController extends AbstractController
                     unlink("uploads/images/galleries/" . $imageSrc);
                 }
                 $this->addFlash('success','Supprimée');
+                $this->tag->invalidateTags(['galerie','galerie-' . $name]); 
             } catch (\Throwable $th) {
                 $this->addFlash('error',$th->getMessage());
             }
@@ -458,6 +471,7 @@ final class AdminController extends AbstractController
                 try {
                     $em->flush();
                     $this->addFlash('success','Position modifièe');
+                    $this->tag->invalidateTags(['galerie-' . $img1->getGalleryName()]); 
                 } catch (\Throwable $th) {
                     $this->addFlash('error',$th->getMessage());
                 }
@@ -507,6 +521,7 @@ final class AdminController extends AbstractController
             try {
                 $em->flush();
                 $this->sitemap->generateSitemap();
+                $this->tag->invalidateTags(['galerie']); 
                 $image->move("uploads/images/gallery/",$imageName);
             } catch (\Throwable $th) {
                 $this->addFlash('error',$th->getMessage());
@@ -565,6 +580,7 @@ final class AdminController extends AbstractController
                 }
                 $this->sitemap->updatePage('/galerie');
                 $this->sitemap->generateSitemap();
+                $this->tag->invalidateTags(['galerie','galerie-' . $gallery->getName()]); 
                 $this->addFlash('success','Galerie modifiée');
                 return $this->redirectToRoute('app_admin_galleries');
                 
@@ -600,7 +616,7 @@ final class AdminController extends AbstractController
                 unlink("uploads/images/gallery/" . $imgSrc );
             }
 
-            foreach ($images as $key => $img) {
+            foreach ($images as $img) {
                 $imgPath = "uploads/images/galleries/" . $img->getSrc();
 
                 if (file_exists($imgPath)) {
@@ -609,6 +625,7 @@ final class AdminController extends AbstractController
             }
         $this->sitemap->updatePage('/galerie');
         $this->sitemap->generateSitemap();
+        $this->tag->invalidateTags(['galerie','galerie-' . $gallery->getName()]);
         } catch (\Throwable $th) {
             $this->addFlash('error',$th->getMessage());
         }
@@ -656,6 +673,7 @@ final class AdminController extends AbstractController
                 }
                 $this->addFlash('success','Description modifiée');
                 $em->flush();
+                $this->tag->invalidateTags(['galerie-'. $galleryName]);
                 return $this->redirectToRoute('app_admin_gallery',[
                     'name' => $galleryName
                 ]);
@@ -712,7 +730,7 @@ final class AdminController extends AbstractController
                     $file->move("uploads/images/galleries/",$imgNames[$key]);
                 }   
                 $this->sitemap->generateSitemap();
-
+                  $this->tag->invalidateTags(['galerie-'. $gallery->getName()]);
                 return $this->redirectToRoute('app_admin_gallery',[
                     'name' => $name
                 ]);
@@ -792,9 +810,7 @@ final class AdminController extends AbstractController
     #[Route('/admin/services', name: 'app_admin_services')]
     public function services(): Response
     {
-        return $this->render('admin/services.html.twig', [
-          
-        ]);
+        return $this->render('admin/services.html.twig');
     }
 
     #[Route('/admin/services/{name}', name: 'app_admin_single_services')]

@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Gallery;
+use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -28,4 +29,16 @@ class GalleryRepository extends ServiceEntityRepository
     {
         return $this->findBy([], ['position' => 'ASC']);
     }
+    
+
+    public function getMaxUpdateAt(): ?DateTimeImmutable
+   {
+       $date = $this->createQueryBuilder('g')
+            ->select("MAX(g.updatedAt)")
+           ->getQuery()
+          ->getSingleScalarResult()
+       ;
+
+       return new DateTimeImmutable($date);
+   }
 }

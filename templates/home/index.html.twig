@@ -12,7 +12,7 @@
         <div class="swiper" data-controller="swiper">
             <div class="swiper-wrapper">
                 {% for project in projects %}
-                    <twig:SwiperItem :src="project.backgroundVideo" :slug="project.getSlug" :title="project.getName" :collab="project.collabWith|replace({'&amp;' : '&'})" :poster="project.thumb" />
+                    <twig:SwiperItem :src="project.backgroundVideo" :slug="project.slug" :title="project.name" :collab="project.collab|replace({'&amp;' : '&'})" :poster="project.thumb" />
                 {% endfor %}
             </div>
         </div>
