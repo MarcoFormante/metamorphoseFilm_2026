@@ -6,6 +6,7 @@ import 'swiper/css';
 
 /* stimulusFetch: 'lazy' */
 export default class extends Controller {
+   
     
     connect() {
         this.swiper = new Swiper(this.element, {
@@ -16,7 +17,16 @@ export default class extends Controller {
             keyboard: {
                 enabled: true,
             },
-            speed: 1000
+            speed: 1000,
+            on: {
+                init: function () {
+                    playActiveVideo(this);
+                },
+                slideChange: function () {
+                    playActiveVideo(this);
+                }
+            },
+            
         });
     }
 
@@ -24,5 +34,28 @@ export default class extends Controller {
         if (this.swiper) {
             this.swiper.destroy(true, true);
         }
+    }
+
+   
+}
+
+
+
+ function playActiveVideo(swiperInstance) {
+    
+   const videos = swiperInstance.el.querySelectorAll('video')
+    videos.forEach(video => {
+        video.pause();
+        video.currentTime = 0; 
+    });
+    
+    const activeSlide = swiperInstance.slides[swiperInstance.activeIndex];
+    
+    const activeVideo = activeSlide.querySelector('video');
+    activeVideo.src = activeVideo.dataset.src
+    if (activeVideo) {
+        activeVideo.play().catch(error => {
+            console.log("Autoplay blocked");
+        });
     }
 }

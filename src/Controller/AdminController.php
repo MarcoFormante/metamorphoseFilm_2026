@@ -774,12 +774,25 @@ final class AdminController extends AbstractController
         ->add('deleteCache',SubmitType::class)
         ->getForm();
 
+        $singleCacheForm = $this->createFormBuilder()
+        ->add('cacheKey',null)
+        ->add('deleteSingleCache',SubmitType::class)
+        ->getForm();
+
         $form->handleRequest($request);
         $deleteLogsForm->handleRequest($request);
+        $singleCacheForm->handleRequest($request);
 
         if($deleteLogsForm->isSubmitted() && $deleteLogsForm->isValid()){
             file_put_contents($path, '');
             $this->addFlash('success', 'I log sono stati svuotati con successo!');
+            return $this->redirectToRoute('app_admin_dev');
+        }
+
+        if($singleCacheForm->isSubmitted() && $singleCacheForm->isValid()){
+            $key = $singleCacheForm->get('cacheKey')->getData();
+            $this->cacheInterface->delete($key);
+            $this->addFlash('success', 'Single Cache eliminata S!');
             return $this->redirectToRoute('app_admin_dev');
         }
 
@@ -801,7 +814,8 @@ final class AdminController extends AbstractController
         return $this->render('admin/dev.html.twig', [
             'array' => $entries,
             'form' => $form,
-            'logsForm' => $deleteLogsForm
+            'logsForm' => $deleteLogsForm,
+            'singleCacheForm' => $singleCacheForm
         ]);
     }
 
@@ -927,4 +941,9 @@ final class AdminController extends AbstractController
             $category = $video->getCategory();
         return $this->redirectToRoute('app_admin_single_services',['name' => $category]);
      }
+
+    private function deleteSingleCacheKey(string $key){
+
+        $this->cacheInterface->delete($key);
+    }
 }

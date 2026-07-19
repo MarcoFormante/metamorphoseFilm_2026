@@ -15,11 +15,16 @@ final class HomeController extends AbstractController
     #[Route('/', name: 'app_home')]
     public function index(ProjectRepository $projectRepository,Request $request,TagAwareCacheInterface $cache): Response
     {
-        
+            //if need to delete cache
+            // $cache->delete('home_projects');
+
             $response = new Response();
             $etag = md5('projects-' . $projectRepository->getMaxUpdateAt()->getTimestamp());
             $response->setETag($etag);
             $response->headers->set('Cache-Control', 'public, no-cache, must-revalidate');
+            // $response->headers->set('Pragma','no-cache');
+            // $response->headers->set('Expires','Mon, 13 Jul 2025 00:32::00 GMT');
+            
 
             if ($response->isNotModified($request)) {
                 return $response; 
@@ -52,6 +57,7 @@ final class HomeController extends AbstractController
                 'projects' => $projectList
         ],$response);
     }
+        
     }
 
 
