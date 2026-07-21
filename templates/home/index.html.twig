@@ -3,7 +3,18 @@
 {% block title %}Metamorphose Film - Production Audiovisuelle & Clips Vidéos{% endblock %}
 
 {% block meta %}
-{{ parent() }}
+    {% set pageDescription = "Metamorphose Film propose des productions audiovisuelles créatives, des clips vidéo immersifs et des contenus visuels sur mesure pour artistes et marques." %}
+
+    <meta name="description" content="{{ pageDescription }}">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:title" content="Metamorphose Film - Production Audiovisuelle & Clips Vidéos">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ app.request.getUri() }}">
+    <meta property="og:description" content="{{ pageDescription }}">
+
+    <meta name="twitter:title" content="Metamorphose Film - Production Audiovisuelle & Clips Vidéos">
+    <meta name="twitter:description" content="{{ pageDescription }}">
 {% endblock %}
 
 {% block body %}

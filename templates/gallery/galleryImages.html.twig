@@ -7,7 +7,6 @@
     {% set pageDescription = "Découvrez l'album photo " ~ name|capitalize ~ " par Métamorphose Film. Explorez nos captures artistiques et réalisations visuelles." %}
 
     <meta name="description" content="{{ pageDescription }}">
-    <meta name="keywords" content="galerie photo {{ name }}, album photo {{ name }}, shooting {{ name }}, photographie d'art, portfolio metamorphose">
     <meta name="robots" content="index, follow">
 
     <meta property="og:title" content="{{ galleryTitle }} - Metamorphose Film">
@@ -44,7 +43,7 @@
         </div>
 
     <div class="show-gallery flex-col">
-        <img src="" alt="">
+        <img src="" alt="" aria-hidden="true" class="show-gallery-img">
         <div class="image-desc-container">
             <p class="img-desc"></p>
         </div>

@@ -25,7 +25,7 @@ export default class extends Controller {
 
     disconnect() {
         this.iconTarget.removeEventListener('click', this.toggleBanner);
-        this.btnAccTarget.removeEventListener('removeEventListener', this.onAcceptClick);
+        this.btnAccTarget.removeEventListener('click', this.onAcceptClick);
         this.btnRefTarget.removeEventListener('click', this.onRefuseClick);
     }
 

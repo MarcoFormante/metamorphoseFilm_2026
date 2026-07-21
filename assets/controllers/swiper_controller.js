@@ -46,16 +46,24 @@ export default class extends Controller {
    const videos = swiperInstance.el.querySelectorAll('video')
     videos.forEach(video => {
         video.pause();
-        video.currentTime = 0; 
+        video.removeAttribute('src')
+        video.load()
     });
     
     const activeSlide = swiperInstance.slides[swiperInstance.activeIndex];
+    if (!activeSlide) {
+        return;
+    }
     
     const activeVideo = activeSlide.querySelector('video');
-    activeVideo.src = activeVideo.dataset.src
-    if (activeVideo) {
-        activeVideo.play().catch(error => {
-            console.log("Autoplay blocked");
-        });
+    if (!activeVideo) {
+        return;
     }
+
+    if (activeVideo.dataset.src) {
+        activeVideo.src = activeVideo.dataset.src;
+    }
+    activeVideo.play().catch(() => {
+        // Autoplay blocked or not allowed by browser
+    });
 }

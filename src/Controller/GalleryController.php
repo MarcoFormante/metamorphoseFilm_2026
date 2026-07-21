@@ -72,7 +72,7 @@ final class GalleryController extends AbstractController
         if ($response->isNotModified($request)) {
             return $response; 
         }
-        $galleryId = $gallery->getName();
+        $galleryId = strtolower($gallery->getName());
         $images = $this->cache->get('galerie-' . $galleryId, function(ItemInterface $item) use ($gr,$gallery,$galleryId) {
             $item->expiresAfter(86400);
             $item->tag(['galerie-' . strtolower($galleryId)]);

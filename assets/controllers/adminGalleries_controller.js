@@ -41,19 +41,25 @@ export default class extends Controller {
 
 
      onDragStart(e){
-        if (this.draggedGallery !== e.target && !this.draggedGallery) {
-            this.draggedGallery = e.target
+        const gallery = e.target.closest('.admin-gallery-container');
+        if (gallery && this.draggedGallery !== gallery && !this.draggedGallery) {
+            this.draggedGallery = gallery;
         }
     }
 
     onDragOver(e){
-        e.preventDefault()
-        if (e.target !== this.draggedGallery ) {
-            this.droppedGallery = e.target
+        e.preventDefault();
+        const gallery = e.target.closest('.admin-gallery-container');
+        if (gallery && gallery !== this.draggedGallery) {
+            this.droppedGallery = gallery;
         }
     }
 
     onDrop(){
+        if (!this.draggedGallery || !this.droppedGallery) {
+            return;
+        }
+
         const data = [
             {
                 id: this.draggedGallery.dataset.id,
@@ -63,17 +69,26 @@ export default class extends Controller {
                 id: this.droppedGallery.dataset.id,
                 position: this.draggedGallery.dataset.position
             },
-        ]
+        ];
         
         const inputs = this.element.querySelectorAll("input.form-control");
+        if (inputs.length < 4) {
+            this.draggedGallery = null;
+            this.droppedGallery = null;
+            return;
+        }
+
+        inputs[0].value = data[0].id;
+        inputs[1].value = data[0].position;
+        inputs[2].value = data[1].id;
+        inputs[3].value = data[1].position;
         
-        inputs[0].value = data[0].id
-        inputs[1].value = data[0].position
-        inputs[2].value = data[1].id
-        inputs[3].value = data[1].position
-        
-        this.element.querySelector("button#item_position_submit").click()
-        this.draggedGallery = null
-        this.droppedGallery = null
+        const submitBtn = this.element.querySelector("button#item_position_submit");
+        if (submitBtn) {
+            submitBtn.click();
+        }
+
+        this.draggedGallery = null;
+        this.droppedGallery = null;
     }
 }

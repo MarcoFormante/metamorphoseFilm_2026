@@ -2066,6 +2066,8 @@ body {
     -o-object-fit: cover;
        object-fit: cover;
     border-radius: 50%;
+    -o-object-position: top;
+       object-position: top;
   }
   .about .cards-list .card-container button .card-back {
     backface-visibility: hidden;

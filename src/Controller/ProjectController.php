@@ -11,7 +11,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
@@ -36,9 +35,9 @@ final class ProjectController extends AbstractController
             $adminLogger->alert('Project not found in projet/{slug} : ' . $slug);
             throw new HttpException(404, "project_404");
         }
-
+        $cookie = $request->cookies->get('cookie-consent', '');
         $response = new Response();
-        $etag = md5($projectCheck->getId() . $projectCheck->getUpdatedAt()?->getTimestamp());
+        $etag = md5($projectCheck->getId() . $projectCheck->getUpdatedAt()?->getTimestamp() . $cookie);
         $response->setETag($etag);
         $response->headers->set('Cache-Control', 'public, no-cache, must-revalidate');
 
@@ -103,7 +102,7 @@ final class ProjectController extends AbstractController
             ];
         });
 
-        $cookie = $request->cookies->get('cookie-consent', '');
+    
 
         return  $this->render('project/index.html.twig', [
             'project' => $projectCheck,

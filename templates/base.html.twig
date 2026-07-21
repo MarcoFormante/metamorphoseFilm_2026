@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="{{ app.request.attributes.get('lang')|default('fr') }}">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta http-equiv="content-language" content="fr">
+        <meta http-equiv="content-language" content="{{ app.request.attributes.get('lang')|default('fr') }}">
         <meta name="theme-color" content="#000000">
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-capable" content="yes"> 
@@ -14,7 +14,7 @@
         <link rel="canonical" href="{{ app.request.getUri() }}">
 
         <meta property="og:site_name" content="MetamorphoseFilm">
-        <meta property="og:locale" content="fr_FR">
+        <meta property="og:locale" content="{{ app.request.attributes.get('lang') == 'en' ? 'en_US' : 'fr_FR' }}">
         <meta property="og:image" content="/static/images/og-preview.jpg">
         <meta property="og:image:alt" content="MetamorphoseFilm">
         <meta property="og:image:width" content="1200">
@@ -26,12 +26,11 @@
 
         {% block meta %}
         <meta name="description" content="Société de production audiovisuelle créative, Metamorphose conçoit des contenus multimédias divers et variés, alliant originalité artistique et narration visuelle cinématographique.">
-        <meta name="keywords" content="vidéo, montage, audiovisuel, cinéma, clip musical, réalisation, photographie, artiste, étalonnage, drone, metamorphose, metamorphosefilm">
         <meta name="robots" content="index, follow">
 
         <meta property="og:title" content="MetamorphoseFilm">
         <meta property="og:type" content="website">
-        <meta property="og:url" content="https://metamorphosefilm.com">
+        <meta property="og:url" content="{{ app.request.getUri() }}">
         <meta property="og:description" content="Société de production audiovisuelle créative, Metamorphose conçoit des contenus multimédias divers et variés, alliant originalité artistique et narration visuelle cinématographique.">
 
         <meta name="twitter:title" content="MetamorphoseFilm">

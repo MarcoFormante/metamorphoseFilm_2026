@@ -3,11 +3,17 @@
 {% block title %}Privacy Policy - Metamorphose Film{% endblock %}
 
 {% block meta %}
-    <meta name="robots" content="noindex, nofollow">
+    <meta name="description" content="Metamorphose Film privacy policy: how we handle cookies, data privacy and YouTube consent for a secure, privacy-friendly browsing experience.">
+    <meta name="robots" content="index, follow">
 
-    <link rel="alternate" hreflang="fr" href="{{ url(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale': 'fr'})) }}">
-    <link rel="alternate" hreflang="en" href="{{ url(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale': 'en'})) }}">
-    <link rel="alternate" hreflang="x-default" href="{{ url(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale': 'fr'})) }}">
+    <meta property="og:title" content="Privacy Policy - Metamorphose Film">
+    <meta property="og:description" content="Metamorphose Film privacy policy: how we handle cookies, data privacy and YouTube consent for a secure, privacy-friendly browsing experience.">
+    <meta name="twitter:title" content="Privacy Policy - Metamorphose Film">
+    <meta name="twitter:description" content="Metamorphose Film privacy policy: how we handle cookies, data privacy and YouTube consent for a secure, privacy-friendly browsing experience.">
+
+    <link rel="alternate" hreflang="fr" href="{{ url('app_privacy', {'lang': 'fr'}) }}">
+    <link rel="alternate" hreflang="en" href="{{ url('app_privacy', {'lang': 'en'}) }}">
+    <link rel="alternate" hreflang="x-default" href="{{ url('app_privacy', {'lang': 'fr'}) }}">
 {% endblock %}
 
 {% block body %}

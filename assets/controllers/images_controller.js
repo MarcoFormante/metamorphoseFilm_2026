@@ -35,11 +35,14 @@ export default class extends Controller {
             btn.addEventListener('click', this.onDeleteClick);
         });
 
-        this.modBtn.addEventListener('click',this.toggleMod)
+        if (this.modBtn) {
+            this.modBtn.addEventListener('click', this.toggleMod);
+        }
     }
 
     disconnect() {
         this.images.forEach(img => {
+            img.parentNode.removeEventListener('click', this.onClickImage);
             img.removeEventListener("dragstart", this.onDragStart);
             img.removeEventListener("dragover", this.onDragOver);
             img.removeEventListener("drop", this.onDrop);
@@ -48,6 +51,10 @@ export default class extends Controller {
         this.deleteButtons.forEach(btn => {
             btn.removeEventListener('click', this.onDeleteClick);
         });
+
+        if (this.modBtn) {
+            this.modBtn.removeEventListener('click', this.toggleMod);
+        }
     }
 
     onDragStart(e) {
@@ -73,8 +80,6 @@ export default class extends Controller {
     onDrop(e) {
         e.preventDefault();
         if (this.modSelection === true || !this.draggedImage || !this.droppedImage) return;
-        
-        console.log("asdasd");
         
         const data = [
             {
@@ -114,24 +119,31 @@ export default class extends Controller {
     
     onClickImage(e){
         if (this.modSelection) {
+            const imageElement = e.currentTarget.querySelector('img');
+            const selectedID = imageElement?.dataset?.id;
+            if (!selectedID) {
+                return;
+            }
+
             e.currentTarget.classList.toggle('image-selected');
-            const selectedID = e.currentTarget.querySelector('img').dataset.id
-            console.log(e.currentTarget.classList.contains('image-selected'));
-            
             if (e.currentTarget.classList.contains('image-selected')) {
-                this.selectedImages.push(selectedID)
-            }else{
-                const filteredImages = this.selectedImages.filter(id => id !== selectedID )
-                this.selectedImages = filteredImages                
+                this.selectedImages.push(selectedID);
+            } else {
+                const filteredImages = this.selectedImages.filter(id => id !== selectedID);
+                this.selectedImages = filteredImages;
             }
         }
         
         if (this.selectedImages.length) {
-            this.addDescBtn.classList.remove('hidden')
-            this.addDescBtn.href = '/admin/gallery/add-desc?ids=' + this.selectedImages + '&count=' + this.selectedImages.length 
-        }else{
-            this.addDescBtn.classList.add('hidden')
-             this.addDescBtn.href = '/admin/gallery/add-desc?'
+            if (this.addDescBtn) {
+                this.addDescBtn.classList.remove('hidden');
+                this.addDescBtn.href = '/admin/gallery/add-desc?ids=' + this.selectedImages + '&count=' + this.selectedImages.length;
+            }
+        } else {
+            if (this.addDescBtn) {
+                this.addDescBtn.classList.add('hidden');
+                this.addDescBtn.href = '/admin/gallery/add-desc?';
+            }
         }
 
 

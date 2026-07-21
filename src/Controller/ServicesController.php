@@ -33,40 +33,36 @@ final class ServicesController extends AbstractController
     public function serviceClipVideo(ProjectRepository $pr,TagAwareCacheInterface $cache,Request $request): Response
     {   
         $response = new Response();
+        $response->setPublic();
+        $response->setMaxAge(3600);
+        $response->setSharedMaxAge(86400);
         $response->setEtag(md5('clip-video-' . $pr->getMaxUpdateAt('clip-video')->getTimestamp()));
-        $response->headers->set('Cache-Control', 'public, no-cache, must-revalidate');
 
         if ($response->isNotModified($request)) {
-                return $response; 
+            return $response;
         }
 
+        $videos = $cache->get('clip-video', function (ItemInterface $item) use ($pr) {
+            $item->expiresAfter(86400);
+            $item->tag(['services-clip-video']);
+            $rawVideos = $pr->findBy(['isActive' => 1], ['orderIndex' => 'DESC']);
 
-        $videos = $cache->get('clip-video',function (ItemInterface $item) use ($pr) {
-          $item->expiresAfter(86400);
-          $item->tag(['services-clip-video']);
-          $rawVideos = $pr->findBy(['isActive' => 1],['orderIndex' => 'DESC']);
+            $cachedVideos = [];
+            foreach ($rawVideos as $video) {
+                $cachedVideos[] = [
+                    'youtubeVideo' => $video->getYoutubeVideo(),
+                    'name' => $video->getName(),
+                ];
+            }
 
-          $cachedVideos = [];
-
-          foreach ($rawVideos as $video) {
-              $cachedVideos[] = [
-                'youtubeVideo' => $video->getYoutubeVideo(),
-                'name' => $video->getName(),
-              ];
-          }
-
-          return $cachedVideos;
+            return $cachedVideos;
         });
-
-        $videos = $pr->findBy(['isActive' => 1],['orderIndex' => 'DESC']);
-        
-
 
         return $this->render("services/serviceClipVideo.html.twig",[
           'route' => 'services',
           'videos' => $videos,
           'serviceName' => 'Clip Video'
-        ],$response);
+        ], $response);
     }
 
     #[Route('/services/{category}', name: 'app_services_singleService')]
@@ -91,9 +87,9 @@ public function singleServicePage(string $category, ServiceVideoRepository $sv, 
         return $response; 
     }
 
-    $videos = $cache->get('single-service-' . $category, function (ItemInterface $item) use ($sv, $category) {
+    $videos = $cache->get('single-service-' . strtolower($category), function (ItemInterface $item) use ($sv, $category) {
         $item->expiresAfter(86400);
-        $item->tag(['single-service-' . $category]);
+        $item->tag(['single-service-' . strtolower($category)]);
         
         $rawVideos = $sv->findBy(['category' => $category], ['position' => 'ASC']);
 

@@ -29,7 +29,7 @@ class NewProjectType extends AbstractType
                 'mapped' => false,
                 'required' => false,
                 'data' => $options['data'] ? $options['data']->isActive() : false,
-                'label' => 'Active'
+                'label' => 'Actif'
             ])
             ->add('name',null,[
                 'label' => 'Nom du projet'
@@ -82,10 +82,10 @@ class NewProjectType extends AbstractType
                 'required' => $isCreateForm,
                 'constraints' => [
                     new Image(
-                        maxSize:'5M',
+                        maxSize:'10M',
                         mimeTypes:['image/jpeg','image/png','image/webp'],
-                        mimeTypesMessage:"L`image-{$i} doit etre en JPEG,PNG ou WEBP et etre moins de 2MB",
-                        maxSizeMessage: "L'image-{$i} ne doit pas dépasser 2 MB.",
+                        mimeTypesMessage:"L`image-{$i} doit etre en JPEG,PNG ou WEBP et etre moins de 10MB",
+                        maxSizeMessage: "L'image-{$i} ne doit pas dépasser 10 MB.",
                         groups: ['Default', 'create']
                     ),
                     new NotBlank(

@@ -58,6 +58,10 @@ export default class extends Controller {
     }
 
     showImage(src, index) {
+        if (!this.newImage || !this.imageContainer) {
+            return;
+        }
+
         this.newImage.src = src;
        
         this.index = index;
@@ -68,12 +72,17 @@ export default class extends Controller {
     updateIndices() {
         this.nextIndex = (this.index + 1) > this.count - 1 ? 0 : this.index + 1;
         this.prevIndex = (this.index - 1) < 0 ? this.count - 1 : this.index - 1;
-        const desc = this.images[this.index].dataset.description 
-        this.descText.innerText = desc
-        if (!desc) {
-            this.descContainer.classList.add('image-desc-container-no-desc')
-        }else{
-             this.descContainer.classList.remove('image-desc-container-no-desc')
+        const desc = this.images[this.index].dataset.description;
+        if (this.descText) {
+            this.descText.innerText = desc;
+        }
+
+        if (this.descContainer) {
+            if (!desc) {
+                this.descContainer.classList.add('image-desc-container-no-desc');
+            } else {
+                this.descContainer.classList.remove('image-desc-container-no-desc');
+            }
         }
     }
 
@@ -85,7 +94,9 @@ export default class extends Controller {
     }
 
     handleKeyDown(e) {
-     if (!this.imageContainer.classList.contains("show-gallery-on")) return;
+        if (!this.imageContainer || !this.imageContainer.classList.contains("show-gallery-on")) {
+            return;
+        }
 
         if (e.code === "Escape") {
             this.exit();

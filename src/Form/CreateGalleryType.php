@@ -21,9 +21,9 @@ class CreateGalleryType extends AbstractType
             ->add('name')
             ->add('image',FileType::class,[
                 'constraints' => [new Image(
-                    maxSize:'2M',
+                    maxSize:'10M',
                     mimeTypes:['image/jpeg','image/png','image/webp'],
-                    mimeTypesMessage:'L`image doit etre en JPEG,PNG ou WEBP et etre moins de 2MB',
+                    mimeTypesMessage:'L`image doit etre en JPEG,PNG ou WEBP et etre moins de 10MB',
                 )],
                 'mapped' => false,
                 'required' => $isCreateForm ? true : false,

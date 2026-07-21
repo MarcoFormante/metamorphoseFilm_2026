@@ -13,14 +13,18 @@ final class PrivacyController extends AbstractController
     public function index(string $lang, LoggerInterface $adminLogger): Response
     {
         if (in_array($lang,['fr','en'])) {
-           
-            return $this->render("privacy/$lang.html.twig", [
-               'route'=> 'privacy-policy'
+            $response = $this->render("privacy/$lang.html.twig", [
+                'route'=> 'privacy-policy'
             ]);
-        }else{
+            $response->setPublic();
+            $response->setMaxAge(86400); 
+            $response->setSharedMaxAge(86400);
+
+            return $response;
+        } else {
             $adminLogger->alert('User searched bad Language in privacy-policy page');
             return $this->render('home/index.html.twig', [
-               'route'=> 'home'
+                'route'=> 'home'
             ]);
         }
     }
