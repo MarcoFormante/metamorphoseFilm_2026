@@ -298,6 +298,13 @@ final class AdminController extends AbstractController
 
         if ($deleteForm->isSubmitted() && $deleteForm->isValid()) {
             $slug = $p->getSlug();
+            $images = $p->getProjectImages();
+            $video = "uploads/videos/" . $p->getBackgroundVideo();
+            $imageSrcs = [];
+            $thumb = "uploads/images/projects/" . $p->getThumb();
+            foreach ($images as $image) {
+                $imageSrcs[] = "uploads/images/projects/" . $image->getSrc();
+            }
             $em->remove($p);
             
             $deletedProject = new Deleted();
@@ -311,6 +318,18 @@ final class AdminController extends AbstractController
             }
             try {
                 $em->flush();
+                foreach ($imageSrcs as $image) {
+                    if(file_exists($image) && !is_dir($image)){
+                        unlink($image);
+                    }
+                }
+                if(file_exists($thumb) && !is_dir($thumb)){
+                    unlink($thumb);
+                }
+
+                if(file_exists($video) && !is_dir($video)){
+                    unlink($video);
+                }
                 $this->sitemap->generateSitemap();
                 $this->tag->invalidateTags([$cacheKey,$cacheProjectId,'services-clip-video']);               
                 $this->addFlash('success',"Le Projet a été supprimé");
