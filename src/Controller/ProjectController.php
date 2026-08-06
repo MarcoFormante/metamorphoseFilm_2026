@@ -44,7 +44,6 @@ final class ProjectController extends AbstractController
         if ($response->isNotModified($request)) {
         return $response; 
     }
-
         $cacheKey = 'project-data-' . $projectCheck->getId();
         $projectData = $cache->get($cacheKey, function(ItemInterface $item) use ($repository, $projectCheck) {
             $item->expiresAfter(86400);

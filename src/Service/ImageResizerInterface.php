@@ -6,5 +6,5 @@ use Symfony\Component\HttpFoundation\File\File;
 
 interface ImageResizerInterface
 {
-    public function saveImageResized(File $img, string $newPath): void;
+    public function saveImageResized(File $img, string $newPath,?int $fit = 500): void;
 }

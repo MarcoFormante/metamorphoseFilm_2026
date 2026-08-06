@@ -68,11 +68,36 @@ class NewProjectType extends AbstractType
                    
                 'attr' => [
                     'accept' => 'video/mp4',
-                    'class' =>'inpt-bg-video line-bottom',
+                    'class' =>'inpt-bg-video',
                     'name' => "backgroundVideo",
                     ( !$isCreateForm ? 'data-last' : "create") => !$isCreateForm ? $project->getBackgroundVideo() : "true"
                 ]
             ])
+            ->add('image_cover',FileType::class,[
+                'mapped' => false,
+                'required' => false,
+                'constraints' => [
+                    new Image(
+                        maxSize:'10M',
+                        mimeTypes:['image/jpeg','image/png','image/webp'],
+                        mimeTypesMessage:"L`image Cover doit etre en JPEG,PNG ou WEBP et etre moins de 10MB",
+                        maxSizeMessage: "L'image Cover ne doit pas dépasser 10 MB.",
+                        groups: ['Default', 'create']
+                    )
+                ],
+                 'attr' => [
+                    'accept' => 'image/jpeg, image/png, image/webp',
+                    'class' => "inpt-img-cover line-bottom",
+                    ( !$isCreateForm ? 'data-last' : "create") => !$isCreateForm ? $project->getThumb() : "true"
+                ]
+            ]);
+            if (!$isCreateForm) {
+                $builder->add("lastImageCover",HiddenType::class,[
+                    'data' => $project->getThumb(),
+                    'mapped' => false,
+                    'attr' => ['hidden' => true,'class' => 'lastImageCoverInput']
+                ]);
+            }
         ;
         
         for ($i=1; $i <= 6 ; $i++) { 

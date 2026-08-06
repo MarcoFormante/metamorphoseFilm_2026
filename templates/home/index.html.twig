@@ -15,6 +15,23 @@
 
     <meta name="twitter:title" content="Metamorphose Film - Production Audiovisuelle & Clips Vidéos">
     <meta name="twitter:description" content="{{ pageDescription }}">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "name": "Projets Metamorphose Film",
+      "itemListElement": [
+        {% for project in projects %}
+        {
+          "@type": "ListItem",
+          "position": {{ loop.index }},
+          "url": "{{ app.request.getSchemeAndHttpHost() ~ '/projet/' ~ project.slug }}"
+        }{% if not loop.last %},{% endif %}
+        {% endfor %}
+      ]
+    }
+    </script>
 {% endblock %}
 
 {% block body %}
@@ -23,9 +40,13 @@
         <div class="swiper" data-controller="swiper">
             <div class="swiper-wrapper">
                 {% for project in projects %}
-                    <twig:SwiperItem :src="project.backgroundVideo" :slug="project.slug" :title="project.name" :collab="project.collab|replace({'&amp;' : '&'})" :poster="project.thumb" />
+                    <twig:SwiperItem :src="project.backgroundVideo" :slug="project.slug" :title="project.name" :collab="project.collab|replace({'&amp;' : '&'})" :poster="project.thumb"/>
                 {% endfor %}
             </div>
         </div>
    </main>
+
+
 {% endblock %}
+
+

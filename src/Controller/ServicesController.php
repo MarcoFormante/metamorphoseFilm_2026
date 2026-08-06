@@ -45,7 +45,7 @@ final class ServicesController extends AbstractController
         $videos = $cache->get('clip-video', function (ItemInterface $item) use ($pr) {
             $item->expiresAfter(86400);
             $item->tag(['services-clip-video']);
-            $rawVideos = $pr->findBy(['isActive' => 1], ['orderIndex' => 'DESC']);
+            $rawVideos = $pr->findBy(['isActive' => 1], ['orderIndex' => 'ASC']);
 
             $cachedVideos = [];
             foreach ($rawVideos as $video) {

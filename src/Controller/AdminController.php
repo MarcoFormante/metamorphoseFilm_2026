@@ -62,7 +62,7 @@ final class AdminController extends AbstractController
 
     private bool $isTest = false;
 
-    private function processImageNullable(mixed $img, string $newPath): void
+    private function processImageNullable(mixed $img, string $newPath,?int $fit = 500): void
     {
         if (!$img) {
             return;
@@ -80,9 +80,9 @@ final class AdminController extends AbstractController
         }
 
         if (isset($this->imageResizer) && $this->imageResizer) {
-            $this->imageResizer->saveImageResized($img, $newPath);
+            $this->imageResizer->saveImageResized($img, $newPath,$fit);
         } else {
-            $this->saveImageResized($img, $newPath);
+            $this->saveImageResized($img, $newPath,$fit);
         }
     }
 
@@ -93,10 +93,10 @@ final class AdminController extends AbstractController
         return $this->render('admin/index.html.twig');
     }
 
-    private function saveImageResized(File $img, string $newPath){
+    private function saveImageResized(File $img, string $newPath, ?int $fit = 500){
         Image::load($img->getPathname())
         ->format('webp')
-        ->fit(Fit::Max,500)
+        ->fit(Fit::Max,$fit)
         ->quality(80)
         ->optimize()
         ->save($newPath);
@@ -151,21 +151,22 @@ final class AdminController extends AbstractController
                 $project->setBackgroundVideo($videoUID);
 
                 $videoFile = $form->get("background_video")->getData();
-    
+                $imageCover = $form->get("image_cover")->getData();
+                $imageFiles = [];
                 $imageNames = [];
 
-                $imageFiles = [];
                 for ($i = 1; $i <= 6; $i++) {
                     $imageFiles[$i] = $form->get('image' . $i)->getData();
+                    if ($imageFiles[$i]) {
+                        $imageNames[$i] = 'p-img' . $i . bin2hex(random_bytes(18)) . ".webp";
+                        if($i === 1) $project->setThumb($imageNames[$i]);
+                    }
                 }
 
-                    foreach ($imageFiles as $key => $img) {
-                        if ($img && isset($imageNames[$key - 1])) {
-                            $newPath = 'uploads/images/projects/' . $imageNames[$key - 1];
-                            $this->processImageNullable($img, $newPath);
-                            $moved[] = $newPath;
-                        }
-                    }
+                if ($imageCover) {
+                    $imageCoverName = 'p-cover-img' . bin2hex(random_bytes(18)) . ".webp";
+                    $project->setThumb($imageCoverName);
+                }
 
                 $moved = [];
                 $connection = $em->getConnection();
@@ -177,12 +178,26 @@ final class AdminController extends AbstractController
                         $moved[] = 'uploads/videos/' . $videoUID;
                     }
 
+                    if ($imageCover) {
+                        $coverPath = 'uploads/images/projects/' . $imageCoverName;
+                        $this->processImageNullable($imageCover, $coverPath,1500);
+                        $moved[] = $coverPath;
+                    }
+
                     foreach ($imageFiles as $key => $img) {
-                        if ($img && isset($imageNames[$key - 1])) {
-                            $newPath = 'uploads/images/projects/' . $imageNames[$key - 1];
-                            $this->processImageNullable($img, $newPath);
-                            $moved[] = $newPath;
+                        if (!$img || !isset($imageNames[$key])) {
+                            continue;
                         }
+
+                        $imageName = $imageNames[$key];
+                        $newPath = 'uploads/images/projects/' . $imageName;
+                        $this->processImageNullable($img, $newPath);
+                        $moved[] = $newPath;
+
+                        $projectImage = new ProjectImages();
+                        $projectImage->setSrc($imageName);
+                        $projectImage->setProjectId($project);
+                        $em->persist($projectImage);
                     }
 
                     $em->persist($project);
@@ -315,7 +330,6 @@ final class AdminController extends AbstractController
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $filesToUnlink = [];
             $filesToMove = [];
             $videoToMove = null;
@@ -340,6 +354,22 @@ final class AdminController extends AbstractController
                     $p->setBackgroundVideo($videoUID);
                 }
 
+                $imageCover = $form->get("image_cover")->getData();
+                $lastImageCover = $form->get("lastImageCover")->getData();
+               
+                if($imageCover){
+                    if ($lastImageCover && str_contains($lastImageCover, "p-cover-img")) {
+                        $filesToUnlink[] = "uploads/images/projects/" . $lastImageCover;
+                    }
+                    $imageName = 'p-cover-img' . bin2hex(random_bytes(18)) . ".webp";
+                    $p->setThumb($imageName);
+                    $filesToMove[] = [
+                        'path' => "uploads/images/projects/",
+                        'name' => $imageName,
+                        'file' => $imageCover
+                    ];
+                }
+
                 $arrayImages = array_fill(1,6,"image");
 
                 foreach ($arrayImages as $key => $name) {
@@ -349,7 +379,7 @@ final class AdminController extends AbstractController
                         $filesToUnlink[] = "uploads/images/projects/" . $lastImage;
                         $imageToEdit = $pi->findOneBy(["src" => $lastImage]);
                         $imageName = 'p-img'  . $key . bin2hex(random_bytes(18)) . ".webp";
-                        if ($key === 1) {
+                        if ($key === 1 && !$imageCover && !$lastImageCover) {
                             $p->setThumb($imageName);
                         }
 
@@ -395,10 +425,11 @@ final class AdminController extends AbstractController
                         continue;
                     }
                     $newPath = $fileToMove['path'] . $fileToMove['name'];
-                    $this->processImageNullable($fileToMove['file'], $newPath);
+                    $this->processImageNullable($fileToMove['file'], $newPath, str_contains($fileToMove['name'], "p-cover-img") ? 1500 : 500);
                     $moved[] = $newPath;
                 }
-
+                $p->setUpdatedAt(new DateTimeImmutable("now"));
+                
                 $em->flush();
                 $connection->commit();
 
@@ -407,7 +438,10 @@ final class AdminController extends AbstractController
                         unlink($file);
                     }
                 }
-
+                $this->tag->invalidateTags([$cacheKey,$cacheProjectId,'services-clip-video']); 
+                if ($form->has("slug")) {
+                    $this->sitemap->generateSitemap();
+                }
                 return $this->redirectToRoute('app_admin_projects');
             } catch (\Throwable $th) {
                 if ($connection->isTransactionActive()) {

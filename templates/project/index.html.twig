@@ -13,36 +13,37 @@
     <meta property="og:type" content="video.other">
     <meta property="og:url" content="{{ app.request.getUri() }}">
     <meta property="og:description" content="{{ projectDescription }}">
-    <meta property="og:image" content="https://i.ytimg.com/vi/{{ videoId }}/maxresdefault.jpg">
+    <meta property="og:image" content="https://i.ytimg.com/vi/{{ videoId }}/hqdefault.jpg">
     <meta property="og:image:alt" content="Cover {{ project.name }}">
 
     <meta name="twitter:title" content="{{ project.name }} - Metamorphose Film">
     <meta name="twitter:description" content="{{ projectDescription }}">
-    <meta name="twitter:image" content="https://i.ytimg.com/vi/{{ videoId }}/maxresdefault.jpg">
+    <meta name="twitter:image" content="https://i.ytimg.com/vi/{{ videoId }}/hqdefault.jpg">
 
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "VideoObject",
-      "name": "{{ project.name }}",
-      "description": "{{ projectDescription }}",
-      "thumbnailUrl": [
-        "https://i.ytimg.com/vi/{{ videoId }}/maxresdefault.jpg"
-      ],
-      "uploadDate": "2026-01-01T00:00:00+00:00",
-      "embedUrl": "https://www.youtube.com/embed/{{ videoId }}",
-      "publisher": {
-        "@type": "Organization",
-        "name": "Metamorphose Film",
-        "logo": {
-          "@type": "ImageObject",
-          "url": "{{ app.request.getSchemeAndHttpHost() ~ asset('apple-touch-icon.png')}}",
-          "width": 180,
-          "height": 180
-        }
-      }
+{
+  "@context": "https://schema.org",
+  "@type": "VideoObject",
+  "name": "{{ project.name }}",
+  "description": "{{ projectDescription }}",
+  "thumbnailUrl": [
+    "https://i.ytimg.com/vi/{{ videoId }}/hqdefault.jpg"
+  ],
+  "uploadDate": "2026-01-01T00:00:00+00:00",
+  "contentUrl": "https://www.youtube.com/watch?v={{ videoId }}",
+  "embedUrl": "https://www.youtube.com/embed/{{ videoId }}",
+  "publisher": {
+    "@type": "Organization",
+    "name": "Metamorphose Film",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "{{ app.request.getSchemeAndHttpHost() ~ asset('apple-touch-icon.png')}}",
+      "width": 180,
+      "height": 180
     }
-    </script>
+  }
+}
+</script>
 {% endblock %}
 
 {% block body %}

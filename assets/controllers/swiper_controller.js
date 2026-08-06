@@ -49,6 +49,7 @@ export default class extends Controller {
         video.removeAttribute('src')
         video.load()
     });
+   
     
     const activeSlide = swiperInstance.slides[swiperInstance.activeIndex];
     if (!activeSlide) {
@@ -64,6 +65,7 @@ export default class extends Controller {
         activeVideo.src = activeVideo.dataset.src;
     }
     activeVideo.play().catch(() => {
-        // Autoplay blocked or not allowed by browser
+       
     });
+      
 }

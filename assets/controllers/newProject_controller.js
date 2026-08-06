@@ -91,6 +91,14 @@ export default class extends Controller {
             video.src = "/uploads/videos/" + lastVideo.dataset.last;
             lastVideo.parentNode.appendChild(video);
         }
+
+        const lastImageCover = this.element.querySelector("input[data-last].inpt-img-cover")
+        const image = document.createElement("img");
+        image.width = 300;
+        image.height = 200;
+        image.src = "/uploads/images/projects/" + lastImageCover.dataset.last;
+        lastImageCover.parentNode.appendChild(image);
+        
     }
 
     addStaffRow() {

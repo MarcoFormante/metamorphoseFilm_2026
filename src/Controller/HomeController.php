@@ -45,12 +45,13 @@ final class HomeController extends AbstractController
                         'slug' => $project->getSlug(),
                         'name' => $project->getName(),
                         'collab' => $project->getCollabWith(),
-                        'thumb' => $project->getThumb()
+                        'thumb' => $project->getThumb(),
                     ];
                 }
 
                 return $cachedProjects;
         });
+
 
         return $this->render('home/index.html.twig', [
                 'route' => '/',
