@@ -1,11 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Politique de Confidentialité - Metamorphose Film{% endblock %}
-
+{% block title %}Politique de Confidentialité{% endblock %}
+{% block canonical %}<link rel="canonical" href="{{ url('app_privacy', {'lang': app.request.attributes.get('lang')|default('fr')}) }}">{% endblock %}
 {% block meta %}
     <meta name="description" content="Politique de confidentialité de Metamorphose Film : cookies, gestion des données et consentement YouTube pour une navigation respectueuse de votre vie privée.">
     <meta name="robots" content="index, follow">
 
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url('app_privacy', {'lang': app.request.attributes.get('lang')|default('fr')}) }}">
     <meta property="og:title" content="Politique de Confidentialité - Metamorphose Film">
     <meta property="og:description" content="Politique de confidentialité de Metamorphose Film : cookies, gestion des données et consentement YouTube pour une navigation respectueuse de votre vie privée.">
     <meta name="twitter:title" content="Politique de Confidentialité - Metamorphose Film">
@@ -46,7 +48,7 @@
 
         <li>
             <p class="bold">2. Collecte et Utilisation des Données Techniques (Hébergement)</p>
-            <p>We do not directly collect, store, or use any personal data or IP addresses for our internal purposes.</p>
+            <p>Nous ne collectons, ne stockons ni n’utilisons directement aucune donnée personnelle ni adresse IP pour nos besoins internes.</p>
             <p>Cependant, notre hébergeur (Hostinger) peut enregistrer automatiquement certaines données techniques de navigation et les adresses IP des visiteurs dans les journaux du serveur (logs). Ce processus sert exclusivement à garantir la stabilité, le bon fonctionnement et la sécurité du site (par exemple, pour bloquer les attaques informatiques).</p>
         </li>
 
@@ -54,7 +56,7 @@
             <p class="bold">3. Gestion des Cookies et Consentement (YouTube)</p>
             <p>Ce site utilise un bandeau de gestion du consentement pour vous permettre d'accepter ou de refuser l'activation des cookies de tiers.</p>
             <p>Notre Cookie Technique</p>
-            <p>Lorsque vous interagissez avec le bandeau, un seul cookie technique strictly nécessaire est installé :</p>
+            <p>Lorsque vous interagissez avec le bandeau, un seul cookie technique strictement nécessaire est installé :</p>
             <p>Nom : cookie-consent</p>
             <p>Valeurs possibles : true ou false</p>
             <p>Durée : 365 jours</p>
@@ -63,25 +65,26 @@
             <p>L'affichage des vidéos présentes sur le site dépend directement de votre choix sur le bandeau :</p>
             <p>Si vous acceptez les cookies : Le lecteur YouTube se chargera normalement, la vidéo sera visible ou démarrera automatiquement, et YouTube (Google LLC) installera ses propres cookies de suivi et de ciblage sur votre navigateur.</p>
             <p>Si vous refusez les cookies : L'intégration de YouTube est bloquée pour protéger votre vie privée. À la place de la vidéo, vous verrez une simple image d'aperçu statique. En cliquant manuellement sur cette image, vous donnerez votre consentement spécifique pour cette vidéo : l'intégration s'activera et les cookies de YouTube seront installés.</p>
-            <p>Pour plus de détails sur les cookies utilisés par YouTube et sur la façon de les gérer, nous vous invitons à consulter la Règles de confidentialité de Google / YouTube.</p>
+            <p>Pour plus de détails sur les cookies utilisés par YouTube et sur la façon de les gérer, nous vous invitons à consulter les Règles de confidentialité de Google / YouTube.</p>
         </li>
 
         <li>
             <p class="bold">4. Liens Externes et Plateformes Tierces</p>
-            <p>Sur notre page de contact, des liens vous permettent d'interagir avec nous ou de nos suivre sur des plateformes externes :</p>
+            <p>Sur notre page de contact, des liens vous permettent d'interagir avec nous ou de nous suivre sur des plateformes externes :</p>
             <p>E-mail : Un lien direct pour nous envoyer un e-mail (nous collecterons votre adresse uniquement pour vous répondre).</p>
             <p>Instagram : Lien vers notre profil officiel.</p>
             <p>LinkedIn : Lien vers notre profil officiel.</p>
             <p>En cliquant sur ces liens, vous quittez notre site et êtes redirigé vers des plateformes externes. Ces sites tiers peuvent collecter des données sur vous, utiliser leurs propres cookies ou suivre vos interactions (notamment si vous êtes déjà connecté à vos comptes sur ces réseaux sociaux).</p>
             <p>Vous pouvez prendre connaissance de la manière dont ces plateformes gèrent vos données en cliquant directement sur les liens officiels de leurs politiques :</p>
-            <p>Politique de confidentialité d'Instagram : <a href="https://privacycenter.instagram.com/">Ici</a></p>
-            <p>Politique de confidentialité de LinkedIn : <a href="https://www.linkedin.com/legal/privacy-policy">Ici</a></p>
+            <p>Politique de confidentialité d'Instagram : <a href="https://privacycenter.instagram.com/">Politique de confidentialité d'Instagram</a></p>
+            <p>Politique de confidentialité de LinkedIn : <a href="https://www.linkedin.com/legal/privacy-policy">Politique de confidentialité de LinkedIn</a></p>
+            <p>Google / YouTube Privacy Policy : <a href="https://policies.google.com/privacy">Google / YouTube Privacy Policy</a></p>
         </li>
 
         <li>
             <p class="bold">5. Vos Droits (RGPD)</p>
             <p>En tant qu'utilisateur résidant dans l'Union Européenne, vous disposez d'un droit d'accès aux données vous concernant, de rectification, de limitation ou de suppression définitive ("Droit à l'oubli"). Vous pouvez également retirer votre consentement aux cookies à tout moment en effaçant l'historique de votre navigateur.</p>
-            <p>Note pratique sur l'accès les données : Comme ce site ne propose pas d'espace membre, de newsletter ou de base de données utilisateurs, nous ne conservons aucune information personnelle sur le serveur. Les seules données traitées sont les messages envoyés spontanément par e-mail, que nous conservons temporairement dans notre boîte de réception dans le seul but de répondre à vos demandes.</p>
+            <p>Note pratique sur l'accès aux données : Comme ce site ne propose pas d'espace membre, de newsletter ou de base de données utilisateurs, nous ne conservons aucune information personnelle sur le serveur. Les seules données traitées sont les messages envoyés spontanément par e-mail, que nous conservons temporairement dans notre boîte de réception dans le seul but de répondre à vos demandes.</p>
             <p>Pour toute question ou pour exercer vos droits, vous pouvez nous contacter directement via les canaux indiqués sur le site. Vous avez également le droit d'introduire une réclamation auprès de l'autorité de contrôle compétente (en France, la CNIL).</p>
         </li>
 

@@ -2,34 +2,36 @@
 
 {% block title %}{{ project.name }}{% endblock %}
 
-{% set videoId = project.youtubeVideo|split('=')[1]|split('&')[0] %}
+{% set videoId = project.youtubeVideo|split('v=')|last|split('&')|first %}
 {% set projectDescription = "Découvrez " ~ project.name ~ ", une réalisation audiovisuelle créative par Métamorphose Film." %}
+{% set uploadDate = project.uploadAt ?? project.updatedAt %}
+
+{% block social_image %}
+<meta property="og:image" content="https://i.ytimg.com/vi/{{ videoId }}/hqdefault.jpg">
+<meta property="og:image:alt" content="Cover {{ project.name }}">
+<meta name="twitter:image" content="https://i.ytimg.com/vi/{{ videoId }}/hqdefault.jpg">
+{% endblock %}
 
 {% block meta %}
     <meta name="description" content="{{ projectDescription }}">
     <meta name="robots" content="index, follow">
-
     <meta property="og:title" content="{{ project.name }} - Metamorphose Film">
     <meta property="og:type" content="video.other">
-    <meta property="og:url" content="{{ app.request.getUri() }}">
+    <meta property="og:url" content="{{ canonicalUrl }}">
     <meta property="og:description" content="{{ projectDescription }}">
-    <meta property="og:image" content="https://i.ytimg.com/vi/{{ videoId }}/hqdefault.jpg">
-    <meta property="og:image:alt" content="Cover {{ project.name }}">
-
     <meta name="twitter:title" content="{{ project.name }} - Metamorphose Film">
     <meta name="twitter:description" content="{{ projectDescription }}">
-    <meta name="twitter:image" content="https://i.ytimg.com/vi/{{ videoId }}/hqdefault.jpg">
 
     <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "VideoObject",
-  "name": "{{ project.name }}",
-  "description": "{{ projectDescription }}",
+  "name": {{ project.name|json_encode|raw }},
+  "description": {{ projectDescription|json_encode|raw }},
   "thumbnailUrl": [
     "https://i.ytimg.com/vi/{{ videoId }}/hqdefault.jpg"
   ],
-  "uploadDate": "2026-01-01T00:00:00+00:00",
+"uploadDate": {{ uploadDate|date('c')|json_encode|raw }},
   "contentUrl": "https://www.youtube.com/watch?v={{ videoId }}",
   "embedUrl": "https://www.youtube.com/embed/{{ videoId }}",
   "publisher": {
@@ -37,7 +39,7 @@
     "name": "Metamorphose Film",
     "logo": {
       "@type": "ImageObject",
-      "url": "{{ app.request.getSchemeAndHttpHost() ~ asset('apple-touch-icon.png')}}",
+      "url": {{ (app.request.schemeAndHttpHost ~ asset('apple-touch-icon.png'))|json_encode|raw }}
       "width": 180,
       "height": 180
     }
@@ -51,11 +53,11 @@
         <article>
             <div>
                 {% if next %}
-                    <a aria-label="Aller au prochain projet" href="/projet/{{ next }}" class="single-project-fixed-btn single-project-nextBtn">></a>
+                    <a aria-label="Aller au prochain projet" href="/projet/{{ next }}" class="single-project-fixed-btn single-project-nextBtn">&gt;</a>
                 {% endif %}
 
                 {% if prev %}
-                    <a aria-label="Aller au projet precedent" href="/projet/{{ prev }}" class="single-project-fixed-btn single-project-prevBtn"><</a>
+                    <a aria-label="Aller au projet précédent" href="/projet/{{ prev }}" class="single-project-fixed-btn single-project-prevBtn">&lt;</a>
                 {% endif %}
             </div>
            
@@ -90,7 +92,7 @@
                         </div>
                     {% elseif cookie == 'true' %}
                         <div class="ytb-video-container">
-                            <iframe width="560" height="315" src="{{ project.youtubeVideo|replace({'watch?v=' : 'embed/'})|split('&')[0] }}?autoplay=1&mute=1" allowfullscreen data-poster=""></iframe>
+                            <iframe width="560" height="315" src="{{ project.youtubeVideo|replace({'watch?v=' : 'embed/'})|split('&')[0] }}?autoplay=1&amp;mute=1" allowfullscreen data-poster=""></iframe>
                         </div>
                     {% endif %}
                 {% endif %}

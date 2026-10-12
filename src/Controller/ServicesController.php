@@ -33,10 +33,9 @@ final class ServicesController extends AbstractController
     public function serviceClipVideo(ProjectRepository $pr,TagAwareCacheInterface $cache,Request $request): Response
     {   
         $response = new Response();
-        $response->setPublic();
-        $response->setMaxAge(3600);
-        $response->setSharedMaxAge(86400);
-        $response->setEtag(md5('clip-video-' . $pr->getMaxUpdateAt('clip-video')->getTimestamp()));
+        $response->setEtag(md5('clip-video-' . ($pr->getMaxUpdateAt('clip-video')?->getTimestamp() ?? 0)));
+        $response->headers->set('Cache-Control', 'public, no-cache, must-revalidate');
+ 
 
         if ($response->isNotModified($request)) {
             return $response;
@@ -65,13 +64,9 @@ final class ServicesController extends AbstractController
         ], $response);
     }
 
-    #[Route('/services/{category}', name: 'app_services_singleService')]
+    #[Route('/services/{category}', name: 'app_services_singleService', requirements: ['category' => 'publicitaire|corporate|evenementiel'])]
 public function singleServicePage(string $category, ServiceVideoRepository $sv, LoggerInterface $adminLogger, Request $request, TagAwareCacheInterface $cache): Response
 {   
-    if ($category === 'clip-video') {
-        return $this->redirect('/services/clip-video', 302);
-    }
-    
     $allowedCategories = ['publicitaire', 'corporate', 'evenementiel'];
     $isServiceExists = in_array($category, $allowedCategories);
     if (!$isServiceExists) {
@@ -80,7 +75,7 @@ public function singleServicePage(string $category, ServiceVideoRepository $sv, 
     }
 
     $response = new Response();
-    $response->setEtag(md5('single-service-' . $category . '-' . $sv->getMaxUpdatedAt($category)->getTimestamp()));
+    $response->setEtag(md5('single-service-' . strtolower($category) . '-' . ($sv->getMaxUpdatedAt($category)?->getTimestamp() ?? 0)));
     $response->headers->set('Cache-Control', 'public, no-cache, must-revalidate');
 
     if ($response->isNotModified($request)) {
@@ -97,9 +92,8 @@ public function singleServicePage(string $category, ServiceVideoRepository $sv, 
         foreach ($rawVideos as $video) {
             $cachedVideos[] = [
                 'videoLink' => $video->getVideoLink(),
-                'isShort'      => $video->isShort(), 
+                'isShort'   => $video->isShort(), 
                 'title'     => $video->getTitle(),
-                'isShort'   => $video->isShort()
             ];
         }
 

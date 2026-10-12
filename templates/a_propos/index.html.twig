@@ -9,12 +9,10 @@
     <meta name="robots" content="index, follow">
 
     <meta property="og:title" content="À Propos de Nous - Metamorphose Film">
-    <meta property="og:type" content="profile">
-    <meta property="og:url" content="{{ app.request.getUri() }}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ canonicalUrl }}">
     <meta property="og:description" content="{{ pageDescription }}">
-    <meta property="og:image" content="{{asset('static/images/og-preview.jpg')}}">
 
-    <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="À Propos de Nous - Metamorphose Film">
     <meta name="twitter:description" content="{{ pageDescription }}">
 
@@ -26,7 +24,8 @@
         "@type": "Organization",
         "name": "Metamorphose Film",
         "url": "https://metamorphosefilm.com",
-        "logo": "{{ app.request.getSchemeAndHttpHost() ~ asset('static/images/og-preview.jpg')}}",
+        "logo": {{ (app.request.schemeAndHttpHost ~ asset('apple-touch-icon.png'))|json_encode|raw }},
+        "email": "metamorphoseproductions@gmail.com",
         "sameAs": [
           "https://www.instagram.com/metamorphosefilm/",
           "https://www.linkedin.com/company/metamorphose-film/"
@@ -57,13 +56,13 @@
 {% endblock %}
 
 {% block body %}
-<main class="about main-padding title-mobile-center" >
+<main class="about main-padding title-mobile-center">
     <twig:pageTitle title1="À Propos" title2="" />
     <p class="about-desc">Tout a commencé avec 3 esprits créatifs et passionnés, qui ont uni leurs forces pour donner naissance à une aventure unique.</p>
 
     <div class="about-person-cards" data-controller="cards">
         <div class="about-person-container">
-            <a aria-label="Profile instagram de Thibaud RICHARD" href="https://www.instagram.com/thibaud.richard/">
+            <a aria-label="Profil Instagram de Thibaud RICHARD" href="https://www.instagram.com/thibaud.richard/">
                 <div class="about-person">
                     <figure>
                         <img src="{{ asset('static/images/thibaud-metamorphose.webp') }}" alt="Thibaud RICHARD - Réalisation et Montage chez Metamorphose film">
@@ -74,15 +73,15 @@
                             <li class="person-job person-text">RÉALISATION</li>
                             <li class="person-job person-text">CADRAGE</li>
                             <li class="person-job person-text">MONTAGE</li>
-                            <li class="person-job person-text">EFFETS SPECIAUX</li>
-                        </ul> 
+                            <li class="person-job person-text">EFFETS SPÉCIAUX</li>
+                        </ul>
                     </div>
                 </div>
             </a>
         </div>
 
         <div class="about-person-container about-person-container-reverse">
-            <a aria-label="Profile instagram de Napy" href="https://www.instagram.com/napy.video/">
+            <a aria-label="Profil Instagram de Napy" href="https://www.instagram.com/napy.video/">
                 <div class="about-person">
                     <figure>
                         <img src="{{ asset('static/images/napy-metamorphose-web.webp') }}" alt="Napy - Réalisation, Photographie et Drone chez Metamorphose film">
@@ -93,23 +92,22 @@
                             <li class="person-job person-text">RÉALISATION</li>
                             <li class="person-job person-text">PHOTOGRAPHIE</li>
                             <li class="person-job person-text">ÉTALONNAGE</li>
-                            <li class="person-job person-text">PILOTAGE</li>
-                            <li class="person-job person-text">DRONE</li>
-                        </ul> 
+                            <li class="person-job person-text">PILOTAGE DRONE</li>
+                        </ul>
                     </div>
                 </div>
             </a>
         </div>
 
         <div class="about-person-container">
-            <a aria-label="Profile instagram de Vincent PAULY" href="https://www.instagram.com/vincii_pauly/">
+            <a aria-label="Profil Instagram de Vincent PAULY" href="https://www.instagram.com/vincii_pauly/">
                 <div class="about-person">
                     <figure>
-                        <img src="{{ asset('static/images/vincent-metamorphose.webp') }}" alt="Vincent PAULY - Réalisation e Storyboard chez Metamorphose film">
+                        <img src="{{ asset('static/images/vincent-metamorphose.webp') }}" alt="Vincent PAULY - Réalisation et Storyboard chez Metamorphose film">
                     </figure>
                     <div>
                         <p class="person-name person-text">Vincent PAULY</p>
-                         <ul class="person-job-list">
+                        <ul class="person-job-list">
                             <li class="person-job person-text">RÉALISATION</li>
                             <li class="person-job person-text">CADRAGE</li>
                             <li class="person-job person-text">MONTAGE</li>
@@ -124,12 +122,12 @@
     <div class="about-person-cards-mobile">
         <ul class="cards-list" data-controller="cards">
             <li class="card-container">
-                <button aria-pressed="false" aria-expanded="false" class="card-btn">
+                <div role="button" tabindex="0" aria-pressed="false" class="card-btn">
                     <div class="card-flipper">
                         <div class="card-front">
                             <figure>
                                 <figcaption class="person-name person-text">Thibaud RICHARD</figcaption>
-                                <img src="{{ asset('static/images/thibaud-metamorphose.webp') }}" alt="Thibaud RICHARD - Metamorphose film">
+                                <img src="{{ asset('static/images/thibaud-metamorphose.webp') }}" alt="Thibaud RICHARD - Metamorphose film" loading="lazy">
                             </figure>
                         </div>
                         <div class="card-back" aria-hidden="true">
@@ -137,20 +135,20 @@
                                 <li class="person-job person-text">RÉALISATION</li>
                                 <li class="person-job person-text">CADRAGE</li>
                                 <li class="person-job person-text">MONTAGE</li>
-                                <li class="person-job person-text">EFFETS SPECIAUX</li>
+                                <li class="person-job person-text">EFFETS SPÉCIAUX</li>
                             </ul>
                         </div>
                     </div>
-                </button>
+                </div>
             </li>
-           
+
             <li class="card-container">
-                <button aria-pressed="false" aria-expanded="false" class="card-btn">
+                <div role="button" tabindex="0" aria-pressed="false" class="card-btn">
                     <div class="card-flipper">
                         <div class="card-front">
                             <figure>
                                 <figcaption class="person-name person-text">Napy</figcaption>
-                                <img src="{{ asset('static/images/napy-metamorphose-web.webp') }}" alt="Napy - Metamorphose film">
+                                <img src="{{ asset('static/images/napy-metamorphose-web.webp') }}" alt="Napy - Metamorphose film" loading="lazy">
                             </figure>
                         </div>
                         <div class="card-back" aria-hidden="true">
@@ -162,16 +160,16 @@
                             </ul>
                         </div>
                     </div>
-                </button>
+                </div>
             </li>
 
             <li class="card-container">
-                <button aria-pressed="false" aria-expanded="false" class="card-btn">
+                <div role="button" tabindex="0" aria-pressed="false" class="card-btn">
                     <div class="card-flipper">
                         <div class="card-front">
                             <figure>
                                 <figcaption class="person-name person-text">Vincent PAULY</figcaption>
-                                <img src="{{ asset('static/images/vincent-metamorphose.webp') }}" alt="Vincent PAULY - Metamorphose film">
+                                <img src="{{ asset('static/images/vincent-metamorphose.webp') }}" alt="Vincent PAULY - Metamorphose film" loading="lazy">
                             </figure>
                         </div>
                         <div class="card-back" aria-hidden="true">
@@ -183,21 +181,21 @@
                             </ul>
                         </div>
                     </div>
-                </button>
+                </div>
             </li>
         </ul>
     </div>
 
     <h2 class="bigTitle">Contact</h2>
     <div class="about-contact-desc-container">
-        <p class="about-contact-desc"> Si vous souhaitez passer une commande, établir un partenariat, formuler une demande ou simplement obtenir des informations,</p>
+        <p class="about-contact-desc">Si vous souhaitez passer une commande, établir un partenariat, formuler une demande ou simplement obtenir des informations,</p>
         <p class="about-contact-desc">Metamorphose est à votre service afin de répondre à votre demande dans les plus brefs délais !</p>
     </div>
     <div class="about-contact-container">
         <ul>
             <li><a href="https://www.instagram.com/metamorphosefilm/" class="about-contact-insta">Instagram {% include "_partials/instagram.html.twig" %}</a></li>
-            <li><a href="mailto:metamorphoseproduction@gmail.com" class="about-contact-email"> <span>Email</span>  {% include "_partials/email.html.twig" %}</a></li>
-            <li><a href="https://www.linkedin.com/company/metamorphose-film/" class="about-contact-linkedin">Linkedin {% include "_partials/linkedin.html.twig" %}</a></li>
+            <li><a href="mailto:metamorphoseproductions@gmail.com" class="about-contact-email"><span>Email</span> {% include "_partials/email.html.twig" %}</a></li>
+            <li><a href="https://www.linkedin.com/company/metamorphose-film/" class="about-contact-linkedin">LinkedIn {% include "_partials/linkedin.html.twig" %}</a></li>
         </ul>
     </div>
 </main>

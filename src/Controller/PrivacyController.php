@@ -9,7 +9,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class PrivacyController extends AbstractController
 {
-    #[Route('/privacy-policy/{lang}', name: 'app_privacy')]
+    #[Route('/privacy-policy/{lang}', name: 'app_privacy',requirements: ['lang' => 'fr|en'])]
     public function index(string $lang, LoggerInterface $adminLogger): Response
     {
         if (in_array($lang,['fr','en'])) {

@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Privacy Policy - Metamorphose Film{% endblock %}
+{% block title %}Privacy Policy{% endblock %}
+{% block canonical %}<link rel="canonical" href="{{ url('app_privacy', {'lang': app.request.attributes.get('lang')|default('fr')}) }}">{% endblock %}
 
 {% block meta %}
     <meta name="description" content="Metamorphose Film privacy policy: how we handle cookies, data privacy and YouTube consent for a secure, privacy-friendly browsing experience.">
@@ -75,8 +76,9 @@
             <p>LinkedIn: Link to our official profile.</p>
             <p>By clicking on these links, you leave our site and are redirected to external platforms. These third-party sites may collect data about you, use their own cookies, or track your interactions (especially if you are already logged into your accounts on these social networks).</p>
             <p>You can learn more about how these platforms manage your data by clicking directly on the official links of their policies:</p>
-            <p>Instagram Privacy Policy: <a href="https://privacycenter.instagram.com/">Here</a></p>
-            <p>LinkedIn Privacy Policy: <a href="https://www.linkedin.com/legal/privacy-policy">Here</a></p>
+            <p>Instagram Privacy Policy: <a href="https://privacycenter.instagram.com/">Instagram Privacy Policy</a></p>
+            <p>LinkedIn Privacy Policy: <a href="https://www.linkedin.com/legal/privacy-policy">LinkedIn Privacy Policy</a></p>
+            <p>Google / YouTube Privacy Policy: <a href="https://policies.google.com/privacy">Google / YouTube Privacy Policy</a></p>
         </li>
 
         <li>

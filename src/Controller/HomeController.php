@@ -19,7 +19,7 @@ final class HomeController extends AbstractController
             // $cache->delete('home_projects');
 
             $response = new Response();
-            $etag = md5('projects-' . $projectRepository->getMaxUpdateAt()->getTimestamp());
+            $etag = md5('projects-' . ($projectRepository->getMaxUpdateAt()->getTimestamp() ?? 0));
             $response->setETag($etag);
             $response->headers->set('Cache-Control', 'public, no-cache, must-revalidate');
             // $response->headers->set('Pragma','no-cache');

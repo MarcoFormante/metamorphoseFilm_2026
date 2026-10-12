@@ -1,19 +1,18 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Galerie{% endblock %}
-
+{% set pageDescription = "Explorez les galeries photos et réalisations visuelles de Métamorphose Film. Découvrez nos projets à travers notre portfolio artistique." %}
 {% block meta %}
-    {% set pageDescription = "Explorez les galeries photos et réalisations visuelles de Métamorphose Film. Découvrez nos projets à travers notre portfolio artistique." %}
-
+    
     <meta name="description" content="{{ pageDescription }}">
     <meta name="robots" content="index, follow">
 
-    <meta property="og:title" content="Galerie Photo & Portfolio - Metamorphose Film">
+    <meta property="og:title" content="Galerie Photo &amp; Portfolio - Metamorphose Film">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="{{ app.request.getUri() }}">
+    <meta property="og:url" content="{{ canonicalUrl }}">
     <meta property="og:description" content="{{ pageDescription }}">
 
-    <meta name="twitter:title" content="Galerie Photo & Portfolio - Metamorphose Film">
+    <meta name="twitter:title" content="Galerie Photo &amp; Portfolio - Metamorphose Film">
     <meta name="twitter:description" content="{{ pageDescription }}">
 
     <script type="application/ld+json">
@@ -21,8 +20,8 @@
       "@context": "https://schema.org",
       "@type": "CollectionPage",
       "name": "Galerie Photo - Metamorphose Film",
-      "description": "{{ pageDescription }}",
-      "url": "{{ app.request.getUri() }}",
+      "description": {{ pageDescription|json_encode|raw }},
+      "url": {{ canonicalUrl|json_encode|raw }},
       "about": {
         "@type": "Organization",
         "name": "Metamorphose Film"
@@ -33,11 +32,12 @@
 
 {% block body %}
 <main class="galleries">
+    <h1 class="hidden">Galerie photo - Metamorphose Film</h1>
     <ul class="gallery-list">
         {% if galleries %}
             {% for gallery in galleries %}
                 <li>
-                    <a href="/galerie/{{ gallery.name|lower }}">
+                    <a href="/galerie/{{ gallery.name|lower|url_encode }}">
                         <figure>
                             <img src="{{ asset('/uploads/images/gallery/' ~ gallery.src) }}" alt="Galerie d'images, catégorie {{ gallery.name }}" width="300" height="420">
                             <figcaption>{{ gallery.name|capitalize }}</figcaption>

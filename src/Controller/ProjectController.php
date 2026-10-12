@@ -23,7 +23,7 @@ final class ProjectController extends AbstractController
 
         if ($projectCheck && !$projectCheck->isActive()) {
             $adminLogger->alert('Not Active Project in projet/{slug} : ' . $slug);
-            throw new HttpException(403, "project_403");
+            throw new HttpException(404, "project_404");
         }
         
         if (!$projectCheck) {
@@ -35,9 +35,15 @@ final class ProjectController extends AbstractController
             $adminLogger->alert('Project not found in projet/{slug} : ' . $slug);
             throw new HttpException(404, "project_404");
         }
+
+        if ($slug !== $projectCheck->getSlug()) {
+            return $this->redirectToRoute('app_project', ['slug' => $projectCheck->getSlug()], 301);
+        }
+
         $cookie = $request->cookies->get('cookie-consent', '');
         $response = new Response();
-        $etag = md5($projectCheck->getId() . $projectCheck->getUpdatedAt()?->getTimestamp() . $cookie);
+        $lastUpdate = $repository->getMaxUpdateAt()?->getTimestamp() ?? 0;
+        $etag = md5($projectCheck->getId() . ($projectCheck->getUpdatedAt()?->getTimestamp() ?? 0) . $cookie . '-' . $lastUpdate);
         $response->setETag($etag);
         $response->headers->set('Cache-Control', 'public, no-cache, must-revalidate');
 
@@ -94,7 +100,6 @@ final class ProjectController extends AbstractController
           
             return [
                 'images' => $images,
-                'staff' => $staff,
                 'createdStaff' => $createdStaff,
                 'next' => $nextSlug,
                 'prev' => $prevSlug
@@ -106,7 +111,7 @@ final class ProjectController extends AbstractController
         return  $this->render('project/index.html.twig', [
             'project' => $projectCheck,
             'images' => $projectData['images'],
-            'staff' => $projectData['staff'],
+            'staff' => $projectCheck->getProjectStaff(),
             'createdStaff' => $projectData['createdStaff'],
             'next' => $projectData['next'],
             'prev' => $projectData['prev'],

@@ -451,7 +451,7 @@ form[name=new_project] img {
   font-style: normal;
 }
 
-.poppins-light, .image-desc-container p, .admin-gallery-add-desc form textarea, .privacy, .cookie-banner .cookie-banner-text, .about .about-desc, .about .about-contact-desc, .services-email, .services .cards-list .card-container button .card-back ul li, .services h2, .backButton, .gallery-images .show-gallery .show-gallery-btn, .single-project .madeBy li, .single-project .project-staff li, .single-project-fixed-btn, .app-header, body:has(.admin-page) {
+.poppins-light, .image-desc-container p, .admin-gallery-add-desc form textarea, .privacy, .cookie-banner .cookie-banner-text, .about .about-desc, .about .about-contact-desc, .services-email, .services .cards-list .card-container div[role=button] .card-back ul li, .services h2, .backButton, .gallery-images .show-gallery .show-gallery-btn, .single-project .madeBy li, .single-project .project-staff li, .single-project-fixed-btn, .app-header, body:has(.admin-page) {
   font-family: "Poppins", sans-serif;
   font-weight: 300;
   font-style: normal;
@@ -475,7 +475,7 @@ form[name=new_project] img {
   font-style: normal;
 }
 
-.poppins-bold, .video-blocker .isShort-text, .video-blocker .youtube-label, .video-blocker .video-title, .about .about-contact-container a, .about .about-person-container .person-text, main.page-error h1, .services .cards-list .card-container button .card-back h5, .services .cards-list .card-container button .card-front h4, .services h3, .services ul.services-cards-projects-section li a, h1.bigTitle, h2.bigTitle, .gallery-images .show-gallery .show-gallery-exit, .gallery-list li a, .single-project .project-staff div h3, .single-project .madeBy h2, .single-project .project-staff h2, .swiper-slide figcaption .slide-collab {
+.poppins-bold, .video-blocker .isShort-text, .video-blocker .youtube-label, .video-blocker .video-title, .about .about-contact-container a, .about .about-person-container .person-text, main.page-error h1, .services .cards-list .card-container div[role=button] .card-back h5, .services .cards-list .card-container div[role=button] .card-front h4, .services h3, .services ul.services-cards-projects-section li a, h1.bigTitle, h2.bigTitle, .gallery-images .show-gallery .show-gallery-exit, .gallery-list li a, .single-project .project-staff div h3, .single-project .madeBy h2, .single-project .project-staff h2, .swiper-slide figcaption .slide-collab {
   font-family: "Poppins", sans-serif;
   font-weight: 700;
   font-style: normal;
@@ -1266,7 +1266,7 @@ h1.bigTitle .title2 {
     transform: rotate(0deg);
   }
 }
-.services .cards-list .card-container button {
+.services .cards-list .card-container div[role=button] {
   -webkit-appearance: none;
      -moz-appearance: none;
           appearance: none;
@@ -1276,27 +1276,27 @@ h1.bigTitle .title2 {
   height: 192px;
   width: 240px;
 }
-.services .cards-list .card-container button:focus h4 {
+.services .cards-list .card-container div[role=button]:focus h4 {
   color: #f13900;
 }
 @media screen and (max-width: 1180px) {
-  .services .cards-list .card-container button {
+  .services .cards-list .card-container div[role=button] {
     width: 200px;
     height: 152px;
   }
 }
 @media screen and (max-width: 1024px) {
-  .services .cards-list .card-container button {
+  .services .cards-list .card-container div[role=button] {
     height: 192px;
     width: 240px;
   }
 }
-.services .cards-list .card-container button .card-flipper {
+.services .cards-list .card-container div[role=button] .card-flipper {
   height: 100%;
   perspective: 1000px;
   position: relative;
 }
-.services .cards-list .card-container button .card-front {
+.services .cards-list .card-container div[role=button] .card-front {
   backface-visibility: hidden;
   height: 100%;
   left: 0px;
@@ -1314,19 +1314,19 @@ h1.bigTitle .title2 {
   display: grid;
   place-items: center;
 }
-.services .cards-list .card-container button .card-front:hover h4 {
+.services .cards-list .card-container div[role=button] .card-front:hover h4 {
   color: #f13900;
 }
-.services .cards-list .card-container button .card-front h4 {
+.services .cards-list .card-container div[role=button] .card-front h4 {
   transition: color 0.3s;
   font-size: clamp(20px, 1.5vw, 24px);
 }
 @media screen and (max-width: 1024px) {
-  .services .cards-list .card-container button .card-front h4 {
+  .services .cards-list .card-container div[role=button] .card-front h4 {
     font-size: 24px;
   }
 }
-.services .cards-list .card-container button .card-back {
+.services .cards-list .card-container div[role=button] .card-back {
   backface-visibility: hidden;
   height: 100%;
   left: 0px;
@@ -1345,33 +1345,34 @@ h1.bigTitle .title2 {
   flex-direction: column;
   justify-content: center;
   gap: 20px;
+  text-align: center;
 }
-.services .cards-list .card-container button .card-back ul {
+.services .cards-list .card-container div[role=button] .card-back ul {
   list-style: none;
 }
-.services .cards-list .card-container button .card-back ul li {
+.services .cards-list .card-container div[role=button] .card-back ul li {
   font-size: 16px;
   font-size: clamp(13px, 1.2vw, 16px);
 }
 @media screen and (max-width: 1024px) {
-  .services .cards-list .card-container button .card-back ul li {
+  .services .cards-list .card-container div[role=button] .card-back ul li {
     font-size: 16px;
   }
 }
-.services .cards-list .card-container button .card-back h5 {
+.services .cards-list .card-container div[role=button] .card-back h5 {
   font-size: 17px;
   font-size: clamp(13px, 1.2vw, 17px);
 }
 @media screen and (max-width: 1024px) {
-  .services .cards-list .card-container button .card-back h5 {
+  .services .cards-list .card-container div[role=button] .card-back h5 {
     font-size: 17px;
   }
 }
-.services .cards-list .card-container button.card-btn-on .card-front {
+.services .cards-list .card-container div[role=button].card-btn-on .card-front {
   transform: rotateY(-180deg);
   position: relative;
 }
-.services .cards-list .card-container button.card-btn-on .card-back {
+.services .cards-list .card-container div[role=button].card-btn-on .card-back {
   transform: rotateY(0deg);
   position: absolute;
   z-index: 1;
@@ -2068,7 +2069,7 @@ body {
   }
 }
 @media screen and (max-width: 1024px) {
-  .about .cards-list .card-container button {
+  .about .cards-list .card-container div {
     -webkit-appearance: none;
        -moz-appearance: none;
             appearance: none;
@@ -2077,13 +2078,14 @@ body {
     cursor: pointer;
     height: 100%;
     width: 100%;
+    text-align: center;
   }
-  .about .cards-list .card-container button .card-flipper {
+  .about .cards-list .card-container div .card-flipper {
     height: 100%;
     perspective: 1000px;
     position: relative;
   }
-  .about .cards-list .card-container button .card-front {
+  .about .cards-list .card-container div .card-front {
     backface-visibility: hidden;
     left: 0px;
     position: absolute;
@@ -2100,7 +2102,7 @@ body {
     height: 100%;
     width: 100%;
   }
-  .about .cards-list .card-container button .card-front figure {
+  .about .cards-list .card-container div .card-front figure {
     width: 100%;
     height: 100%;
     display: flex;
@@ -2108,14 +2110,14 @@ body {
     justify-content: space-evenly;
     align-items: center;
   }
-  .about .cards-list .card-container button .card-front figure figcaption {
+  .about .cards-list .card-container div .card-front figure figcaption {
     font-size: clamp(16px, 5vw, 32px);
     color: #fff;
     font-weight: bold;
     font-family: "Poppins", sans-serif;
     text-transform: uppercase;
   }
-  .about .cards-list .card-container button .card-front img {
+  .about .cards-list .card-container div .card-front img {
     width: clamp(140px, 30vw, 250px);
     height: clamp(140px, 30vw, 250px);
     -o-object-fit: cover;
@@ -2124,7 +2126,8 @@ body {
     -o-object-position: top;
        object-position: top;
   }
-  .about .cards-list .card-container button .card-back {
+  .about .cards-list .card-container div .card-back {
+    text-align: center;
     backface-visibility: hidden;
     left: 0px;
     position: relative;
@@ -2145,23 +2148,23 @@ body {
     height: 100%;
     width: 100%;
   }
-  .about .cards-list .card-container button .card-back ul.person-job-list {
+  .about .cards-list .card-container div .card-back ul.person-job-list {
     list-style: none;
     display: flex;
     flex-direction: column;
     justify-content: center;
     gap: 2vw;
   }
-  .about .cards-list .card-container button .card-back ul.person-job-list li {
+  .about .cards-list .card-container div .card-back ul.person-job-list li {
     font-size: clamp(18px, 5vw, 26px);
     font-family: "Poppins", sans-serif;
     font-weight: 600;
   }
-  .about .cards-list .card-container button.card-btn-on .card-front {
+  .about .cards-list .card-container div.card-btn-on .card-front {
     transform: rotateY(-180deg);
     position: relative;
   }
-  .about .cards-list .card-container button.card-btn-on .card-back {
+  .about .cards-list .card-container div.card-btn-on .card-back {
     transform: rotateY(0deg);
     position: absolute;
     z-index: 1;

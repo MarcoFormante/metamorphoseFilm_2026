@@ -1348,7 +1348,7 @@ h1.bigTitle{
 
            
 
-            button{
+            div[role=button]{
                 appearance: none;
                 background: transparent;
                 border: none;
@@ -1432,6 +1432,7 @@ h1.bigTitle{
                     flex-direction: column;
                     justify-content: center;
                     gap: 20px;
+                    text-align: center;
 
                     ul{
                         list-style: none;
@@ -2259,13 +2260,14 @@ body{
             min-height: 180px;
 
 
-            button{
+            div{
                 appearance: none;
                 background: transparent;
                 border: none;
                 cursor: pointer;
                 height: 100%;
                 width: 100%;
+                text-align: center;
 
                
                 .card-flipper{
@@ -2322,6 +2324,7 @@ body{
                  }
 
                 .card-back{
+                    text-align: center;
                     backface-visibility: hidden;
                     left: 0px;
                     position: relative;

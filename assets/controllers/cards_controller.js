@@ -9,7 +9,7 @@ import { Controller } from '@hotwired/stimulus';
 export default class extends Controller {
 
     initialize() {
-        this.cards = this.element.querySelectorAll('button')
+        this.cards = this.element.querySelectorAll('div[role=button]')
         this.turnCard = this.turnCard.bind(this)
     }
 

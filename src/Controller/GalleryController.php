@@ -11,7 +11,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
@@ -26,8 +25,9 @@ final class GalleryController extends AbstractController
     public function index(GalleryRepository $gr, Request $request): Response
     {
         $response = new Response();
-        $etag = md5('galerie-' . $gr->getMaxUpdateAt()->getTimestamp());
+        $etag = md5('galerie-' . ($gr->getMaxUpdateAt()?->getTimestamp() ?? 0) . '-' . $gr->count([]));
         $response->setETag($etag);
+        $response->headers->set('Cache-Control', 'public, no-cache, must-revalidate');
        
          
         if ($response->isNotModified($request)) {
@@ -60,22 +60,27 @@ final class GalleryController extends AbstractController
     public function getGalleryImages(#[MapEntity(mapping: ['name' => 'name'])] ?Gallery $gallery,string $name,GalleryImagesRepository $gr, LoggerInterface $adminLogger,Request $request): Response
     {
         if (!$gallery) {
-            $adminLogger->alert('User searched bad gallery name in url: galerie/{name}');
+            $adminLogger->alert('User searched bad gallery name in url: galerie/' . $name);
             throw $this->createNotFoundException("gallery");
         }
 
+        $canonicalName = mb_strtolower($gallery->getName());
+        if ($name !== $canonicalName) {
+            return $this->redirectToRoute('app_gallery_images', ['name' => $canonicalName], 301);
+        }
+
         $response = new Response();
-        $etag = md5('galerie-' . $gallery->getName() . '-' . $gallery->getUpdatedAt()->getTimestamp());
+        $etag = md5('galerie-' . $gallery->getName() . '-' . ($gallery->getUpdatedAt()?->getTimestamp() ?? 0));
         $response->setETag($etag);
         $response->headers->set('Cache-Control', 'public, no-cache, must-revalidate');
 
         if ($response->isNotModified($request)) {
             return $response; 
         }
-        $galleryId = strtolower($gallery->getName());
-        $images = $this->cache->get('galerie-' . $galleryId, function(ItemInterface $item) use ($gr,$gallery,$galleryId) {
+        $galleryId = $canonicalName;
+        $images = $this->cache->get('galerie-' . md5($galleryId), function(ItemInterface $item) use ($gr,$gallery,$galleryId) {
             $item->expiresAfter(86400);
-            $item->tag(['galerie-' . strtolower($galleryId)]);
+            $item->tag(['galerie-' . md5($galleryId)]);
             $rawImages = $gr->findBy(["gallery" => $gallery],['position' => 'DESC']);
             $cachedImages = [];
             foreach ($rawImages as $image) {

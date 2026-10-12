@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Metamorphose Film - Production Audiovisuelle & Clips Vidéos{% endblock %}
+{% block title %}Production Audiovisuelle & Clips Vidéos{% endblock %}
 
 {% block meta %}
     {% set pageDescription = "Metamorphose Film propose des productions audiovisuelles créatives, des clips vidéo immersifs et des contenus visuels sur mesure pour artistes et marques." %}
@@ -10,7 +10,7 @@
 
     <meta property="og:title" content="Metamorphose Film - Production Audiovisuelle & Clips Vidéos">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="{{ app.request.getUri() }}">
+    <meta property="og:url" content="{{ canonicalUrl }}">
     <meta property="og:description" content="{{ pageDescription }}">
 
     <meta name="twitter:title" content="Metamorphose Film - Production Audiovisuelle & Clips Vidéos">
@@ -26,7 +26,7 @@
         {
           "@type": "ListItem",
           "position": {{ loop.index }},
-          "url": "{{ app.request.getSchemeAndHttpHost() ~ '/projet/' ~ project.slug }}"
+          "url": {{ (app.request.schemeAndHttpHost ~ '/projet/' ~ project.slug)|json_encode|raw }}
         }{% if not loop.last %},{% endif %}
         {% endfor %}
       ]

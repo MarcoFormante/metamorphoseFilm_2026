@@ -46,6 +46,7 @@ use Symfony\Contracts\Cache\TagAwareCacheInterface;
 use Spatie\Image\Image;
 use Symfony\Component\HttpFoundation\File\File;
 use App\Service\ImageResizerInterface;
+use Symfony\Component\Console\Output\BufferedOutput;
 
 #[IsGranted('ROLE_ADMIN')]
 final class AdminController extends AbstractController
@@ -342,10 +343,11 @@ final class AdminController extends AbstractController
         }
         
         $form->handleRequest($request);
-        $formErrors = $form->getErrors(true);
 
-        if (count($formErrors)) {
-            $this->addFlash('error',$formErrors);
+        if ($form->isSubmitted() && !$form->isValid()) {
+            foreach ($form->getErrors(true) as $error) {
+                $this->addFlash('error', $error->getMessage());
+            }
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -519,6 +521,9 @@ final class AdminController extends AbstractController
             if ($img1 && $img2 ) {
                 $img1->setPosition($img1Position);
                 $img2->setPosition($img2Position);
+                $img1->setUpdatedAt();
+                $img2->setUpdatedAt();
+                    
                 try {
                     $em->flush();
                     $this->tag->invalidateTags(['galerie']);   
@@ -552,7 +557,11 @@ final class AdminController extends AbstractController
 
         if($deleteForm->isSubmitted() && $deleteForm->isValid()){
             $id = $deleteForm->get("imageID")->getData();
-            $image = $gr->findOneBy(['id'=>$id]);
+            $image = $gr->findOneBy(['id'=> $id]);
+            if (!$image) {
+                $this->addFlash('error', 'Image introuvable.');
+                return $this->redirectToRoute('app_admin_gallery', ['name' => $name]);
+            }
             $imageSrc = $image->getSrc();
             $em->remove($image);
             $image->getGallery()->setUpdatedAt();
@@ -563,7 +572,7 @@ final class AdminController extends AbstractController
                     unlink("uploads/images/galleries/" . $imageSrc);
                 }
                 $this->addFlash('success','Supprimée');
-                $this->tag->invalidateTags(['galerie','galerie-' . strtolower($name)]); 
+                $this->tag->invalidateTags(['galerie','galerie-' . md5(mb_strtolower($name))]); 
             } catch (\Throwable $th) {
                 $this->addFlash('error',$th->getMessage());
             }
@@ -592,7 +601,7 @@ final class AdminController extends AbstractController
                 try {
                     $em->flush();
                     $this->addFlash('success','Position modifièe');
-                    $this->tag->invalidateTags(['galerie-' . strtolower($img1->getGalleryName())]); 
+                    $this->tag->invalidateTags(['galerie-' . md5(mb_strtolower($name))]); 
                     
                 } catch (\Throwable $th) {
                     $this->addFlash('error',$th->getMessage());
@@ -679,31 +688,35 @@ final class AdminController extends AbstractController
 
 
     #[Route('/admin/galleries/{name}/edit', name: 'app_admin_edit_gallery')]
-    public function editGallery(string $name,Request $request, EntityManagerInterface $em, GalleryRepository $gr): Response
+    public function editGallery(string $name, Request $request, EntityManagerInterface $em, GalleryRepository $gr): Response
     {
         $gallery = $gr->findOneBy(['name' => $name]);
-        $form = $this->createForm(CreateGalleryType::class,$gallery);
+
+        if (!$gallery) {
+            $this->addFlash('error', 'Galerie introuvable.');
+            return $this->redirectToRoute('app_admin_galleries');
+        }
+
+        $oldName = $name;
+
+        $form = $this->createForm(CreateGalleryType::class, $gallery);
 
         $deleteForm = $this->createFormBuilder()
-        ->setAction($this->generateUrl("app_admin_delete_gallery",['id' => $gallery->getId()]))
-        ->setMethod('POST')
-        ->getForm();
+            ->setAction($this->generateUrl('app_admin_delete_gallery', ['id' => $gallery->getId()]))
+            ->setMethod('POST')
+            ->getForm();
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $newName = $form->get("name")->getData();
-
-            if ($newName !== $name) {
-                $gallery->setName($newName);
-                $name = $newName;
-            }
-
             $image = $form->get('image')->getData();
-            $imageSrc = "g-" . bin2hex(random_bytes(18)) . ".webp"; 
+            $oldImage = null;
+            $newPath = null;
 
             if ($image) {
-                $lastImage = $form->get("lastImage")->getData();
+                $oldImage = $form->get('lastImage')->getData();
+                $imageSrc = 'g-' . bin2hex(random_bytes(18)) . '.webp';
+                $newPath = 'uploads/images/gallery/' . $imageSrc;
                 $gallery->setSrc($imageSrc);
             }
 
@@ -711,8 +724,6 @@ final class AdminController extends AbstractController
             $connection = $em->getConnection();
             $connection->beginTransaction();
             $moved = [];
-            $oldImage = $image ? $lastImage : null;
-            $newPath = $image ? "uploads/images/gallery/" . $imageSrc : null;
 
             try {
                 if ($image) {
@@ -723,17 +734,20 @@ final class AdminController extends AbstractController
                 $em->flush();
                 $connection->commit();
 
-                if ($image) {
-                    if (file_exists("uploads/images/gallery/" . $oldImage)) {
-                        unlink("uploads/images/gallery/" . $oldImage);
+                if ($oldImage) {
+                    $oldPath = 'uploads/images/gallery/' . $oldImage;
+                    if (file_exists($oldPath) && !is_dir($oldPath)) {
+                        @unlink($oldPath);
                     }
                 }
+
                 $this->sitemap->updatePage('/galerie');
                 $this->sitemap->generateSitemap();
-                $this->tag->invalidateTags(['galerie','galerie-' . strtolower($gallery->getName())]); 
-                $this->addFlash('success','Galerie modifiée');
+                $this->tag->invalidateTags(['galerie','galerie-' . md5(mb_strtolower($oldName)),'galerie-' . md5(mb_strtolower($gallery->getName()))]); 
+
+                $this->addFlash('success', 'Galerie modifiée');
                 return $this->redirectToRoute('app_admin_galleries');
-                
+
             } catch (\Throwable $th) {
                 if ($connection->isTransactionActive()) {
                     $connection->rollBack();
@@ -743,29 +757,33 @@ final class AdminController extends AbstractController
                         @unlink($file);
                     }
                 }
-                $this->addFlash('error',$th->getMessage());
-                return $this->render('admin/newGallery.html.twig',[
-                'form' => $form,
-                'gallery' => $gallery,
-                'deleteForm' => $deleteForm,
-                'formErrors' => $form->getErrors(true)
-                ],new Response(null,500));
+                $this->adminLogger->error('editGallery failed', ['message' => $th->getMessage()]);
+                $this->addFlash('error', $th->getMessage());
+
+                return $this->render('admin/newGallery.html.twig', [
+                    'form' => $form,
+                    'gallery' => $gallery,
+                    'deleteForm' => $deleteForm,
+                    'formErrors' => $form->getErrors(true),
+                ], new Response(null, Response::HTTP_INTERNAL_SERVER_ERROR));
             }
         }
 
-        return $this->render('admin/newGallery.html.twig',[
+        return $this->render('admin/newGallery.html.twig', [
             'form' => $form,
             'gallery' => $gallery,
             'deleteForm' => $deleteForm,
-            'formErrors' => $form->getErrors(true)
+            'formErrors' => $form->getErrors(true),
         ]);
     }
+
+
 
     #[Route('/admin/galleries/{id}/delete', name: 'app_admin_delete_gallery', methods: ['POST'])]
      public function deleteGallery(Gallery $gallery, EntityManagerInterface $em): Response
      {
         $galleryName = $gallery->getName();
-        $images = $gallery->getImages();
+        $images = $gallery->getImages()->toArray();
         $imgSrc = $gallery->getSrc();
         $connection = $em->getConnection();
         $connection->beginTransaction();
@@ -787,7 +805,7 @@ final class AdminController extends AbstractController
             }
             $this->sitemap->updatePage('/galerie');
             $this->sitemap->generateSitemap();
-            $this->tag->invalidateTags(['galerie','galerie-' . strtolower($galleryName)]);
+            $this->tag->invalidateTags(['galerie','galerie-' . md5(mb_strtolower($galleryName))]);
             $this->addFlash('success', 'Galerie supprimée');
         } catch (\Throwable $th) {
             if ($connection->isTransactionActive()) {
@@ -859,7 +877,7 @@ final class AdminController extends AbstractController
                 $gallery->setUpdatedAt(new DateTimeImmutable('now'));
                 $em->flush();
 
-                $this->tag->invalidateTags(['galerie-' . strtolower($galleryName)]);
+                $this->tag->invalidateTags(['galerie-' . md5(mb_strtolower($gallery->getName()))]);
                 $this->addFlash('success', 'Description modifiée');
 
                 return $this->redirectToRoute('app_admin_gallery', [
@@ -928,7 +946,7 @@ final class AdminController extends AbstractController
                 $connection->commit();
 
                 $this->sitemap->generateSitemap();
-                $this->tag->invalidateTags(['galerie-'. strtolower($gallery->getName())]);
+                $this->tag->invalidateTags(['galerie-'. md5(mb_strtolower($gallery->getName()))]);
                 return $this->redirectToRoute('app_admin_gallery',[
                     'name' => $name
                 ]);
@@ -961,7 +979,9 @@ final class AdminController extends AbstractController
     public function adminDev(Kernel $kernel, Request $request,KernelInterface $kernelInterface): Response
     {
         $path = $kernel->getProjectDir() . '/var/log/admin.log';
-        $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        $lines = is_file($path) ? (file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: []) : [];
+        $lines = array_slice($lines, -500);
+        $lines = array_reverse($lines);
         $entries = [];
 
         foreach ($lines as $line) {
@@ -989,9 +1009,14 @@ final class AdminController extends AbstractController
             ->add('deleteSingleCache', SubmitType::class)
             ->getForm();
 
+        $assetsForm = $this->createFormBuilder()
+            ->add('compileAssets', SubmitType::class)
+            ->getForm();
+
         $form->handleRequest($request);
         $deleteLogsForm->handleRequest($request);
         $singleCacheForm->handleRequest($request);
+        $assetsForm->handleRequest($request);
 
         if ($deleteLogsForm->isSubmitted() && $deleteLogsForm->isValid()) {
             @file_put_contents($path, '');
@@ -1023,26 +1048,67 @@ final class AdminController extends AbstractController
             return $this->redirectToRoute('app_admin_dev');
         }
 
+
+        if ($assetsForm->isSubmitted() && $assetsForm->isValid()) {
+            @set_time_limit(180);
+
+            $application = new Application($kernelInterface);
+            $application->setAutoExit(false);
+            $output = new BufferedOutput();
+
+            $exitCode = $application->run(new ArrayInput([
+                'command' => 'asset-map:compile',
+            ]), $output);
+
+            if ($exitCode === 0) {
+                if (function_exists('opcache_reset')) {
+                    opcache_reset();
+                }
+                $this->addFlash('success', 'Asset compilati');
+            } else {
+                $this->adminLogger->error('asset-map:compile failed', ['output' => $output->fetch()]);
+                $this->addFlash('error', 'Errore nella compilazione degli asset, controlla i log');
+            }
+
+            return $this->redirectToRoute('app_admin_dev');
+        }
+
         if($form->isSubmitted() && $form->isValid()){
-        $application = new Application($kernelInterface);
+           @set_time_limit(180);
 
-        $input = new ArrayInput([
-            'command' => 'cache:clear',
-        ]);
+            $application = new Application($kernelInterface);
+            $application->setAutoExit(false);
+            $output = new BufferedOutput();
 
-        $output = new NullOutput();
-        $application->run($input, $output);
+            // 1. pool applicativo (dati in cache: home, progetti, gallerie...)
+            $poolExit = $application->run(new ArrayInput([
+                'command' => 'cache:pool:clear',
+               'pools' => ['cache.app'],
+           ]), $output);
 
-        $this->addFlash('success', 'La cache è stata svuotata');
+            // 2. cache del kernel (container, template, route) + warm-up
+            $clearExit = $application->run(new ArrayInput([
+                'command' => 'cache:clear',
+            ]), $output);
 
-        return $this->redirectToRoute('app_admin_home');
+           if ($poolExit === 0 && $clearExit === 0) {
+               $this->addFlash('success', 'Cache svuotata e riscaldata');
+           } else {
+                $this->adminLogger->error('cache clear failed', ['output' => $output->fetch()]);
+                $this->addFlash('error', 'Errore durante la pulizia della cache, controlla i log');
+         }
+
+            return $this->redirectToRoute('app_admin_home');
+         
+        
         }
         
         return $this->render('admin/dev.html.twig', [
             'array' => $entries,
             'form' => $form,
             'logsForm' => $deleteLogsForm,
-            'singleCacheForm' => $singleCacheForm
+            'singleCacheForm' => $singleCacheForm,
+            'assetsForm' => $assetsForm,
         ]);
     }
 
@@ -1181,7 +1247,7 @@ final class AdminController extends AbstractController
             $em->remove($video);
             try {
                 $em->flush();
-                $this->tag->invalidateTags(['single-service-' . $category]);
+                $this->tag->invalidateTags(['single-service-' . strtolower($category)]);
                 $this->addFlash('success', 'Video effacée.');
             } catch (\Throwable $th) {
                 $this->adminLogger->error('deleteServiceVideo failed', ['exception' => $th]);
